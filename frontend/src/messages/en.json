@@ -1,0 +1,315 @@
+{
+  "HomePage": {
+    "addAlternative": "Add Alternative",
+    "compareAlternatives": "Compare Selection",
+    "openAlternative": "Open Selected",
+    "pageTitle": "Alternatives",
+    "goals":{
+      "maximizeEconomy": "Maximize Economy",
+      "minimizeNLoad": "Minimize N-Load",
+      "maximizeEconomyNLoad": "Max Economy & Min N-Load"
+    },
+    "tabs": {
+      "completed": "Completed",
+      "pending": "Calculating",
+      "all": "All"
+    },
+    "columns": {
+      "actions": "Compare or map view",
+      "compareLong": "Compare with Status Quo",
+      "mapLong": "Map view of alternative",
+      "select": "Select",
+      "name": "Alternative",
+      "status":"Status",
+      "details":"Details",
+      "created":"Created at",
+      "goal":"Goal Type",
+      "goalType": {
+        "maximizeEconomy": "Maximize Economy",
+        "minimizeNLoad": "Minimize N-Load",
+        "maximizeEconomyNLoad": "Max Economy & Min N-Load"
+      },
+      "goalTypeLong": {
+        "maximizeEconomy": "placeholder: Maximize Economy description",
+        "minimizeNLoad": "placeholder: Minimize N-Load description",
+        "maximizeEconomyNLoad": "placeholder: Max Economy & Min N-Load description"
+      },
+      "viewDetails": "View Details",
+      "statusValue": {
+        "success": "Success",
+        "nonOptimal": "Non Optimal Solution",
+        "pending": "Calculating",
+        "failed": "No Solution"
+      },
+      "statusDescription": {
+        "success": "Placeholder: success description",
+        "nonOptimal": "Placeholder: non optimal description",
+        "pending": "Placeholder: pending description",
+        "failed": "Placeholder: failed description"
+      }
+    },
+    "AlternativeConfigurationDialog": {
+        "title": "Alternative configuration overview",
+        "description": "Placeholder: The constraints chosen for alternative {name} are shown below."
+      }
+  },
+  "RegionPage": {
+    "chooseRegion": "Choose a region",
+    "chooseRegionDescription": "Choose a region to compare and explore alternatives",
+    "alternativesFor": "Alternatives for"
+},
+  "NavMenu": {
+    "my_alternatives": "Alternatives",
+    "create_new_alternative": "Create new alternative",
+    "my_models": "My Alternatives",
+    "regions": "Region",
+    "chooseRegion": "Choose a region",
+    "back": "Back"
+  },
+  "AlternativeTable": {
+    "search": "Search name or goal type",
+    "showing": "Showing {start} to {end} of {total} results"
+  },
+  "Alternative": {
+    "switch_goal_type_title": "Switch Goal Type",
+    "switch_goal_type_description": "Are you sure you want to switch to a different goal? This will reset your current constraints selection",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "noChartData": "No chart data",
+    "noConstraintData": "No constraint data",
+    "create_alternative": "Create alternative model",
+    "configure_model": "Configure your model",
+    "addAlternative": "Add Alternative",
+    "submit": "Submit",
+    "name": "Name",
+    "alternative_name_placeholder": "Name of alternative",
+    "name_min_length": "Name must be at least 2 characters",
+    "model": "Model",
+    "select_model": "Select a model",
+    "select_model_required": "Please select a model",
+    "n_load": "Change in total N-Load",
+    "economy": "Change in total Economy",
+    "constraints": "Constraints",
+    "grass_fields": "Only allow new grass fields...",
+    "single_constraint": "Only allow for a single...",
+    "new_grass_constraint": "Only allow for new grass on...",
+    "areaChange_constraint": "Only allow percentage of area to change",
+    "fieldsChange_constraint": "Only allow percentage of fields to change",
+    "area": "area",
+    "fields": "fields",
+    "minValue": "Lowest value",
+    "nextButton": "Next",
+    "backButton": "Back",
+    "maxValue": "Highest value",
+    "nLoadMaxLimit": "Max N-Load Limit",
+    "economyMinLimit": "Min Economy Limit",
+    "genesis_description": "Fast and efficient for simple scenarios",
+    "explorer_description": "Balanced performance for most use cases",
+    "quantum_description": "Advanced processing for complex scenarios",
+    "result": "Result",
+    "result_description": "Result of the model",
+    "alternative_name": "Alternative Name",
+    "fieldsShown": "Map colors",
+    "alternative": "Alternative",
+    "diagramName": {
+      "Crops In Rotation": "Crops in Rotation",
+      "Rotations": "Rotations"
+    },
+    "statusquo": "Status Quo",
+    "difference": "Difference",
+    "comparisonDescription":"Click to see the difference between the two, colored by ratio-value",
+    "alternativeDescription": "Click to see alternative map colors",
+    "statusQuoDescription": "Click to see status quo map colors",
+    "selected_model": "Neural Genesis",
+    "model_results": "Model Results",
+    "nLoadChange": "N-Load Change:",
+    "legendTitle": "Legend",
+    "economyChange": "Economy Change:",
+    "biodiversity": "Biodiversity:",
+    "carbon_storage": "Carbon Storage:",
+    "social_impact": "Social Impact:",
+    "distanceToBiogas": "Distance to Biogas:",
+    "areaChange": "Area Change:",
+    "fieldsChange": "Fields Change:",
+    "value_ranges": "Value Range",
+    "value_range_names": {
+      "maximizeEconomy": "N-Load change",
+      "minimizeNLoad": "Economy Change"
+    },
+    "value_range_descriptions": {
+      "maximizeEconomy": "placeholder: Value range for the constraint",
+      "minimizeNLoad": "placeholder: Value range for the constraint"
+    },
+    "goal_selection": "Goal Selection",
+    "select_goal": "Select a Goal",
+    "goal_names": {
+      "maximizeEconomy": "Maximize Economy",
+      "minimizeNLoad": "Minimize N-Load",
+      "maximizeEconomyNLoad": "Max Economy & Min N-Load"
+    },
+    "goal_descriptions": {
+      "maximizeEconomy": "Maximize the total economy of the region",
+      "minimizeNLoad": "Minimize the total N-Load of the region",
+      "maximizeEconomyNLoad": "Maximize the economy per N-Load"
+    },
+    "disabled": "Disabled",
+    "variableTypes": {
+      "crop": "Crop Rotation",
+      "economy": "Economy",
+      "nLoad": "N Load",
+      "nature":"Nature"
+    },
+    "isStatusQuoDescription": "Click to show alternative map colors",
+    "isNotStatusQuoDescription": "Click to show status quo map colors",
+    "fieldsChangeDescription": "Some descriptive text about what this constraint implies ", 
+    "areaChangeDescription": "Some descriptive text about what this constraint implies ", 
+    "natureValueDescription": "Some descriptive text about what this constraint implies ", 
+    "singleFarmerImpactDescription": "Some descriptive text about what this constraint implies ", 
+    "distanceToBiogasDescription": "Some descriptive text about what this constraint implies ", 
+    "goals": {
+      "maximizeEconomy": "Maximize Economy",
+      "minimizeNLoad": "Minimize N-Load",
+      "maximizeEconomyNLoad": "Max Economy & Min N-Load",
+      "maximizeEconomy_description": "Maximize the total economy of the region",
+      "minimizeNLoad_description": "Minimize the total N-Load of the region",
+      "maximizeEconomyNLoad_description": "Maximize the total economy and N-Load of the region"
+    },
+    "singleFarmerImpact": "Single Farmer Impact",
+    "natureValue": "Nature Value",
+    "charts": "Charts",
+    "cropsInRotation": "Crops in Rotation",
+    "rotations": "Rotations",
+    "alternativeOverview": "Alternative Overview"
+  },
+  "ResultDetailsPanel": {
+    "seeDetails": "See details",
+    "statusTitle": "Status",
+    "note": "Notes",
+    "createdAt": "Created at",
+    "goalType": "Goal Type",
+    "salary": "Salary",
+    "salaryValue": "${value}",
+    "about": "About",
+    "lastUpdated": "Last updated {date}",
+    "status": {
+      "success": "Success",
+      "pending": "Calculating",
+      "failed": "Failed"
+    }
+  },
+  "AlternativeResultCard":{
+    "economyChange": "Economy Change",
+    "summary":"Summary",
+    "nLoadChange": "N-Load Change",
+    "constraints": "Constraints",
+    "min": "Min",
+    "max": "Max",
+    "goalType": "Goal Type",
+    "distanceToBiogas":"Distance to Biogas:",
+    "areaChange":"Area Change:",
+    "fieldsChange":"Fields Change:",
+    "singleFarmerImpact":"Single Farmer Impact",
+    "natureValue":"Nature Value",
+    "noConfiguration": "This alternative has no configuration"
+  },
+  "AlternativeComparisonCard": {
+    "cardTitle": "Alternative Comparison",
+    "summaryTitle": "Summary",
+    "constraintsTitle": "Constraints",
+    "noConstraintData": "No constraint data",
+    "selectAlternative":"Select alternative to compare",
+    "economy": "Economy",
+    "nload": "N Load",
+    "nature": "Nature",
+    "consistency": "Consistency",
+    "farmEconomy": "Farm Economy",
+    "nloadPerEcon": "N Load Per Economy",
+    "nbalance": "N Balance",
+    "fieldConsistency": "Field Consistency",
+    "distanceToBiogas": "Distance to Biogas",
+    "singleFarmerImpact": "Single Farmer Impact",
+    "natureValue": "Nature Value",
+    "areaChange": "Area Change",
+    "fieldsChange": "Fields Change",
+    "raw": "Raw",
+    "statusQuo":"Status Quo",
+    "ratio": "Ratio",
+    "tableView": "Table View",
+    "radarView": "Radar View"
+  },  
+  "LocaleSwitcher": {
+    "label": "Choose language",
+    "en": "English",
+    "de": "Deutsch",
+    "dk": "Dansk"
+  },
+  "LoginForm": {
+  "unexpectedSignInStatus": "Unexpected sign in status",
+  "signinError": "Sign in error",
+  "username": "Username",
+  "usernamePlaceholder": "Enter your username",
+  "oauthError": "OAuth error: {provider}",
+  "verificationFailed": "Verification failed",
+  "verificationError": "Verification error",
+  "appTitle": "Decision Support Tool",
+  "email": "Email",
+  "emailPlaceholder": "example@example.dk",
+  "password": "Password",
+  "login": "Sign in",
+  "signInWith": "Sign in with",
+  "noAccount": "No account?",
+  "signOut": "Sign out",
+  "signUp": "Sign up",
+  "signUpWith": "Sign up with",
+  "orContinueWith": "Or continue with",
+  "microsoft": "Microsoft",
+  "agreementText": "By signing in, you agree to our",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "cookiePolicy": "Cookie Policy",
+  "and": "and",
+  "signingIn": "Signing in..."
+},
+"DisclaimerDialog": {
+  "title": "Disclaimer",
+  "description": "This application is intended to support your analysis and planning. It does not replace your own judgment or independent professional advice. You are solely liable for any financial or business decisions you take in reliance on information from the application.",
+  "acceptTerms": "By checking the box, you accept the above terms and conditions.",
+  "acceptTermsError": "You must accept the terms and conditions to continue.",
+  "confirm": "Confirm",
+  "cancel": "Cancel"
+},
+"AlternativeFields": {
+  "fieldNames": {
+    "economy": "Economy",
+    "nload": "N Load",
+    "nature": "Nature",
+    "consistency": "Consistency",
+    "farmEconomy": "Farm Economy",
+    "nloadPerEcon": "N Load Per Economy",
+    "nbalance": "N Balance",
+    "fieldConsistency": "Field Consistency",
+    "Distance to Biogas": "Distance to Biogas",
+    "Single Farmer Impact": "Single Farmer Impact",
+    "Nature Value": "Nature Value",
+    "Area Change": "Area Change",
+    "Fields Change": "Fields Change",
+    "Percentage of farm type change": "Percentage of farm type change"
+  },
+  "fieldDescriptions": {
+    "economy": "placeholder: Economy tooltip",
+    "nload": "placeholder: N Load tooltip",
+    "nature": "placeholder: Nature tooltip",
+    "consistency": "placeholder: Consistency tooltip",
+    "farmEconomy": "placeholder: Farm Economy tooltip",
+    "nloadPerEcon": "placeholder: N Load Per Economy tooltip",
+    "nbalance": "placeholder: N Balance tooltip",
+    "fieldConsistency": "placeholder: Field Consistency tooltip",
+    "Distance to Biogas": "placeholder: Distance to Biogas",
+    "Single Farmer Impact": "placeholder: Single Farmer Impact",
+    "Nature Value": "placeholder: Nature Value",
+    "Area Change": "placeholder: Area Change",
+    "Fields Change": "placeholder: Fields Change",
+    "Percentage of farm type change": "placeholder: Percentage of farm type change"
+  }
+}
+}

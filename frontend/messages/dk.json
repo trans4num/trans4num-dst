@@ -1,0 +1,316 @@
+{
+  "HomePage": {
+    "addAlternative": "Tilføj Alternativ",
+    "compareAlternatives": "Sammenlign Valg",
+    "openAlternative": "Åbn Valg",
+    "pageTitle": "Alternativer",
+    "goals": {
+      "maximizeEconomy": "Maksimer økonomi",
+      "minimizeNLoad": "Minimer N-belastning",
+      "maximizeEconomyNLoad": "Maks økonomi & min N-belastning"
+    },
+    "tabs": {
+      "completed": "Færdige",
+      "pending": "Udregner",
+      "all": "Alle"
+    },
+    "columns": {
+      "actions": "Sammenlign eller kortvisning",
+      "compareLong": "Sammenlign med Status Quo",
+      "mapLong": "Kortvisning af alternativ",
+      "select": "Vælg",
+      "name": "Alternativ",
+      "status": "Status",
+      "details": "Detaljer",
+      "created": "Oprettet den",
+      "goal": "Målstype",
+      "goalType": {
+        "maximizeEconomy": "Maksimer økonomi",
+        "minimizeNLoad": "Minimer N-belastning",
+        "maximizeEconomyNLoad": "Maks økonomi & min N-belastning"
+      },
+      "goalTypeLong": {
+        "maximizeEconomy": "placeholder: Beskrivelse af Maksimer økonomi",
+        "minimizeNLoad": "placeholder: Beskrivelse af Minimer N-belastning",
+        "maximizeEconomyNLoad": "placeholder: Beskrivelse af Maks økonomi & min N-belastning"
+      },
+      "viewDetails": "Se detaljer",
+      "statusValue": {
+        "success": "Succes",
+        "nonOptimal": "Ikke optimal løsning",
+        "pending": "Udregner",
+        "failed": "Ingen løsning"
+      },
+      "statusDescription": {
+        "success": "Placeholder: success description",
+        "nonOptimal": "Placeholder: non optimal description",
+        "pending": "Placeholder: pending description",
+        "failed": "Placeholder: failed description"
+      }
+    },
+      "AlternativeConfigurationDialog": {
+        "title": "Alternativets konfigurationsoversigt",
+        "description": "Placeholder: De valgte begrænsninger for alternativet {name} er vist nedenfor."
+      }
+
+  },
+  "RegionPage": {
+    "chooseRegion": "Vælg en region",
+    "chooseRegionDescription": "Vælg en region for at sammenligne og udforske alternativer",
+    "alternativesFor": "Alternativer for"
+  },
+  "NavMenu": {
+    "my_alternatives": "Alternativer",
+    "create_new_alternative": "Opret nyt alternativ",
+    "my_models": "Mine alternativer",
+    "regions": "Region",
+    "chooseRegion": "Vælg region",
+    "back": "Tilbage"
+  },
+  "AlternativeTable": {
+    "search": "Søg navn eller måltype",
+    "showing": "Viser {start} til {end} af {total} resultater"
+  },
+  "Alternative": {
+    "switch_goal_type_title": "Skift måltype",
+    "switch_goal_type_description": "Er du sikker på, at du vil skiftet til en anden måltype? Dette vil nulstille dine nuværendebegrænsninger",
+    "cancel": "Annuller",
+    "confirm": "Bekræft",
+    "noChartData": "Ingen data",
+    "noConstraintData": "Ingen data",
+    "create_alternative": "Opret alternativ model",
+    "configure_model": "Konfigurer din model",
+    "addAlternative": "Tilføj alternativ",
+    "nextButton": "Videre",
+    "backButton": "Tilbage",
+    "submit": "Indsend",
+    "name": "Navn",
+    "alternative_name_placeholder": "Navn på alternativ",
+    "name_min_length": "Navnet skal være mindst 2 tegn",
+    "model": "Model",
+    "select_model": "Vælg en model",
+    "select_model_required": "Vælg venligst en model",
+    "n_load": "Ændring i total N-belastning",
+    "economy": "Ændring i total økonomi",
+    "constraints": "Begrænsninger",
+    "grass_fields": "Tillad kun nye græsmarker...",
+    "single_constraint": "Tillad kun en enkelt...",
+    "new_grass_constraint": "Tillad kun nye græsmarker på...",
+    "areaChange_constraint": "Tillad kun procentdel af område at ændre sig",
+    "fieldsChange_constraint": "Tillad kun procentdel af marker at ændre sig",
+    "area": "område",
+    "fields": "marker",
+    "minValue": "Laveste værdi",
+    "maxValue": "Højeste værdi",
+    "nLoadMaxLimit": "Maks N-belastningsgrænse",
+    "economyMinLimit": "Minimum økonomigrænse",
+    "genesis_description": "Hurtig og effektiv til enkle scenarier",
+    "explorer_description": "Balanceret ydelse til de fleste anvendelser",
+    "quantum_description": "Avanceret behandling til komplekse scenarier",
+    "result": "Resultat",
+    "result_description": "Resultatet af modellen",
+    "alternative_name": "Alternativ navn",
+    "fieldsShown": "Kortfarver",
+    "alternative": "Alternativ",
+    "diagramName": {
+      "Crops In Rotation": "Afgrøder i sædskifte",
+      "Rotations": "Sædskifte"
+    },
+    "statusquo": "Status quo",
+    "difference": "Difference",
+    "comparisonDescription": "Klik for at se forskellen mellem de to, farvet efter forholdstal",
+    "alternativeDescription": "Klik for at se alternativets kortfarver",
+    "statusQuoDescription": "Klik for at se status quo-kortfarver",
+    "selected_model": "Neural Genesis",
+    "model_results": "Modelresultater",
+    "nLoadChange": "Ændring i N-belastning:",
+    "legendTitle": "Forklaring",
+    "variableTypes": {
+      "crop": "Sædskifte",
+      "economy": "Økonomi",
+      "nLoad": "Nitratbelastning",
+      "nature": "Natur"
+    },
+    "economyChange": "Ændring i økonomi:",
+    "biodiversity": "Biodiversitet:",
+    "carbon_storage": "Kulstoflagring:",
+    "social_impact": "Social påvirkning:",
+    "distanceToBiogas": "Afstand til biogas:",
+    "areaChange": "Områdeændring:",
+    "fieldsChange": "Markændring:",
+    "value_range_names": {
+      "maximizeEconomy": "Ændring i N-belastning",
+      "minimizeNLoad": "Ændring i økonomi"
+    },
+    "value_range_descriptions": {
+      "maximizeEconomy": "pladsholder: Værdiinterval for begrænsningen",
+      "minimizeNLoad": "pladsholder: Værdiinterval for begrænsningen"
+    },
+    "value_ranges": "Værdimål",
+    "goal_names": {
+      "maximizeEconomy": "Maksimer økonomi",
+      "minimizeNLoad": "Minimer N-belastning",
+      "maximizeEconomyNLoad": "Maks økonomi & min N-belastning"
+    },
+    "goal_descriptions": {
+      "maximizeEconomy": "Maksimer den samlede økonomi i regionen",
+      "minimizeNLoad": "Minimer den samlede N-belastning i regionen",
+      "maximizeEconomyNLoad": "Maksimer økonomien pr. N-belastning"
+    },
+    "goal_selection": "Målsætning",
+    "select_goal": "Vælg et mål",
+    "disabled": "Deaktiveret",
+    "isStatusQuoDescription": "Klik for at vise alternative kortfarver",
+    "isNotStatusQuoDescription": "Klik for at vise status quo kortfarver",
+    "fieldsChangeDescription": "Beskrivende tekst om hvad denne begrænsning indebærer",
+    "areaChangeDescription": "Beskrivende tekst om hvad denne begrænsning indebærer",
+    "natureValueDescription": "Beskrivende tekst om hvad denne begrænsning indebærer",
+    "singleFarmerImpactDescription": "Beskrivende tekst om hvad denne begrænsning indebærer",
+    "distanceToBiogasDescription": "Beskrivende tekst om hvad denne begrænsning indebærer",
+    "goals": {
+      "maximizeEconomy": "Maksimer økonomi",
+      "minimizeNLoad": "Minimer N-belastning",
+      "maximizeEconomyNLoad": "Maks økonomi & min N-belastning",
+      "maximizeEconomy_description": "Maksimer den samlede økonomi i regionen",
+      "minimizeNLoad_description": "Minimer den samlede N-belastning i regionen",
+      "maximizeEconomyNLoad_description": "Maksimer den samlede økonomi og N-belastning i regionen"
+    },
+    "singleFarmerImpact": "Påvirkning af enkelt landmand",
+    "natureValue": "Naturværdi",
+    "charts": "Diagrammer",
+    "cropsInRotation": "Afgrøder i sædskifte",
+    "rotations": "Sædskifter",
+    "alternativeOverview": "Alternativ oversigt"
+  },
+  "ResultDetailsPanel": {
+    "seeDetails": "Se detaljer",
+    "statusTitle": "Status",
+    "note": "Noter",
+    "createdAt": "Oprettet den",
+    "goalType": "Måltype",
+    "salary": "Løn",
+    "salaryValue": "${value}",
+    "about": "Om",
+    "lastUpdated": "Sidst opdateret {date}",
+    "status": {
+      "success": "Succes",
+      "pending": "Udregner",
+      "failed": "Mislykket"
+    }
+  },
+  "AlternativeResultCard": {
+    "economyChange": "Ændring i økonomi",
+    "summary": "Sammendrag",
+    "nLoadChange": "Ændring i N-belastning",
+    "constraints": "Begrænsninger",
+    "min": "Min",
+    "max": "Maks",
+    "goalType": "Måltype",
+    "distanceToBiogas": "Afstand til biogas:",
+    "areaChange": "Områdeændring:",
+    "fieldsChange": "Markændring:",
+    "singleFarmerImpact": "Enkelt landbruger påvirkning",
+    "natureValue": "Naturværdi",
+    "noConfiguration": "Dette alternativ har ingen konfiguration"
+  },
+  "AlternativeComparisonCard": {
+    "cardTitle": "Alternativ sammenligning",
+    "summaryTitle": "Resumé",
+    "constraintsTitle": "Begrænsninger",
+    "noConstraintData": "Ingen data for begrænsninger",
+    "selectAlternative": "Vælg alternativ at sammenligne",
+    "economy": "Økonomi",
+    "nload": "N Belastning",
+    "nature": "Natur",
+    "consistency": "Konsistens",
+    "farmEconomy": "Landbrugsøkonomi",
+    "nloadPerEcon": "N Belastning pr. Økonomi",
+    "nbalance": "N Balance",
+    "fieldConsistency": "Markkonsistens",
+    "distanceToBiogas": "Afstand til biogas",
+    "singleFarmerImpact": "Påvirkning af enkelt landmand",
+    "natureValue": "Naturværdi",
+    "areaChange": "Områdeændring",
+    "fieldsChange": "Markændring",
+    "raw": "Rådata",
+    "statusQuo":"Status Quo",
+    "ratio": "Ratio",
+    "tableView": "Tabelvisning",
+    "radarView": "Radarvisning"
+  },
+  "LocaleSwitcher": {
+    "label": "Vælg sprog",
+    "en": "English",
+    "de": "Deutsch",
+    "dk": "Dansk"
+  },
+  "LoginForm": {
+    "unexpectedSignInStatus": "Uventet log ind-status",
+    "signinError": "Fejl ved login",
+    "username": "Brugernavn",
+    "usernamePlaceholder": "Indtast dit brugernavn",
+    "oauthError": "OAuth-fejl: {provider}",
+    "verificationFailed": "Verifikation mislykkedes",
+    "verificationError": "Verifikationsfejl",
+    "appTitle": "Beslutningsstøtteværktøj",
+    "email": "E-mail",
+    "emailPlaceholder": "example@example.dk",
+    "password": "Adgangskode",
+    "login": "Log ind",
+    "signInWith": "Log ind med",
+    "noAccount": "Ingen konto?",
+    "signOut": "Log ud",
+    "signUp": "Opret konto",
+    "signUpWith": "Opret konto med",
+    "orContinueWith": "Eller fortsæt med",
+    "microsoft": "Microsoft",
+    "agreementText": "Ved at logge ind accepterer du vores",
+    "termsOfService": "Servicevilkår",
+    "privacyPolicy": "Privatlivspolitik",
+    "cookiePolicy": "Cookiepolitik",
+    "and": "og",
+    "signingIn": "Logger ind..."
+  },
+  "DisclaimerDialog": {
+    "title": "Disclaimer",
+    "description": "Denne applikation er beregnet til at understøtte din analyse og planlægning. Den erstatter ikke din egen vurdering eller uafhængig professionel rådgivning. Du er eneansvarlig for enhver økonomisk eller forretningsmæssig beslutning, du træffer på baggrund af oplysninger fra applikationen.",
+    "acceptTerms": "Ved at markere feltet accepterer du de ovenstående vilkår og betingelser.",
+    "acceptTermsError": "Du skal acceptere vilkår og betingelser for at fortsætte.",
+    "confirm": "Bekræft",
+    "cancel": "Annuller"
+  },
+  "AlternativeFields": {
+    "fieldNames": {
+      "economy": "Økonomi",
+      "nload": "N-belastning",
+      "nature": "Natur",
+      "consistency": "Konsistens",
+      "farmEconomy": "Landbrugsøkonomi",
+      "nloadPerEcon": "N-belastning pr. økonomi",
+      "nbalance": "N-balance",
+      "fieldConsistency": "Markkonsistens",
+      "Distance to Biogas": "Afstand til biogas",
+      "Single Farmer Impact": "Påvirkning af enkelt landmand",
+      "Nature Value": "Naturværdi",
+      "Area Change": "Områdeændring",
+      "Fields Change": "Markændring",
+      "Percentage of farm type change": "Procentdel af bedriftstypeændring"
+    },
+    "fieldDescriptions": {
+      "economy": "placeholder: Værktøjstip til økonomi",
+      "nload": "placeholder: Værktøjstip til N-belastning",
+      "nature": "placeholder: Værktøjstip til natur",
+      "consistency": "placeholder: Værktøjstip til konsistens",
+      "farmEconomy": "placeholder: Værktøjstip til landbrugsøkonomi",
+      "nloadPerEcon": "placeholder: Værktøjstip til N-belastning pr. økonomi",
+      "nbalance": "placeholder: Værktøjstip til N-balance",
+      "fieldConsistency": "placeholder: Værktøjstip til markkonsistens",
+      "Distance to Biogas": "placeholder: Afstand til biogas",
+      "Single Farmer Impact": "placeholder: Påvirkning af enkelt landmand",
+      "Nature Value": "placeholder: Naturværdi",
+      "Area Change": "placeholder: Områdeændring",
+      "Fields Change": "placeholder: Markændring",
+      "Percentage of farm type change": "placeholder: Procentdel af bedriftstypeændring"
+    }
+  }
+}

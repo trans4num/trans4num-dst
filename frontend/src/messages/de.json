@@ -1,0 +1,313 @@
+{
+  "HomePage": {
+    "addAlternative": "Alternative hinzufügen",
+    "openAlternative": "Ausgewählte Alternative öffnen",
+    "compareAlternatives": "Alternativen vergleichen",
+    "pageTitle": "Alternativen",
+    "goals": {
+      "maximizeEconomy": "Wirtschaft maximieren",
+      "minimizeNLoad": "N-Belastung minimieren",
+      "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung"
+    },
+    "tabs": {
+      "completed": "Fertig",
+      "pending": "Berechnung",
+      "all": "Alle"
+    },
+    "columns": {
+      "actions": "Vergleichen oder Kartenansicht",
+      "compareLong": "Mit Status Quo vergleichen",
+      "mapLong": "Kartenansicht der Alternative",
+      "select": "Auswählen",
+      "name": "Alternative",
+      "status": "Status",
+      "details": "Details",
+      "created": "Erstellt am",
+      "goal": "Zieltyp",
+      "goalType": {
+        "maximizeEconomy": "Wirtschaft maximieren",
+        "minimizeNLoad": "N-Belastung minimieren",
+        "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung"
+      },
+      "goalTypeLong": {
+        "maximizeEconomy": "placeholder: Beschreibung Wirtschaft maximieren",
+        "minimizeNLoad": "placeholder: Beschreibung N-Belastung minimieren",
+        "maximizeEconomyNLoad": "placeholder: Beschreibung Max. Wirtschaft & min. N-Belastung"
+      },
+      "viewDetails": "Details anzeigen",
+      "statusValue": {
+        "success": "Erfolg",
+        "nonOptimal": "Nicht optimal",
+        "pending": "Berechnung",
+        "failed": "Keine Lösung"
+      },
+      "statusDescription": {
+        "success": "Placeholder: success description",
+        "nonOptimal": "Placeholder: non optimal description",
+        "pending": "Placeholder: pending description",
+        "failed": "Placeholder: failed description"
+      }
+    },
+      "AlternativeConfigurationDialog": {
+        "title": "Alternative Konfigurationsübersicht",
+        "description": "Placeholder: Die Einschränkungen für die Alternative {name} sind unten dargestellt."
+      }
+  },
+  "RegionPage": {
+    "chooseRegion": "Region auswählen",
+    "chooseRegionDescription": "Wählen Sie eine Region, um Alternativen zu vergleichen und zu erkunden",
+    "alternativesFor": "Alternativen für"
+  },
+  "AlternativeTable": {
+    "search": "Name oder Zieltyp suchen",
+    "showing": "Zeige {start} bis {end} von {total} Ergebnissen"
+  },
+  "NavMenu": {
+    "my_alternatives": "Alternativen",
+    "create_new_alternative": "Neue Alternative erstellen",
+    "my_models": "Meine Alternativen",
+    "regions": "Region",
+    "chooseRegion": "Region auswählen",
+    "back": "Zurück"
+  },
+  "Alternative": {
+    "switch_goal_type_title": "Zieltyp wechseln",
+    "switch_goal_type_description": "Sind Sie sicher, dass Sie zu einem anderen Zieltyp wechseln möchten? Dies wird Ihre aktuellen Einschränkungen zurücksetzen",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "noChartData": "Keine Diagrammdaten",
+    "noConstraintData": "Keine Einschränkungsdaten",
+    "create_alternative": "Alternative Modell erstellen",
+    "configure_model": "Modell konfigurieren",
+    "addAlternative": "Alternative hinzufügen",
+    "submit": "Absenden",
+    "name": "Name",
+    "alternative_name_placeholder": "Name der Alternative",
+    "name_min_length": "Der Name muss mindestens 2 Zeichen lang sein",
+    "model": "Modell",
+    "select_model": "Modell auswählen",
+    "select_model_required": "Bitte ein Modell auswählen",
+    "n_load": "Änderung der gesamten N-Belastung",
+    "economy": "Änderung der gesamten Wirtschaft",
+    "constraints": "Einschränkungen",
+    "grass_fields": "Nur neue Grasflächen erlauben...",
+    "single_constraint": "Nur eine einzelne erlauben...",
+    "new_grass_constraint": "Nur neue Grasflächen auf...",
+    "areaChange_constraint": "Nur einen Prozentsatz der Fläche ändern lassen",
+    "fieldsChange_constraint": "Nur einen Prozentsatz der Felder ändern lassen",
+    "area": "Fläche",
+    "fields": "Felder",
+    "nextButton": "Weiter",
+    "backButton": "Zurück",
+    "minValue": "Niedrigster Wert",
+    "maxValue": "Höchster Wert",
+    "nLoadMaxLimit": "Max. N-Belastungsgrenze",
+    "economyMinLimit": "Min. Wirtschaftsgrenze",
+    "genesis_description": "Schnell und effizient für einfache Szenarien",
+    "explorer_description": "Ausgewogene Leistung für die meisten Anwendungsfälle",
+    "quantum_description": "Fortgeschrittene Verarbeitung für komplexe Szenarien",
+    "result": "Ergebnis",
+    "result_description": "Ergebnis des Modells",
+    "alternative_name": "Alternativer Name",
+    "fieldsShown": "Kartenfarben",
+    "alternative": "Alternative",
+    "diagramName": {
+      "Crops In Rotation": "Kulturen in der Fruchtfolge",
+      "Rotations": "Fruchtfolge"
+    },
+    "statusquo": "Status Quo",
+    "difference": "Difference",
+    "comparisonDescription": "Klicken Sie, um den Unterschied zwischen den beiden zu sehen, farblich nach Verhältniswert",
+    "alternativeDescription": "Klicken Sie, um alternative Kartenfarben zu sehen",
+    "statusQuoDescription": "Klicken Sie, um die Status-quo-Kartenfarben zu sehen",
+    "selected_model": "Neural Genesis",
+    "model_results": "Modellergebnisse",
+    "nLoadChange": "Änderung der N-Belastung:",
+    "legendTitle": "Legende",
+    "economyChange": "Änderung der Wirtschaft:",
+    "biodiversity": "Biodiversität:",
+    "carbon_storage": "Kohlenstoffspeicherung:",
+    "social_impact": "Soziale Auswirkungen:",
+    "distanceToBiogas": "Entfernung zur Biogasanlage:",
+    "areaChange": "Flächenänderung:",
+    "fieldsChange": "Feldänderung:",
+    "value_range_names": {
+      "maximizeEconomy": "Änderung der N-Belastung",
+      "minimizeNLoad": "Änderung der Wirtschaft"
+    },
+    "value_range_descriptions": {
+      "maximizeEconomy": "Platzhalter: Wertebereich für die Einschränkung",
+      "minimizeNLoad": "Platzhalter: Wertebereich für die Einschränkung"
+    },
+    "value_ranges": "Wertebereich",
+    "goal_names": {
+      "maximizeEconomy": "Wirtschaft maximieren",
+      "minimizeNLoad": "N-Belastung minimieren",
+      "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung"
+    },
+    "goal_descriptions": {
+      "maximizeEconomy": "Maximieren Sie die gesamte Wirtschaft der Region",
+      "minimizeNLoad": "Minimieren Sie die gesamte N-Belastung der Region",
+      "maximizeEconomyNLoad": "Maximieren Sie die Wirtschaft pro N-Belastung"
+    },
+    "goal_selection": "Zielauswahl",
+    "select_goal": "Ein Ziel auswählen",
+    "disabled": "Deaktiviert",
+    "variableTypes": {
+      "crop": "Fruchtfolge",
+      "economy": "Wirtschaft",
+      "nLoad": "Nitratbelastung",
+      "nature": "Natur"
+    },
+    "isStatusQuoDescription": "Klicken, um alternative Kartenfarben anzuzeigen",
+    "isNotStatusQuoDescription": "Klicken, um Status Quo Kartenfarben anzuzeigen",
+    "fieldsChangeDescription": "Beschreibender Text, was diese Einschränkung bedeutet",
+    "areaChangeDescription": "Beschreibender Text, was diese Einschränkung bedeutet",
+    "natureValueDescription": "Beschreibender Text, was diese Einschränkung bedeutet",
+    "singleFarmerImpactDescription": "Beschreibender Text, was diese Einschränkung bedeutet",
+    "distanceToBiogasDescription": "Beschreibender Text, was diese Einschränkung bedeutet",
+    "goals": {
+      "maximizeEconomy": "Wirtschaft maximieren",
+      "minimizeNLoad": "N-Belastung minimieren",
+      "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung",
+      "maximizeEconomy_description": "Maximieren Sie die gesamte Wirtschaft der Region",
+      "minimizeNLoad_description": "Minimieren Sie die gesamte N-Belastung der Region",
+      "maximizeEconomyNLoad_description": "Maximieren Sie die gesamte Wirtschaft und minimieren Sie die N-Belastung der Region"
+    },
+    "singleFarmerImpact": "Auswirkung auf einzelne Landwirte",
+    "natureValue": "Naturwert",
+    "charts": "Diagramme",
+    "cropsInRotation": "Kulturen in der Fruchtfolge",
+    "rotations": "Fruchtfolgen",
+    "alternativeOverview": "Alternative Übersicht"
+  },
+  "ResultDetailsPanel": {
+    "seeDetails": "Details anzeigen",
+    "statusTitle": "Status",
+    "note": "Notizen",
+    "createdAt": "Erstellt am",
+    "goalType": "Zieltyp",
+    "salary": "Gehalt",
+    "salaryValue": "${value}",
+    "about": "Über",
+    "lastUpdated": "Zuletzt aktualisiert am {date}",
+    "status": {
+      "success": "Erfolgreich",
+      "pending": "Berechnung",
+      "failed": "Fehlgeschlagen"
+    }
+  },
+  "AlternativeResultCard": {
+    "economyChange": "Änderung der Wirtschaft",
+    "summary": "Zusammenfassung",
+    "nLoadChange": "Änderung der N-Belastung",
+    "constraints": "Einschränkungen",
+    "min": "Min",
+    "max": "Max",
+    "goalType": "Zieltyp",
+    "distanceToBiogas": "Entfernung zur Biogasanlage:",
+    "areaChange": "Flächenänderung:",
+    "fieldsChange": "Feldänderung:",
+    "singleFarmerImpact": "Auswirkung auf einzelne Landwirte",
+    "natureValue": "Naturwert"
+  },
+  "AlternativeComparisonCard": {
+    "cardTitle": "Alternativer Vergleich",
+    "summaryTitle": "Zusammenfassung",
+    "constraintsTitle": "Einschränkungen",
+    "selectAlternative": "Alternative zum Vergleich auswählen",
+    "economy": "Wirtschaft",
+    "nload": "N-Belastung",
+    "nature": "Natur",
+    "consistency": "Konsistenz",
+    "farmEconomy": "Landwirtschaft",
+    "nloadPerEcon": "N-Belastung pro Wirtschaft",
+    "nbalance": "N-Bilanz",
+    "fieldConsistency": "Feldkonsistenz",
+    "distanceToBiogas": "Entfernung zur Biogasanlage",
+    "singleFarmerImpact": "Auswirkung auf Einzellandwirt",
+    "natureValue": "Naturwert",
+    "areaChange": "Flächenänderung",
+    "fieldsChange": "Felderänderung",
+    "raw": "Raw",
+    "statusQuo":"Status Quo",
+    "ratio": "Ratio",
+    "tableView": "Tabellenansicht",
+    "radarView": "Radaransicht"
+  },
+  "LocaleSwitcher": {
+    "label": "Sprache wählen",
+    "en": "English",
+    "de": "Deutsch",
+    "dk": "Dansk"
+  },
+  "LoginForm": {
+    "unexpectedSignInStatus": "Unerwarteter Anmeldestatus",
+    "signinError": "Anmeldefehler",
+    "username": "Benutzername",
+    "usernamePlaceholder": "Benutzernamen eingeben",
+    "oauthError": "OAuth-Fehler: {provider}",
+    "verificationFailed": "Überprüfung fehlgeschlagen",
+    "verificationError": "Überprüfungsfehler",
+    "appTitle": "Entscheidungsunterstützungstool",
+    "email": "E-Mail",
+    "emailPlaceholder": "example@example.de",
+    "password": "Passwort",
+    "login": "Anmelden",
+    "signInWith": "Anmelden mit",
+    "noAccount": "Kein Konto?",
+    "signOut": "Abmelden",
+    "signUp": "Registrieren",
+    "signUpWith": "Registrieren mit",
+    "orContinueWith": "Oder weiter mit",
+    "microsoft": "Microsoft",
+    "agreementText": "Mit der Anmeldung stimmen Sie unseren",
+    "termsOfService": "Nutzungsbedingungen",
+    "privacyPolicy": "Datenschutzrichtlinien",
+    "cookiePolicy": "Cookie-Richtlinien",
+    "and": "und",
+    "signingIn": "Anmeldung läuft..."
+  },
+  "DisclaimerDialog": {
+    "title": "Disclaimer",
+    "description": "Diese Anwendung soll Ihre Analyse und Planung unterstützen. Sie ersetzt weder Ihr eigenes Urteil noch unabhängige professionelle Beratung. Sie tragen die alleinige Verantwortung für finanzielle oder geschäftliche Entscheidungen, die Sie auf Grundlage von Informationen aus der Anwendung treffen.",
+    "acceptTerms": "Durch Ankreuzen des Kästchens akzeptieren Sie die oben genannten Geschäftsbedingungen.",
+    "acceptTermsError": "Sie müssen die Geschäftsbedingungen akzeptieren, um fortzufahren.",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen"
+  },
+  "AlternativeFields": {
+    "fieldNames": {
+      "economy": "Wirtschaft",
+      "nload": "N-Belastung",
+      "nature": "Natur",
+      "consistency": "Konsistenz",
+      "farmEconomy": "Landwirtschaft",
+      "nloadPerEcon": "N-Belastung pro Wirtschaft",
+      "nbalance": "N-Bilanz",
+      "fieldConsistency": "Feldkonsistenz",
+      "Distance to Biogas": "Entfernung zur Biogasanlage",
+      "Single Farmer Impact": "Auswirkung auf einzelne Landwirte",
+      "Nature Value": "Naturwert",
+      "Area Change": "Flächenänderung",
+      "Fields Change": "Felderänderung",
+      "Percentage of farm type change": "Prozentsatz der Betriebstypänderung"
+    },
+    "fieldDescriptions": {
+      "economy": "placeholder: Kurzinfo Wirtschaft",
+      "nload": "placeholder: Kurzinfo N-Belastung",
+      "nature": "placeholder: Kurzinfo Natur",
+      "consistency": "placeholder: Kurzinfo Konsistenz",
+      "farmEconomy": "placeholder: Kurzinfo Landwirtschaft",
+      "nloadPerEcon": "placeholder: Kurzinfo N-Belastung pro Wirtschaft",
+      "nbalance": "placeholder: Kurzinfo N-Bilanz",
+      "fieldConsistency": "placeholder: Kurzinfo Feldkonsistenz",
+      "Distance to Biogas": "placeholder: Entfernung zur Biogasanlage",
+      "Single Farmer Impact": "placeholder: Auswirkung auf einzelne Landwirte",
+      "Nature Value": "placeholder: Naturwert",
+      "Area Change": "placeholder: Flächenänderung",
+      "Fields Change": "placeholder: Felderänderung",
+      "Percentage of farm type change": "placeholder: Prozentsatz der Betriebstypänderung"
+    }
+  }
+}
