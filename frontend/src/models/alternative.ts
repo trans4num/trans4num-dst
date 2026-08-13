@@ -9,7 +9,7 @@ export type Alternative = {
   id: string
   name: string
   regionId: string
-  status: "pending" | "success" | "failed" | "processing" | "nonOptimal"
+  status: "success" | "failed" | "processing" | "nonOptimal"
   model?: AlternativeModel
   summary?: AlternativeResultSummary
   charts?: AlternativeChart[]
@@ -96,4 +96,3 @@ export const alternativeFormSchema = z.object({
 })
 
 export type AlternativeFormValues = z.infer<typeof alternativeFormSchema>
-

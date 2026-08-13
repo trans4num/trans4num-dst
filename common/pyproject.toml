@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trans4num-common"
+version = "0.1.0"
+description = "Shared datamodel for trans4num services"
+requires-python = ">=3.12"
+
+[tool.setuptools]
+packages = ["shared_datamodel"]

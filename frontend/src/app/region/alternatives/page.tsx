@@ -20,7 +20,7 @@ import { buildAlternativeRoute, buildCreateAlternativeRoute } from "@/lib/routes
 import { type Alternative } from "@/models/alternative";
 
 const TEN_SECONDS_IN_MILLISECONDS = 10000;
-type TabKey = "completed" | "pending" | "all";
+type TabKey = "completed" | "processing" | "all";
 
 export default function AlternativesPage() {
   const t = useTranslations("HomePage");
@@ -38,7 +38,7 @@ export default function AlternativesPage() {
   const tabs = [
     { key: "all" as TabKey, displayValue: t("tabs.all") },
     { key: "completed" as TabKey, displayValue: t("tabs.completed") },
-    { key: "pending" as TabKey, displayValue: t("tabs.pending") },
+    { key: "processing" as TabKey, displayValue: t("tabs.processing") },
   ];
 
   const { alternatives, statusQuo, isLoading } = useAlternatives(
@@ -51,8 +51,8 @@ export default function AlternativesPage() {
     switch (activeTab) {
       case "completed":
         return alternatives.filter((alt) => alt.status === "success");
-      case "pending":
-        return alternatives.filter((alt) => alt.status === "pending" || alt.status === "processing");
+      case "processing":
+        return alternatives.filter((alt) => alt.status === "processing");
       default:
         return alternatives;
     }

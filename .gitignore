@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+
+# Local backend configuration and generated data
+backend/config.json
+backend/src/data/*
+backend/dist/
+backend/.pixi/
+
+# Local engine data and environments
+engine/.venv/
+engine/.pixi/
+engine/data/
+engine/dataset/
+engine/simulations/
+engine/simulations.zip
+
+# Build output
+frontend/dist/

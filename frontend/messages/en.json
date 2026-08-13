@@ -11,7 +11,7 @@
     },
     "tabs": {
       "completed": "Completed",
-      "pending": "Calculating",
+      "processing": "Calculating",
       "all": "All"
     },
     "columns": {
@@ -38,13 +38,13 @@
       "statusValue": {
         "success": "Success",
         "nonOptimal": "Non Optimal Solution",
-        "pending": "Calculating",
+        "processing": "Calculating",
         "failed": "No Solution"
       },
       "statusDescription": {
         "success": "Placeholder: success description",
         "nonOptimal": "Placeholder: non optimal description",
-        "pending": "Placeholder: pending description",
+        "processing": "Placeholder: processing description",
         "failed": "Placeholder: failed description"
       }
     },
@@ -193,7 +193,7 @@
     "lastUpdated": "Last updated {date}",
     "status": {
       "success": "Success",
-      "pending": "Calculating",
+      "processing": "Calculating",
       "failed": "Failed"
     }
   },

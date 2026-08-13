@@ -1,0 +1,14 @@
+name: t4n
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - gdal
+  - pip
+  - pip:
+    - pandas
+    - matplotlib
+    - ortools
+    - simple_term_menu
+    - geojson_pydantic
+    - boto3

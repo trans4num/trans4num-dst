@@ -1,0 +1,296 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source_data_uri="${TRANS4NUM_SOURCE_DATA_URI:-}"
+region_id=""
+build_engine=true
+engine_started=false
+backend_pid=""
+frontend_pid=""
+
+usage() {
+    cat <<'EOF'
+Usage:
+  ./trans4num [local] [options]
+  ./trans4num engine [options]
+  ./trans4num download [options]
+  ./trans4num stop
+
+Commands:
+  local       Start the engine, backend, and frontend (default).
+  engine      Download source data if needed and start the engine only.
+  download    Download the engine source data only.
+  stop        Stop the local engine container.
+
+Options:
+  --source-data-uri URI  S3 prefix containing the engine source files.
+  --region UUID           Create Status Quo for this region after engine startup.
+  --no-build              Do not rebuild the engine Docker image.
+  -h, --help              Show this help.
+
+The source-data URI can also be supplied through
+TRANS4NUM_SOURCE_DATA_URI. When source data is missing, local interactive
+runs prompt for the URI.
+EOF
+}
+
+fail() {
+    printf 'Error: %s\n' "$1" >&2
+    exit 1
+}
+
+require_command() {
+    command -v "$1" >/dev/null 2>&1 || fail "The '$1' command is required."
+}
+
+check_docker_compose() {
+    require_command docker
+    docker compose version >/dev/null 2>&1 || \
+        fail 'Docker Compose is required (try: docker compose version).'
+}
+
+parse_options() {
+    while (($# > 0)); do
+        case "$1" in
+            --source-data-uri)
+                (($# >= 2)) || fail '--source-data-uri requires a value.'
+                source_data_uri="$2"
+                shift 2
+                ;;
+            --source-data-uri=*)
+                source_data_uri="${1#*=}"
+                shift
+                ;;
+            --region)
+                (($# >= 2)) || fail '--region requires a value.'
+                region_id="$2"
+                shift 2
+                ;;
+            --region=*)
+                region_id="${1#*=}"
+                shift
+                ;;
+            --no-build)
+                build_engine=false
+                shift
+                ;;
+            -h|--help)
+                usage
+                exit 0
+                ;;
+            *)
+                fail "Unknown option or argument: $1"
+                ;;
+        esac
+    done
+}
+
+validate_region() {
+    if [[ -n "$region_id" && ! "$region_id" =~ ^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$ ]]; then
+        fail "Invalid region UUID: $region_id"
+    fi
+}
+
+ensure_source_data_uri() {
+    if [[ -z "$source_data_uri" && -t 0 ]]; then
+        printf 'S3 URI containing the engine source data (s3://bucket/prefix): ' >&2
+        read -r source_data_uri
+    fi
+
+    [[ -n "$source_data_uri" ]] || \
+        fail 'Set TRANS4NUM_SOURCE_DATA_URI or pass --source-data-uri.'
+    [[ "$source_data_uri" == s3://* ]] || \
+        fail 'The source data URI must start with s3://.'
+    export TRANS4NUM_SOURCE_DATA_URI="${source_data_uri%/}"
+}
+
+source_data_is_ready() {
+    [[ -f "$repo_root/engine/data/Fields2023_DataDST_May2025.csv" && \
+       -f "$repo_root/engine/data/Marker_2023_n61489.zip" ]]
+}
+
+ensure_writable_directory() {
+    local directory="$1"
+    mkdir -p "$directory"
+    if [[ -w "$directory" ]]; then
+        return
+    fi
+
+    # Docker may have created an empty bind-mount directory as root. Recreate
+    # only empty directories; never remove a directory containing user data.
+    if rmdir "$directory" 2>/dev/null; then
+        mkdir -p "$directory"
+        return
+    fi
+
+    fail "Directory is not writable: $directory. Fix ownership with: sudo chown -R $(id -u):$(id -g) \"$directory\""
+}
+
+download_source_data_if_needed() {
+    ensure_writable_directory "$repo_root/engine/data"
+    if source_data_is_ready; then
+        return
+    fi
+
+    ensure_source_data_uri
+    require_command aws
+    (
+        cd "$repo_root/engine"
+        ./scripts/download_data.sh
+    )
+}
+
+wait_for_engine() {
+    local invoke_url='http://localhost:8080/2015-03-31/functions/function/invocations'
+    for attempt in {1..60}; do
+        if curl --silent --show-error --max-time 2 "$invoke_url" >/dev/null 2>&1; then
+            return
+        fi
+        sleep 1
+    done
+    fail 'The local engine did not become ready on port 8080.'
+}
+
+initialize_region() {
+    if [[ -z "$region_id" ]]; then
+        return 0
+    fi
+
+    local invoke_url='http://localhost:8080/2015-03-31/functions/function/invocations'
+    local payload
+    payload=$(printf \
+        '{"Records":[{"body":"{\\"region\\":\\"%s\\",\\"create_status_quo\\":true}"}]}' \
+        "$region_id")
+
+    curl --fail-with-body -sS -X POST "$invoke_url" \
+        -H 'Content-Type: application/json' \
+        --data "$payload"
+    printf '\nStatus Quo is ready or already existed for %s.\n' "$region_id"
+}
+
+start_engine() {
+    require_command curl
+    check_docker_compose
+    download_source_data_if_needed
+    ensure_writable_directory "$repo_root/backend/src/data/simulations"
+    export TRANS4NUM_CONTAINER_UID="${TRANS4NUM_CONTAINER_UID:-$(id -u)}"
+    export TRANS4NUM_CONTAINER_GID="${TRANS4NUM_CONTAINER_GID:-$(id -g)}"
+
+    local compose_args=(compose -f "$repo_root/compose.yaml" up -d)
+    if [[ "$build_engine" == true ]]; then
+        compose_args+=(--build)
+    fi
+    compose_args+=(engine)
+    docker "${compose_args[@]}"
+    engine_started=true
+    wait_for_engine
+    initialize_region
+    printf 'Local engine is running at http://localhost:8080.\n'
+}
+
+setup_backend() {
+    require_command pixi
+    (
+        cd "$repo_root/backend"
+        pixi run setup-config
+        mkdir -p src/data/regions src/data/simulations
+    )
+}
+
+setup_frontend() {
+    require_command npm
+    if [[ ! -d "$repo_root/frontend/node_modules" ]]; then
+        (
+            cd "$repo_root/frontend"
+            npm ci
+        )
+    fi
+}
+
+run_local() {
+    require_command curl
+    local invoke_url='http://localhost:8080/2015-03-31/functions/function/invocations'
+
+    cleanup() {
+        local exit_code=$?
+        trap - EXIT INT TERM
+        [[ -z "$backend_pid" ]] || kill "$backend_pid" 2>/dev/null || true
+        [[ -z "$frontend_pid" ]] || kill "$frontend_pid" 2>/dev/null || true
+        [[ -z "$backend_pid" ]] || wait "$backend_pid" 2>/dev/null || true
+        [[ -z "$frontend_pid" ]] || wait "$frontend_pid" 2>/dev/null || true
+        if [[ "$engine_started" == true ]]; then
+            docker compose -f "$repo_root/compose.yaml" down
+        fi
+        exit "$exit_code"
+    }
+    trap cleanup EXIT INT TERM
+
+    start_engine
+    setup_backend
+    setup_frontend
+
+    (
+        cd "$repo_root/backend"
+        exec env \
+            TRANS4NUM_ENGINE_JOB_QUEUE_TYPE=local \
+            TRANS4NUM_ENGINE_JOB_QUEUE_URL="$invoke_url" \
+            pixi run start
+    ) &
+    backend_pid=$!
+
+    (
+        cd "$repo_root/frontend"
+        exec npm run dev
+    ) &
+    frontend_pid=$!
+
+    printf '\nLocal services are running. Press Ctrl-C to stop them.\n'
+    wait "$backend_pid" "$frontend_pid"
+}
+
+command_name="local"
+if (($# > 0)); then
+    case "$1" in
+        local|engine|download|stop|help)
+            command_name="$1"
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --*)
+            ;;
+        *)
+            fail "Unknown command: $1"
+            ;;
+    esac
+fi
+
+if [[ "$command_name" == help ]]; then
+    usage
+    exit 0
+fi
+
+if [[ "$command_name" == stop ]]; then
+    check_docker_compose
+    docker compose -f "$repo_root/compose.yaml" down
+    exit 0
+fi
+
+parse_options "$@"
+validate_region
+
+case "$command_name" in
+    local)
+        run_local
+        ;;
+    engine)
+        start_engine
+        ;;
+    download)
+        download_source_data_if_needed
+        printf 'Engine source data is ready in engine/data.\n'
+        ;;
+esac

@@ -10,8 +10,6 @@ interface GoalStatusBadgeProps {
 export function GoalStatusBadge({ status }: GoalStatusBadgeProps) {
     const t = useTranslations("HomePage.columns")
 
-    if (status === "processing") status = "pending";
-
     return (
 
     <Tooltip>

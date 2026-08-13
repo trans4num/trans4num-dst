@@ -28,16 +28,17 @@ The production output is written to `dist/`.
 
 No local secrets or environment variables are required.
 
-Public runtime values are defined in [src/lib/public-config.ts](./src/lib/public-config.ts):
+Public runtime values are defined in [src/lib/public-config.ts](./src/lib/public-config.ts).
+The API URL can be set at build time with `VITE_API_BASE_URL`:
 
 ```ts
 export const PUBLIC_CONFIG = {
-  apiBaseUrl: "https://trans4num.cordulus.dev/api/v1",
+  apiBaseUrl: "http://localhost:8000/api/v1",
   mapStyle: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
 } as const;
 ```
 
-If the backend base URL or map style changes, update that file.
+If the backend base URL changes, set `VITE_API_BASE_URL` before building.
 
 ## Auth Model
 

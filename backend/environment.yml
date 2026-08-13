@@ -1,0 +1,10 @@
+name: trans4num
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - fastapi[standard]
+      - geojson_pydantic
+      - boto3

@@ -11,7 +11,7 @@
     },
     "tabs": {
       "completed": "Færdige",
-      "pending": "Udregner",
+      "processing": "Udregner",
       "all": "Alle"
     },
     "columns": {
@@ -38,13 +38,13 @@
       "statusValue": {
         "success": "Succes",
         "nonOptimal": "Ikke optimal løsning",
-        "pending": "Udregner",
+        "processing": "Udregner",
         "failed": "Ingen løsning"
       },
       "statusDescription": {
         "success": "Placeholder: success description",
         "nonOptimal": "Placeholder: non optimal description",
-        "pending": "Placeholder: pending description",
+        "processing": "Placeholder: processing description",
         "failed": "Placeholder: failed description"
       }
     },
@@ -194,7 +194,7 @@
     "lastUpdated": "Sidst opdateret {date}",
     "status": {
       "success": "Succes",
-      "pending": "Udregner",
+      "processing": "Udregner",
       "failed": "Mislykket"
     }
   },

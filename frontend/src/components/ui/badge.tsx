@@ -17,7 +17,7 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         success:
           "select-none border-transparent items-center gap-2 rounded-lg bg-green-100 px-4 py-2 text-green-600 hover:bg-green-200",
-        pending:
+        processing:
           "select-none border-transparent items-center gap-2 rounded-lg bg-yellow-100 px-4 py-2 text-yellow-600 hover:bg-yellow-200",
         outline: "text-foreground",
         failed:
@@ -40,7 +40,7 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   return (
     <div className={cn(badgeVariants({ variant }), className)} {...props}>
       {variant === "success" && <CheckCircle className="size-4" />}
-      {variant === "pending" && <Loader2 className="size-4 animate-spin" />}
+      {variant === "processing" && <Loader2 className="size-4 animate-spin" />}
       {variant === "failed" && <XCircle className="size-4" />}
       {variant === "nonOptimal" && <CircleCheck className="size-4" />}
       {props.children}

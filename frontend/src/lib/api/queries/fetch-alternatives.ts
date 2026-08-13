@@ -45,7 +45,7 @@ interface SimulationResponse {
     ]
   }
   created: string
-  status: "success" | "pending" | "failed" | "nonOptimal"
+  status: "success" | "processing" | "failed" | "nonOptimal"
   summary: Array<{
     name: string
     value: number

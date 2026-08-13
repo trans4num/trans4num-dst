@@ -1,0 +1,21 @@
+[workspace]
+name = "trans4num-backend"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64"]
+
+[dependencies]
+python = "3.12.*"
+pip = "*"
+
+[pypi-dependencies]
+fastapi = { version = "*", extras = ["standard"] }
+geojson-pydantic = "*"
+boto3 = "*"
+trans4num-common = { path = "../common", editable = true }
+
+[tasks]
+setup-config = "sh -c '[ -f config.json ] || cp config.default.json config.json'"
+start = "uvicorn src.main:app --reload --host 0.0.0.0 --port 8000"
+serve = "uvicorn src.main:app --host 0.0.0.0 --port 8000"
+bundle = "./scripts/create_bundle.sh dist/backend-bundle.zip"

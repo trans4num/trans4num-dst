@@ -1,0 +1,13 @@
+services:
+  engine:
+    build:
+      context: .
+      dockerfile: engine/Dockerfile
+    user: "${TRANS4NUM_CONTAINER_UID:-1000}:${TRANS4NUM_CONTAINER_GID:-1000}"
+    environment:
+      STORE_TYPE: local
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./engine/data:/var/task/data
+      - ./backend/src/data/simulations:/var/task/simulations

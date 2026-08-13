@@ -1,0 +1,10 @@
+{
+    "service-token": "some-token",
+    "login-username": "admin",
+    "login-password": "change-me",
+    "login-token-secret": "change-me-too",
+    "login-token-expiration-minutes": 60,
+    "cors-allow-origins": ["*"],
+    "store-type": "local",
+    "engine-job-queue-url": ""
+}
