@@ -51,6 +51,12 @@ class Store(IStore):
         return df.rename(columns={v: k for k, v in input_names.items() if v != k})
 
     def read_fields_shapefile(self, region_id: UUID) -> gdal.Dataset:
+        fake_geometry_file = "data/fake-fields.geojson"
+        if path.exists(fake_geometry_file) and not path.exists(
+            "data/Marker_2023_n61489.zip"
+        ):
+            return ogr.Open(fake_geometry_file)
+
         field_geometries_file = (
             "/vsizip/data/Marker_2023_n61489.zip/Marker_2023_n61489.shp"
         )

@@ -22,6 +22,22 @@ contains them. It can also be supplied non-interactively:
 ./trans4num --source-data-uri s3://YOUR_SOURCE_BUCKET/YOUR_PREFIX
 ```
 
+### Run with fake data
+
+From a clean checkout, collaborators without access to the private source data
+can generate a deterministic local dataset and start all services with:
+
+```bash
+./trans4num --fake-data
+```
+
+This creates 2,000 synthetic, non-overlapping grid fields, fake farm IDs,
+randomized field values, a synthetic region fallback when needed, and starts
+the default region with a Status Quo. No AWS access is required.
+
+Keep the command running while using the application. Press Ctrl-C in that
+terminal to stop the backend, frontend, and engine container.
+
 The same URI can be stored in `TRANS4NUM_SOURCE_DATA_URI`. To initialize a
 region with an idempotent Status Quo while starting locally, pass its UUID:
 
@@ -50,6 +66,7 @@ implemented by this repository's CLI.
 ### Prerequisites
 
 - Node.js and npm for the frontend.
+- Python 3 for fake-data generation.
 - [Pixi](https://pixi.sh/) for the backend Python environment.
 - Docker and Docker Compose for the engine.
 - `curl` and the command-line tools required by the source-data download script.

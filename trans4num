@@ -5,9 +5,11 @@ repo_root="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source_data_uri="${TRANS4NUM_SOURCE_DATA_URI:-}"
 region_id=""
 build_engine=true
+fake_data=false
 engine_started=false
 backend_pid=""
 frontend_pid=""
+fake_region_id="8b7127be-5cf8-4c2f-838e-b483724bcc58"
 
 usage() {
     cat <<'EOF'
@@ -25,6 +27,7 @@ Commands:
 
 Options:
   --source-data-uri URI  S3 prefix containing the engine source files.
+  --fake-data             Generate deterministic local data instead of using S3.
   --region UUID           Create Status Quo for this region after engine startup.
   --no-build              Do not rebuild the engine Docker image.
   -h, --help              Show this help.
@@ -75,6 +78,10 @@ parse_options() {
                 build_engine=false
                 shift
                 ;;
+            --fake-data)
+                fake_data=true
+                shift
+                ;;
             -h|--help)
                 usage
                 exit 0
@@ -110,6 +117,20 @@ source_data_is_ready() {
        -f "$repo_root/engine/data/Marker_2023_n61489.zip" ]]
 }
 
+fake_data_is_ready() {
+    [[ -f "$repo_root/engine/data/Fields2023_DataDST_May2025.csv" && \
+       -f "$repo_root/engine/data/fake-fields.geojson" && \
+       -f "$repo_root/engine/data/.trans4num-fake-data" && \
+       -f "$repo_root/backend/src/data/regions/$region_id/area.json" ]]
+}
+
+generate_fake_data() {
+    require_command python3
+    python3 "$repo_root/engine/scripts/generate_fake_data.py" \
+        --root "$repo_root" \
+        --region-id "$region_id"
+}
+
 ensure_writable_directory() {
     local directory="$1"
     mkdir -p "$directory"
@@ -129,6 +150,15 @@ ensure_writable_directory() {
 
 download_source_data_if_needed() {
     ensure_writable_directory "$repo_root/engine/data"
+    if [[ "$fake_data" == true ]]; then
+        if source_data_is_ready && ! fake_data_is_ready; then
+            fail 'Real engine data already exists. Remove engine/data or omit --fake-data.'
+        fi
+        if ! fake_data_is_ready; then
+            generate_fake_data
+        fi
+        return
+    fi
     if source_data_is_ready; then
         return
     fi
@@ -280,6 +310,9 @@ if [[ "$command_name" == stop ]]; then
 fi
 
 parse_options "$@"
+if [[ "$fake_data" == true && -z "$region_id" ]]; then
+    region_id="$fake_region_id"
+fi
 validate_region
 
 case "$command_name" in

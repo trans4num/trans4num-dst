@@ -95,7 +95,9 @@ def create_output(
 
         if field_id in field_ids:
             geom = feature.GetGeometryRef()
-            geom = geom.Simplify(10.0)
+            simplified_geom = geom.Simplify(10.0)
+            if simplified_geom is not None and not simplified_geom.IsEmpty():
+                geom = simplified_geom
             geom.Transform(transform)
             features.append(
                 {
