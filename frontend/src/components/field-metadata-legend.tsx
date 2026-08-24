@@ -13,6 +13,7 @@ interface FieldMetadataLegendProps {
   minValue?: number;
   maxValue?: number;
   colorScheme: ColorScheme;
+  dataType: string;
   getColor: (value: number, min: number, max: number, scheme: ColorScheme) => string;
 }
 
@@ -22,6 +23,7 @@ export default function FieldMetadataLegend({
   minValue = 0,
   maxValue = 100,
   colorScheme = "redToGreen",
+  dataType,
   getColor,
 }: FieldMetadataLegendProps) {
   const t = useTranslations("Alternative");
@@ -36,7 +38,7 @@ export default function FieldMetadataLegend({
   }, [minValue, maxValue, colorScheme, getColor]);
 
   return (
-    <Card className="h-full flex flex-col p-4">
+    <Card className="h-full w-64 flex flex-col p-4">
       <CardHeader className="p-0">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -65,6 +67,7 @@ export default function FieldMetadataLegend({
           >
             <div className="min-h-0 h-full flex flex-col">
               <Separator className="my-2" />
+              <p className="text-xs text-muted-foreground mb-2">{t(`legendDescription.${dataType}`)}</p>
               <div className="min-h-0 overflow-auto h-full">
                 {type === "categorical" ? (
                   <div className="flex flex-col gap-2">
