@@ -189,9 +189,9 @@ export default function AlternativePage() {
           const statusVal = statusQuoMap[id];
 
           if (typeof altVal === "number" && typeof statusVal === "number") {
-            const diff = statusVal === 0 ? 1 : altVal / statusVal;
+            const diff = statusVal === 0 ? 0 : ((altVal - statusVal) / statusVal) * 100;
             const colorScheme = selectedType === "nLoad" ? "greenToRed" : "redToGreen";
-            color = generateNumericColor(diff, 0, 2, colorScheme);
+            color = generateNumericColor(diff, -100, 100, colorScheme);
           } else {
             color = altVal === statusVal ? "grey" : "green";
           }
@@ -288,8 +288,9 @@ export default function AlternativePage() {
                           Changed: "green",
                         }}
                         type={selectedType === "crop" ? "categorical" : "numeric"}
-                        minValue={0}
-                        maxValue={2}
+                        minValue={-100}
+                        maxValue={100}
+                        unit="%"
                         dataType={selectedType}
                         colorScheme={selectedType === "nLoad" ? "greenToRed" : "redToGreen"}
                         getColor={generateNumericColor}
