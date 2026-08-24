@@ -235,7 +235,8 @@
     "statusQuo":"Status Quo",
     "ratio": "Ratio",
     "tableView": "Table View",
-    "radarView": "Radar View"
+    "radarView": "Radar View",
+    "nbalanceDescription": "Overall N-balance of the region. Inputs consist of N in manure (excreted N by livestock in the region), N as mineral fertilizers and other organic fertilizers. N input via biological fixation varies depending on the Alternative crop allocation.\n\nOutputs are N harvested with crops including crop residues and NH3 losses upon application.\n\nNote: Input values from manure and fertilizers are not linked to the crop allocation model and do not change during optimization. The N balance highlights the current nutrient situation and potential outcomes under the new crop allocation, serving as a basis for discussion on alternative input scenarios."
   },  
   "LocaleSwitcher": {
     "label": "Choose language",
