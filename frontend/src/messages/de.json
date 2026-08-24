@@ -233,7 +233,8 @@
     "statusQuo":"Status Quo",
     "ratio": "Ratio",
     "tableView": "Tabellenansicht",
-    "radarView": "Radaransicht"
+    "radarView": "Radaransicht",
+    "nbalanceDescription": "Gesamt-N-Bilanz der Region. Der Input besteht aus N in Gülle (von Nutztieren in der Region ausgeschiedenes N), N als Mineraldünger und anderem organischem Dünger. Der N-Eintrag durch biologische Fixierung variiert je nach Fruchtfolge der Alternative.\n\nDer Output ist mit Ernte geerntetes N, einschließlich Ernterückständen und NH3-Verlusten bei der Ausbringung.\n\nHinweis: Die Inputwerte aus Gülle und Dünger sind nicht an das Fruchtfolgemodell gekoppelt und ändern sich während der Optimierung nicht. Die N-Bilanz zeigt die aktuelle Nährstoffsituation und mögliche Ergebnisse unter der neuen Fruchtfolge und dient als Diskussionsgrundlage für alternative Input-Szenarien."
   },
   "LocaleSwitcher": {
     "label": "Sprache wählen",

@@ -236,7 +236,8 @@
     "statusQuo":"Status Quo",
     "ratio": "Ratio",
     "tableView": "Tabelvisning",
-    "radarView": "Radarvisning"
+    "radarView": "Radarvisning",
+    "nbalanceDescription": "Regionens samlede N-balance. Input består af N i gødning (N udskilt af husdyr i regionen), N som mineralsk gødning og anden organisk gødning. N-input via biologisk fiksering varierer afhængigt af alternativets afgrødefordeling.\n\nOutput er N høstet med afgrøder, inklusive afgrøderester og NH3-tab ved udbringning.\n\nBemærk: Inputværdier fra gødning og kunstgødning er ikke koblet til afgrødefordelingsmodellen og ændrer sig ikke under optimeringen. N-balancen fremhæver den nuværende næringsstofsituation og mulige udfald under den nye afgrødefordeling, og fungerer som grundlag for diskussion af alternative input-scenarier."
   },
   "LocaleSwitcher": {
     "label": "Vælg sprog",

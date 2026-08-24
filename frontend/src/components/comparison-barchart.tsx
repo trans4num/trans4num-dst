@@ -82,7 +82,10 @@ export default function ComparisonBarcharts( { alternatives, hasData: hasData }:
 }
 
 function BarChartCard( { charts }: { charts: BarChartWithAlternativeName[] } ) {
+  const t = useTranslations("AlternativeComparisonCard");
   const title = charts[0]?.chartName ?? "";
+  const isNBalance = title === "N-Balance";
+
   return (
     <Card>
       <CardHeader>
@@ -90,6 +93,12 @@ function BarChartCard( { charts }: { charts: BarChartWithAlternativeName[] } ) {
           <ChartBarBig className="size-6 mr-2 rotate-270" />
           <h4 className="text-lg font-semibold">{title}</h4>
         </div>
+
+        {isNBalance && (
+          <p className="text-xs text-muted-foreground whitespace-pre-line mt-2">
+            {t("nbalanceDescription")}
+          </p>
+        )}
       </CardHeader>
       <CardContent className="flex w-full flex-col gap-4">
         {charts.map((barChart, index) => (
