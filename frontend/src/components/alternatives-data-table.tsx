@@ -165,11 +165,7 @@ export function AlternativesDataTable({
                       data-state={row.original === selectedRow ? "selected" : undefined}
                       className="cursor-pointer hover:bg-muted/50 data-[state=selected]:bg-muted"
                       onClick={() => {
-                        if (getRowLink && row.getCanSelect()) {
-                          router.push(getRowLink(row.original));
-                        } else {
                           setClickedAlternative(row.original as Alternative);
-                        }
                       }}
                     >
                       {row.getVisibleCells().map((cell) => (
