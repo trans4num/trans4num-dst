@@ -125,6 +125,12 @@
     "model_results": "Modellergebnisse",
     "nLoadChange": "Änderung der N-Belastung:",
     "legendTitle": "Legende",
+    "legendDescription": {
+      "economy": "Durchschnittlicher wirtschaftlicher Ertrag von 7-jährigen Fruchtfolge [DKK/ha/Jahr]",
+      "nLoad": "N-Eintrag in den Fjord [kg N/ha]",
+      "nature": "Relativer Naturwert der Felder (DRAFT)",
+      "crop": "Frucht für jedes Feld (7-jährige Rotation)"
+    },
     "economyChange": "Änderung der Wirtschaft:",
     "biodiversity": "Biodiversität:",
     "carbon_storage": "Kohlenstoffspeicherung:",

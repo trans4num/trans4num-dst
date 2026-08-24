@@ -278,6 +278,7 @@ export default function AlternativePage() {
                         minValue={minMaxValue.min}
                         maxValue={minMaxValue.max}
                         colorScheme={selectedType === "nLoad" ? "blueToRed" : "redToGreen"}
+                        dataType={selectedType}
                         getColor={generateNumericColor}
                       />
                     ) : (
@@ -289,6 +290,7 @@ export default function AlternativePage() {
                         type={selectedType === "crop" ? "categorical" : "numeric"}
                         minValue={0}
                         maxValue={2}
+                        dataType={selectedType}
                         colorScheme={selectedType === "nLoad" ? "greenToRed" : "redToGreen"}
                         getColor={generateNumericColor}
                       />
