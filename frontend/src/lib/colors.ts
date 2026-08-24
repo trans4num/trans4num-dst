@@ -51,3 +51,25 @@ export const barchartColorPalette = Array.from({ length: BARCHART_COLOR_PALETTE_
 
 export const summaryColorPalette = ["#36A2EB", "#FF6384", "#4BC0C0", "#9966FF", "#AA425E", "#FF0000", "#00FF00"];
 export const statusQuoColor = "#FFCE56";
+
+export const nBalanceColorPalettes: Record<string, string[]> = {
+  Input: ["hsl(215 75% 35%)", "hsl(212 70% 48%)", "hsl(206 65% 62%)", "hsl(200 55% 75%)"],
+  Output: ["hsl(45 90% 45%)", "hsl(48 80% 65%)"],
+};
+
+export const nBalanceCategoryColors: Record<string, string> = {
+  Input: "hsl(212 70% 48%)",
+  Output: "hsl(45 90% 45%)",
+  Balance: "hsl(28 90% 52%)",
+};
+
+export function getNBalanceBarColor(categoryName: string, key: string, index: number): string {
+  if (categoryName === "Balance") {
+    return nBalanceCategoryColors[key] ?? barchartColorPalette[index % barchartColorPalette.length];
+  }
+  const palette = nBalanceColorPalettes[categoryName];
+  if (palette) {
+    return palette[index % palette.length];
+  }
+  return barchartColorPalette[index % barchartColorPalette.length];
+}
