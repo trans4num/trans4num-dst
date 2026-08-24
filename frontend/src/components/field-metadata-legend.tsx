@@ -14,6 +14,7 @@ interface FieldMetadataLegendProps {
   maxValue?: number;
   colorScheme: ColorScheme;
   dataType: string;
+  unit?: string
   getColor: (value: number, min: number, max: number, scheme: ColorScheme) => string;
 }
 
@@ -24,6 +25,7 @@ export default function FieldMetadataLegend({
   maxValue = 100,
   colorScheme = "redToGreen",
   dataType,
+  unit = "",
   getColor,
 }: FieldMetadataLegendProps) {
   const t = useTranslations("Alternative");
@@ -83,14 +85,14 @@ export default function FieldMetadataLegend({
                   </div>
                 ) : (
                   <div className="flex items-center flex-col gap-2 pt-4">
-                    <span className="text-xs text-gray-600 flex flex-col items-center"><p>{t("maxValue")}</p><b>{maxValue}</b></span>
+                    <span className="text-xs text-gray-600 flex flex-col items-center"><p>{t("maxValue")}</p><b>{maxValue}{unit}</b></span>
 
                     <div
                       className="w-3 h-[30vh] rounded-full relative cursor-pointer"
                       style={{ background: getColorAtPosition }}
                     />
 
-                    <span className="text-xs text-gray-600 flex flex-col items-center"><p>{t("minValue")}</p><b>{minValue}</b></span>
+                    <span className="text-xs text-gray-600 flex flex-col items-center"><p>{t("minValue")}</p><b>{minValue}{unit}</b></span>
                   </div>
                 )}
               </div>
