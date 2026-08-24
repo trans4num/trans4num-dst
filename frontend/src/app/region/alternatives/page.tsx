@@ -112,12 +112,18 @@ export default function AlternativesPage() {
               <div className="flex items-center justify-between gap-2">
                 <TabNavigation tabs={tabs} onTabChange={handleTabChange} />
                 <div className="flex items-center gap-2">
-                  <Link href={buildCreateAlternativeRoute(regionId)}>
-                    <Button variant="outline" disabled={selectedAlternativesArray.length !== 1}>
-                      {t("openAlternative")}
-                      <Map className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
+                  <Button 
+                    variant="outline" 
+                    disabled={selectedAlternativesArray.length !== 1}
+                    onClick={() => {
+                      if (selectedAlternativesArray[0]) {
+                        router.push(getRowLink(selectedAlternativesArray[0]));
+                      }
+                    }}
+                  >
+                    {t("openAlternative")}
+                    <Map className="ml-2 h-4 w-4" />
+                  </Button>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button disabled={selectedAlternativesArray.length === 0} variant="outline">
