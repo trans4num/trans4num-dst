@@ -18,8 +18,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartBarBig } from "lucide-react";
 import type { Alternative, AlternativeBarChart } from "@/models/alternative";
 import { valueRangeForChartData, ticksForValueRange } from "@/lib/helpers/barchart-axis-helpers";
-import { barchartColorPalette } from "@/lib/colors";
 import { useMemo } from "react";
+import { barchartColorPalette, getNBalanceBarColor } from "@/lib/colors";
 
 type AxisTickProps = RechartsTextProps & {
   payload: { value: string | number };
@@ -154,7 +154,7 @@ function renderBarChart(barChart: BarChartWithAlternativeName) {
                   <Legend />
                   <ReferenceLine y={0} stroke="#000" />
                   {valueKeys.map((key, index) => {
-                    const color = barchartColorPalette[index % barchartColorPalette.length];
+                    const color = getNBalanceBarColor (category.name, key, index);
                     return (
                       <Bar
                         key={key}
