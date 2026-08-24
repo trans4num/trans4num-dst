@@ -16,10 +16,12 @@ import {
 import type { Props as RechartsTextProps } from "recharts/types/component/Text";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartBarBig } from "lucide-react";
-import type { Alternative, AlternativeBarChart } from "@/models/alternative";
+import type { Alternative, AlternativeBarChart, BarchartData } from "@/models/alternative";
 import { valueRangeForChartData, ticksForValueRange } from "@/lib/helpers/barchart-axis-helpers";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { barchartColorPalette, getNBalanceBarColor } from "@/lib/colors";
+import { type TooltipProps } from "recharts";
+import { type NameType, type ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 type AxisTickProps = RechartsTextProps & {
   payload: { value: string | number };
@@ -122,58 +124,92 @@ function renderBarChart(barChart: BarChartWithAlternativeName) {
     <div className="w-full space-y-3">
       <AlternativeFacetTitle name={barChart.alternativeName} />
       <div className="flex w-full flex-row flex-wrap">
-        {chartData.map((category) => {
-          const valueKeys = Object.keys(category.values);
-          const data = [{ name: category.name, ...category.values }];
-          return (
-            <div
-              key={category.name}
-              className="h-[400px] min-w-[12rem] flex-1 basis-0 border-b border-border pb-2"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={data}
-                  margin={{
-                    top: 5,
-                    right: 0,
-                    left: 0,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeOpacity={0.5}/>
-                  <XAxis dataKey="name" />
-                  <YAxis
-                    type="number"
-                    width={100}
-                    tick={CustomYAxisTick}
-                    domain={yAxisDomain}
-                    ticks={yAxisTicks}
-                    allowDecimals
-                  />
-                  <Tooltip />
-                  <Legend />
-                  <ReferenceLine y={0} stroke="#000" />
-                  {valueKeys.map((key, index) => {
-                    const color = getNBalanceBarColor (category.name, key, index);
-                    return (
-                      <Bar
-                        key={key}
-                        dataKey={key}
-                        unit={barChart.unit}
-                        fill={color}
-                        fillOpacity={0.45}
-                        stroke={color}
-                        strokeWidth={1}
-                        radius={[5, 5, 0, 0]}
-                      />
-                    );
-                  })}
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          );
-        })}
+        {chartData.map((category) => (
+          <SingleCategoryChart
+            key={category.name}
+            category={category}
+            unit={barChart.unit}
+            yAxisDomain={yAxisDomain}
+            yAxisTicks={yAxisTicks}
+          />
+        ))}
       </div>
+    </div>
+  );
+}
+
+interface SingleCategoryChartProps {
+  category: BarchartData;
+  unit: string;
+  yAxisDomain: [number, number];
+  yAxisTicks: number[];
+}
+
+function SingleCategoryChart({ category, unit, yAxisDomain, yAxisTicks }: SingleCategoryChartProps) {
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+  const valueKeys = Object.keys(category.values);
+  const data = [{ name: category.name, ...category.values }];
+
+  return (
+    <div className="h-[400px] min-w-[12rem] flex-1 basis-0 border-b border-border pb-2">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          margin={{ top: 5, right: 0, left: 0, bottom: 5 }}
+        >
+          <CartesianGrid strokeOpacity={0.5} />
+          <XAxis dataKey="name" />
+          <YAxis
+            type="number"
+            width={100}
+            tick={CustomYAxisTick}
+            domain={yAxisDomain}
+            ticks={yAxisTicks}
+            allowDecimals
+          />
+          <Tooltip content={<SingleBarTooltip unit={unit} hoveredKey={hoveredKey} />} />
+          <Legend />
+          <ReferenceLine y={0} stroke="#000" />
+          {valueKeys.map((key, index) => {
+            const color = getNBalanceBarColor(category.name, key, index);
+            return (
+              <Bar
+                key={key}
+                dataKey={key}
+                unit={unit}
+                fill={color}
+                fillOpacity={0.45}
+                stroke={color}
+                strokeWidth={1}
+                radius={[5, 5, 0, 0]}
+                onMouseEnter={() => setHoveredKey(key)}
+                onMouseLeave={() => setHoveredKey(null)}
+              />
+            );
+          })}
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function SingleBarTooltip({
+  active,
+  payload,
+  unit,
+  hoveredKey,
+}: TooltipProps<ValueType, NameType> & { unit: string; hoveredKey: string | null }) {
+  if (!active || !payload || !hoveredKey) return null;
+
+  const entry = payload.find((p) => p.dataKey === hoveredKey);
+  if (!entry || typeof entry.value !== "number") return null;
+
+  return (
+    <div className="bg-white p-2 shadow-md rounded-md border border-gray-200 text-sm">
+      <span className="font-medium" style={{ color: entry.color }}>
+        {String(entry.dataKey)}:
+      </span>{" "}
+      {entry.value.toLocaleString("da-DK", { maximumFractionDigits: 0 })} {unit}
     </div>
   );
 }
