@@ -13,6 +13,13 @@ import { TabNavigation } from "@/components/tabs";
 import ComparisonBarcharts from "@/components/comparison-barchart";
 import { summaryColorPalette, statusQuoColor } from "@/lib/colors";
 
+const ZERO_DECIMAL_SUMMARY_FIELDS = new Set([
+  "economy",
+  "consistency",
+  "fieldConsistency",
+  "farmEconomy",
+  "nload",
+]);
 
 const isStatusQuo = (alternative: Alternative, statusQuo: Alternative) => alternative.id === statusQuo.id;
 
@@ -340,7 +347,9 @@ function TableSection({
                             : "transparent"}` }}
                         >
                           {typeof item[alt.id] === 'number' && !isNaN(item[alt.id] as number)
-                            ? (item[alt.id] as number).toLocaleString('da-DK', { maximumFractionDigits: 2 })
+                            ? (item[alt.id] as number).toLocaleString('da-DK', { 
+                              maximumFractionDigits: ZERO_DECIMAL_SUMMARY_FIELDS.has(item.key) ? 0 : 2,
+                            })
                             : item[alt.id]}
                         </td>
                       ))}
@@ -362,7 +371,9 @@ function TableSection({
                             : summaryColorPalette[index % summaryColorPalette.length] + "30"}` }}
                       >
                         {typeof item[alt.id] === 'number' && !isNaN(item[alt.id] as number)
-                          ? (item[alt.id] as number).toLocaleString('da-DK', { maximumFractionDigits: 2 })
+                          ? (item[alt.id] as number).toLocaleString('da-DK', { 
+                            maximumFractionDigits: ZERO_DECIMAL_SUMMARY_FIELDS.has(item.key) ? 0 : 2,
+                          })
                           : item[alt.id]}
                         {item.unit && <span className="text-xs ml-1">{item.unit}</span>}
                       </td>
