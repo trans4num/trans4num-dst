@@ -21,6 +21,23 @@ const ZERO_DECIMAL_SUMMARY_FIELDS = new Set([
   "nload",
 ]);
 
+const UNIT_OVERRIDES: Record<string, string> = {
+  nloadPerEcon: "kg N/1000 DKK",
+};
+
+const SCALE_OVERRIDES: Record<string, number> = {
+  nloadPerEcon: 1000,
+};
+
+function displayUnit(item: ChartDataPoint): string {
+  return UNIT_OVERRIDES[item.key] ?? item.unit;
+}
+
+function scaledValue(item: ChartDataPoint, rawValue: number): number {
+  const scale = SCALE_OVERRIDES[item.key] ?? 1;
+  return rawValue * scale;
+}
+
 const isStatusQuo = (alternative: Alternative, statusQuo: Alternative) => alternative.id === statusQuo.id;
 
 interface AlternativeComparisonCardProps {
@@ -310,7 +327,7 @@ function TableSection({
                         <TooltipTrigger asChild>
                       <th key={item.key} className={`py-2 px-3 font-medium text-left border-r last:border-r-0`}>
                         {tFields("fieldNames." + item.key)}
-                        {item.unit && <span className="text-xs ml-1">({item.unit})</span>}
+                        {displayUnit(item) && <span className="text-xs ml-1">({displayUnit(item)})</span>}
                       </th>
                       </TooltipTrigger>
                       <TooltipContent side="top">
@@ -347,7 +364,7 @@ function TableSection({
                             : "transparent"}` }}
                         >
                           {typeof item[alt.id] === 'number' && !isNaN(item[alt.id] as number)
-                            ? (item[alt.id] as number).toLocaleString('da-DK', { 
+                            ? scaledValue(item, item[alt.id] as number).toLocaleString('da-DK', { 
                               maximumFractionDigits: ZERO_DECIMAL_SUMMARY_FIELDS.has(item.key) ? 0 : 2,
                             })
                             : item[alt.id]}
@@ -371,11 +388,11 @@ function TableSection({
                             : summaryColorPalette[index % summaryColorPalette.length] + "30"}` }}
                       >
                         {typeof item[alt.id] === 'number' && !isNaN(item[alt.id] as number)
-                          ? (item[alt.id] as number).toLocaleString('da-DK', { 
+                          ? scaledValue(item, item[alt.id] as number).toLocaleString('da-DK', { 
                             maximumFractionDigits: ZERO_DECIMAL_SUMMARY_FIELDS.has(item.key) ? 0 : 2,
                           })
                           : item[alt.id]}
-                        {item.unit && <span className="text-xs ml-1">{item.unit}</span>}
+                        {displayUnit(item) && <span className="text-xs ml-1">{item.unit}</span>}
                       </td>
                     ))}
                   </tr>
