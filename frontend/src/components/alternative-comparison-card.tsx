@@ -392,7 +392,7 @@ function TableSection({
                             maximumFractionDigits: ZERO_DECIMAL_SUMMARY_FIELDS.has(item.key) ? 0 : 2,
                           })
                           : item[alt.id]}
-                        {displayUnit(item) && <span className="text-xs ml-1">{item.unit}</span>}
+                        {displayUnit(item) && <span className="text-xs ml-1">{displayUnit(item)}</span>}
                       </td>
                     ))}
                   </tr>
