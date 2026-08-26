@@ -19,7 +19,12 @@ export function AlternativeConfigurationDialog({ alternative, setAlternative }: 
             </DialogHeader>
             <DialogDescription asChild>
                 <div className="text-sm text-muted-foreground flex flex-col gap-4">
-                    {t("AlternativeConfigurationDialog.description", { name: alternative.name })}
+                    {t(
+                        alternative.status === "failed"
+                            ? "AlternativeConfigurationDialog.descriptionFailed"
+                            : "AlternativeConfigurationDialog.description",
+                        { name: alternative.name }
+                    )}
                     {alternative.model && 
                     <ConstraintsDisplayCard 
                     alternativeModel={alternative.model} />}

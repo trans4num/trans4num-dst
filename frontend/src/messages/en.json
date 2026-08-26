@@ -30,9 +30,9 @@
         "maximizeEconomyNLoad": "Max Economy & Min N-Load"
       },
       "goalTypeLong": {
-        "maximizeEconomy": "placeholder: Maximize Economy description",
-        "minimizeNLoad": "placeholder: Minimize N-Load description",
-        "maximizeEconomyNLoad": "placeholder: Max Economy & Min N-Load description"
+        "maximizeEconomy": "Maximizes the region's overall economic outcome under a defined nitrogen reduction target.",
+        "minimizeNLoad": "Minimizes nitrogen load while limiting the acceptable reduction in overall regional economy.",
+        "maximizeEconomyNLoad": "Optimizes the ratio between N load reduction and overall economy of the region."
       },
       "viewDetails": "View Details",
       "statusValue": {
@@ -42,15 +42,16 @@
         "failed": "No Solution"
       },
       "statusDescription": {
-        "success": "Placeholder: success description",
+        "success": "Model run completed successfully. A solution was found.",
         "nonOptimal": "Placeholder: non optimal description",
-        "processing": "Placeholder: processing description",
-        "failed": "Placeholder: failed description"
+        "processing": "Model run is in progress.",
+        "failed": "Model run ended without finding a solution. Consider less restrictive constraints or adjust goals."
       }
     },
     "AlternativeConfigurationDialog": {
         "title": "Alternative configuration overview",
-        "description": "Placeholder: The constraints chosen for alternative {name} are shown below."
+        "description": "The constraints chosen for alternative {name} are shown below.",
+        "descriptionFailed": "The constraints selected for {name} are shown below. No solution could be found with the current constraints. Consider relaxing some constraints or adjusting your goals."
       }
   },
   "RegionPage": {
@@ -297,20 +298,20 @@
     "Percentage of farm type change": "Percentage of farm type change"
   },
   "fieldDescriptions": {
-    "economy": "placeholder: Economy tooltip",
-    "nload": "placeholder: N Load tooltip",
-    "nature": "placeholder: Nature tooltip",
-    "consistency": "placeholder: Consistency tooltip",
-    "farmEconomy": "placeholder: Farm Economy tooltip",
-    "nloadPerEcon": "placeholder: N Load Per Economy tooltip",
+    "economy": "Total economic return across the region.",
+    "nload": "Total nitrogen load from the region to the fjord.",
+    "nature": "Overall impact on nature value across the region.",
+    "consistency": "Share of area remaining unchanged relative to status quo.",
+    "farmEconomy": "Share of farm income remaining for the most affected farmer.",
+    "nloadPerEcon": "Ratio of nitrogen load to economic return; lower values indicate better efficiency.",
     "nbalance": "placeholder: N Balance tooltip",
-    "fieldConsistency": "placeholder: Field Consistency tooltip",
-    "Distance to Biogas": "placeholder: Distance to Biogas",
-    "Single Farmer Impact": "placeholder: Single Farmer Impact",
-    "Nature Value": "placeholder: Nature Value",
-    "Area Change": "placeholder: Area Change",
-    "Fields Change": "placeholder: Fields Change",
-    "Percentage of farm type change": "placeholder: Percentage of farm type change"
+    "fieldConsistency": "Share of fields remaining unchanged relative to status quo.",
+    "Distance to Biogas": "Restricts changes to fields within a defined radius of biogas plants.",
+    "Single Farmer Impact": "Limits the economic loss for each individual farmer.",
+    "Nature Value": "Restricts changes to fields below a specified nature value threshold.",
+    "Area Change": "Limits the total area where crop rotations can be altered.",
+    "Fields Change": "Limits the number of fields where crop rotations can be altered.",
+    "Percentage of farm type change": "Limits the area where major changes between farm types are allowed."
   }
 }
 }
