@@ -76,7 +76,7 @@ export async function fetchAlternatives(regionId: string): Promise<AlternativesW
 
     const statusQuo = createAlternative(data.statusQuo);
     const alternatives = data.simulations.map(createAlternative) as Alternative[];
-
+    
     return {statusQuo, alternatives} as AlternativesWithStatusQuo;
   }
 

@@ -16,7 +16,7 @@
       "deleted": "Deleted"
     },
     "columns": {
-      "actions": "Compare or map view",
+      "actions": "Actions",
       "compareLong": "Compare with Status Quo",
       "mapLong": "Map view of alternative",
       "deleteLong": "Delete alternative",
