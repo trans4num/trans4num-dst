@@ -30,9 +30,9 @@
         "maximizeEconomyNLoad": "Maks økonomi & min N-belastning"
       },
       "goalTypeLong": {
-        "maximizeEconomy": "placeholder: Beskrivelse af Maksimer økonomi",
-        "minimizeNLoad": "placeholder: Beskrivelse af Minimer N-belastning",
-        "maximizeEconomyNLoad": "placeholder: Beskrivelse af Maks økonomi & min N-belastning"
+        "maximizeEconomy": "Maksimerer regionens samlede økonomiske resultat under et defineret mål for kvælstofreduktion.",
+        "minimizeNLoad": "Minimerer kvælstofudledningen, mens den acceptable reduktion af regionens samlede økonomi begrænses.",
+        "maximizeEconomyNLoad": "Optimerer forholdet mellem reduktion af kvælstofudledning og regionens samlede økonomi."
       },
       "viewDetails": "Se detaljer",
       "statusValue": {
@@ -42,15 +42,16 @@
         "failed": "Ingen løsning"
       },
       "statusDescription": {
-        "success": "Placeholder: success description",
+        "success": "Modelkørslen blev gennemført med succes. Der blev fundet en løsning.",
         "nonOptimal": "Placeholder: non optimal description",
-        "processing": "Placeholder: processing description",
-        "failed": "Placeholder: failed description"
+        "processing": "Modelkørslen er i gang.",
+        "failed": "Modelkørslen endte uden at finde en løsning. Overvej mindre restriktive begrænsninger eller juster målene."
       }
     },
       "AlternativeConfigurationDialog": {
         "title": "Alternativets konfigurationsoversigt",
-        "description": "Placeholder: De valgte begrænsninger for alternativet {name} er vist nedenfor."
+        "description": "Begrænsningerne valgt for {name} er vist nedenfor.",
+        "descriptionFailed": "Begrænsningerne valgt for {name} er vist nedenfor. Der kunne ikke findes en løsning med de nuværende begrænsninger. Overvej at lempe nogle begrænsninger eller justere dine mål."
       }
 
   },
@@ -297,20 +298,20 @@
       "Percentage of farm type change": "Procentdel af bedriftstypeændring"
     },
     "fieldDescriptions": {
-      "economy": "placeholder: Værktøjstip til økonomi",
-      "nload": "placeholder: Værktøjstip til N-belastning",
-      "nature": "placeholder: Værktøjstip til natur",
-      "consistency": "placeholder: Værktøjstip til konsistens",
-      "farmEconomy": "placeholder: Værktøjstip til landbrugsøkonomi",
-      "nloadPerEcon": "placeholder: Værktøjstip til N-belastning pr. økonomi",
+      "economy": "Regionens samlede økonomiske afkast.",
+      "nload": "Regionens samlede N-udledning til fjorden.",
+      "nature": "Samlet påvirkning af naturværdien i regionen.",
+      "consistency": "Andel af areal der forbliver uændret i forhold til status quo.",
+      "farmEconomy": "Andel af landbrugsindkomst der er tilbage for den hårdest ramte landmand.",
+      "nloadPerEcon": "Forholdet mellem N-udledning og økonomisk afkast; lavere værdier indikerer bedre effektivitet.",
       "nbalance": "placeholder: Værktøjstip til N-balance",
-      "fieldConsistency": "placeholder: Værktøjstip til markkonsistens",
-      "Distance to Biogas": "placeholder: Afstand til biogas",
-      "Single Farmer Impact": "placeholder: Påvirkning af enkelt landmand",
-      "Nature Value": "placeholder: Naturværdi",
-      "Area Change": "placeholder: Områdeændring",
-      "Fields Change": "placeholder: Markændring",
-      "Percentage of farm type change": "placeholder: Procentdel af bedriftstypeændring"
+      "fieldConsistency": "Andel af marker der forbliver uændrede i forhold til status quo.",
+      "Distance to Biogas": "Begrænser ændringer til marker inden for en defineret radius af biogasanlæg.",
+      "Single Farmer Impact": "Begrænser det økonomiske tab for den enkelte landmand.",
+      "Nature Value": "Begrænser ændringer til marker under en angivet naturværdi-tærskel.",
+      "Area Change": "Begrænser det samlede areal hvor afgrødefordelinger kan ændres.",
+      "Fields Change": "Begrænser antallet af marker hvor afgrødefordelinger kan ændres.",
+      "Percentage of farm type change": "Begrænser arealet hvor større ændringer mellem gårdtyper er tilladt."
     }
-  }
+}
 }

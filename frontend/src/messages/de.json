@@ -30,9 +30,9 @@
         "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung"
       },
       "goalTypeLong": {
-        "maximizeEconomy": "placeholder: Beschreibung Wirtschaft maximieren",
-        "minimizeNLoad": "placeholder: Beschreibung N-Belastung minimieren",
-        "maximizeEconomyNLoad": "placeholder: Beschreibung Max. Wirtschaft & min. N-Belastung"
+        "maximizeEconomy": "Maximiert das wirtschaftliche Gesamtergebnis der Region unter einem festgelegten Stickstoffreduktionsziel.",
+        "minimizeNLoad": "Minimiert den Stickstoffeintrag unter Begrenzung der akzeptablen Reduktion der regionalen Gesamtwirtschaft.",
+        "maximizeEconomyNLoad": "Optimiert das Verhältnis zwischen N-Reduktion und der Gesamtwirtschaft der Region."
       },
       "viewDetails": "Details anzeigen",
       "statusValue": {
@@ -42,15 +42,16 @@
         "failed": "Keine Lösung"
       },
       "statusDescription": {
-        "success": "Placeholder: success description",
+        "success": "Der Modelllauf wurde erfolgreich abgeschlossen. Eine Lösung wurde gefunden.",
         "nonOptimal": "Placeholder: non optimal description",
-        "processing": "Placeholder: processing description",
-        "failed": "Placeholder: failed description"
+        "processing": "Der Modelllauf läuft.",
+        "failed": "Der Modelllauf endete ohne eine Lösung zu finden. Erwägen Sie weniger restriktive Einschränkungen oder passen Sie die Ziele an."
       }
     },
       "AlternativeConfigurationDialog": {
         "title": "Alternative Konfigurationsübersicht",
-        "description": "Placeholder: Die Einschränkungen für die Alternative {name} sind unten dargestellt."
+        "description": "Die für {name} gewählten Einschränkungen werden unten angezeigt.",
+        "descriptionFailed": "Die für {name} gewählten Einschränkungen werden unten angezeigt. Für die aktuellen Einschränkungen konnte keine Lösung gefunden werden. Erwägen Sie, einige Einschränkungen zu lockern oder Ihre Ziele anzupassen."
       }
   },
   "RegionPage": {
@@ -294,20 +295,20 @@
       "Percentage of farm type change": "Prozentsatz der Betriebstypänderung"
     },
     "fieldDescriptions": {
-      "economy": "placeholder: Kurzinfo Wirtschaft",
-      "nload": "placeholder: Kurzinfo N-Belastung",
-      "nature": "placeholder: Kurzinfo Natur",
-      "consistency": "placeholder: Kurzinfo Konsistenz",
-      "farmEconomy": "placeholder: Kurzinfo Landwirtschaft",
-      "nloadPerEcon": "placeholder: Kurzinfo N-Belastung pro Wirtschaft",
-      "nbalance": "placeholder: Kurzinfo N-Bilanz",
-      "fieldConsistency": "placeholder: Kurzinfo Feldkonsistenz",
-      "Distance to Biogas": "placeholder: Entfernung zur Biogasanlage",
-      "Single Farmer Impact": "placeholder: Auswirkung auf einzelne Landwirte",
-      "Nature Value": "placeholder: Naturwert",
-      "Area Change": "placeholder: Flächenänderung",
-      "Fields Change": "placeholder: Felderänderung",
-      "Percentage of farm type change": "placeholder: Prozentsatz der Betriebstypänderung"
-    }
+      "economy": "Gesamtwirtschaftlicher Ertrag der Region.",
+      "nload": "Gesamter N-Eintrag der Region in den Fjord.",
+      "nature": "Gesamtauswirkung auf den Naturwert der Region.",
+      "consistency": "Anteil der Fläche, der im Vergleich zum Status Quo unverändert bleibt.",
+      "farmEconomy": "Anteil des Betriebseinkommens, der für den am stärksten betroffenen Landwirt verbleibt.",
+      "nloadPerEcon": "Verhältnis von N-Eintrag zu wirtschaftlichem Ertrag; niedrigere Werte deuten auf bessere Effizienz hin.",
+      "nbalance": "placeholder: N Balance tooltip",
+      "fieldConsistency": "Anteil der Felder, die im Vergleich zum Status Quo unverändert bleiben.",
+      "Distance to Biogas": "Beschränkt Änderungen auf Felder innerhalb eines festgelegten Radius um Biogasanlagen.",
+      "Single Farmer Impact": "Begrenzt den wirtschaftlichen Verlust für den einzelnen Landwirt.",
+      "Nature Value": "Beschränkt Änderungen auf Felder unterhalb eines festgelegten Naturwert-Schwellenwerts.",
+      "Area Change": "Begrenzt die Gesamtfläche, auf der Fruchtfolgen geändert werden können.",
+      "Fields Change": "Begrenzt die Anzahl der Felder, auf denen Fruchtfolgen geändert werden können.",
+      "Percentage of farm type change": "Begrenzt die Fläche, auf der größere Änderungen zwischen Betriebstypen zulässig sind."
   }
+}
 }
