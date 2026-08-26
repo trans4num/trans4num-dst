@@ -16,7 +16,7 @@
       "deleted": "Gelöscht"
     },
     "columns": {
-      "actions": "Vergleichen oder Kartenansicht",
+      "actions": "Aktionen",
       "compareLong": "Mit status quo vergleichen",
       "mapLong": "Kartenansicht der Alternative",
       "deleteLong": "Alternative löschen",
