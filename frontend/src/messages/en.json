@@ -16,7 +16,7 @@
     },
     "columns": {
       "actions": "Compare or map view",
-      "compareLong": "Compare with Status Quo",
+      "compareLong": "Compare with status quo",
       "mapLong": "Map view of alternative",
       "select": "Select",
       "name": "Alternative",

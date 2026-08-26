@@ -16,7 +16,7 @@
     },
     "columns": {
       "actions": "Vergleichen oder Kartenansicht",
-      "compareLong": "Mit Status Quo vergleichen",
+      "compareLong": "Mit status quo vergleichen",
       "mapLong": "Kartenansicht der Alternative",
       "select": "Auswählen",
       "name": "Alternative",
