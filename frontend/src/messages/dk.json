@@ -12,12 +12,20 @@
     "tabs": {
       "completed": "Færdige",
       "processing": "Udregner",
-      "all": "Alle"
+      "all": "Alle",
+      "deleted": "Slettede"
     },
     "columns": {
       "actions": "Sammenlign eller kortvisning",
       "compareLong": "Sammenlign med status quo",
       "mapLong": "Kortvisning af alternativ",
+      "deleteLong": "Slet alternativ",
+      "restoreLong": "Gendan alternativ",
+      "permanentlyDeleteLong": "Slet permanent",
+      "permanentlyDeleteConfirmTitle": "Slet permanent?",
+      "permanentlyDeleteConfirmDescription": "Dette sletter \"{name}\" permanent. Handlingen kan ikke fortrydes.",
+      "permanentlyDeleteConfirmCancel": "Annuller",
+      "permanentlyDeleteConfirmAction": "Slet permanent",
       "select": "Vælg",
       "name": "Alternativ",
       "status": "Status",

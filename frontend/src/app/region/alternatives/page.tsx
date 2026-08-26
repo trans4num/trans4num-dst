@@ -16,11 +16,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useAlternatives } from "@/hooks/use-alternative";
 import { useStableQueryParam } from "@/hooks/use-stable-query-param";
+import { useDeleteAlternative } from "@/hooks/use-delete-alternative";
+import { useRestoreAlternative } from "@/hooks/use-restore-alternative";
+import { usePermanentlyDeleteAlternative } from "@/hooks/use-permanently-delete-alternative";
 import { buildAlternativeRoute, buildCreateAlternativeRoute } from "@/lib/routes";
 import { type Alternative } from "@/models/alternative";
 
 const TEN_SECONDS_IN_MILLISECONDS = 10000;
-type TabKey = "completed" | "processing" | "all";
+type TabKey = "completed" | "processing" | "all" | "deleted";
 
 export default function AlternativesPage() {
   const t = useTranslations("HomePage");
@@ -39,6 +42,7 @@ export default function AlternativesPage() {
     { key: "all" as TabKey, displayValue: t("tabs.all") },
     { key: "completed" as TabKey, displayValue: t("tabs.completed") },
     { key: "processing" as TabKey, displayValue: t("tabs.processing") },
+    { key: "deleted" as TabKey, displayValue: t("tabs.deleted") },
   ];
 
   const { alternatives, statusQuo, isLoading } = useAlternatives(
@@ -46,17 +50,23 @@ export default function AlternativesPage() {
     TEN_SECONDS_IN_MILLISECONDS,
   );
 
+  const { deleteAlternative } = useDeleteAlternative(regionId ?? "");
+  const { restoreAlternative } = useRestoreAlternative(regionId ?? "");
+  const { permanentlyDeleteAlternative } = usePermanentlyDeleteAlternative(regionId ?? "");
+
   const filteredAlternatives = useMemo(() => {
     if (!alternatives) return [];
     switch (activeTab) {
       case "completed":
-        return alternatives.filter((alt) => alt.status === "success");
+        return alternatives.filter((alt) => alt.status === "success" && !alt.deleted);
       case "processing":
-        return alternatives.filter((alt) => alt.status === "processing");
+        return alternatives.filter((alt) => alt.status === "processing" && !alt.deleted);
+      case "deleted":
+        return alternatives.filter((alt) => alt.deleted);
       default:
-        return alternatives;
-    }
-  }, [alternatives, activeTab]);
+        return alternatives.filter((alt) => !alt.deleted);
+  }
+}, [alternatives, activeTab]);
 
   const handleAlternativeToggle = useCallback((alternative: Alternative) => {
     setSelectedAlternatives((prev) => {
@@ -80,7 +90,12 @@ export default function AlternativesPage() {
     [regionId],
   );
 
-  const columns = AlernativeTableColumns(handleAlternativeToggle, statusQuo, getRowLink);
+  const columns = AlernativeTableColumns(handleAlternativeToggle, statusQuo, getRowLink, {
+    isDeletedTab: activeTab === "deleted",
+    onDelete: deleteAlternative,
+    onRestore: restoreAlternative,
+    onPermanentlyDelete: permanentlyDeleteAlternative,
+  });
 
   const selectedAlternativesArray = useMemo(
     () => filteredAlternatives.filter((alt) => selectedAlternatives.has(alt.id)),

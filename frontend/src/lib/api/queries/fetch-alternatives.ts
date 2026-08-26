@@ -46,6 +46,7 @@ interface SimulationResponse {
   }
   created: string
   status: "success" | "processing" | "failed" | "nonOptimal"
+  deleted?: boolean
   summary: Array<{
     name: string
     value: number
@@ -89,7 +90,8 @@ export async function fetchAlternatives(regionId: string): Promise<AlternativesW
       charts: data.charts,
       barCharts: roundBarChartsNumberValues(data.barCharts),
       model: data.model,
-      created: data.created
+      created: data.created,
+      deleted: data.deleted ?? false,
     };
   }
 

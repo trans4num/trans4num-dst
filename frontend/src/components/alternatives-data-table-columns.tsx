@@ -1,25 +1,43 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { Blend, Map } from "lucide-react";
+import { Blend, Map, RotateCcw, Trash2 } from "lucide-react";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-
 import AlternativeComparisonCard from "@/components/alternative-comparison-card";
 import { DataTableColumnHeader } from "@/components/data-table-header";
 import { GoalStatusBadge } from "@/components/goal-status-badge";
 import { GoalTypeBadge } from "@/components/goal-type-badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { type Alternative } from "@/models/alternative";
 
+export type AlternativeDeleteActions = {
+  isDeletedTab: boolean;
+  onDelete: (id: string) => void;
+  onRestore: (id: string) => void;
+  onPermanentlyDelete: (id: string) => void;
+};
+
 export const AlernativeTableColumns = (
-  onRowSelect?: (row: Alternative) => void,
-  statusQuo?: Alternative | null,
-  getRowLink?: (row: Alternative) => string,
+  onRowSelect: ((row: Alternative) => void) | undefined,
+  statusQuo: Alternative | null | undefined,
+  getRowLink: ((row: Alternative) => string) | undefined,
+  deleteActions: AlternativeDeleteActions,
 ): ColumnDef<Alternative>[] => {
   const t = useTranslations("HomePage.columns");
 
@@ -82,50 +100,105 @@ export const AlernativeTableColumns = (
       cell: ({ row }) => {
         const isDisabled = !row.getCanSelect() || !statusQuo;
 
-        return (
+        if(deleteActions.isDeletedTab) {
+          return (
           <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-            <Dialog>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <DialogTrigger asChild>
-                    <Button variant="ghost" disabled={isDisabled}>
-                      <Blend />
-                    </Button>
-                  </DialogTrigger>
+                  <Button variant="ghost" onClick={() => deleteActions.onRestore(row.original.id)}>
+                    <RotateCcw />
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
-                  <p>{t("compareLong")}</p>
+                  <p>{t("restoreLong")}</p>
                 </TooltipContent>
               </Tooltip>
-              <DialogContent className="w-full max-w-6xl mx-auto p-6 sm:p-8 md:p-10">
-                <DialogTitle className="hidden"></DialogTitle>
-                <AlternativeComparisonCard
-                  statusQuo={statusQuo!}
-                  selectedAlternatives={[row.original]}
-                />
-              </DialogContent>
-            </Dialog>
+
+              <AlertDialog>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost">
+                        <Trash2 />
+                      </Button>
+                    </AlertDialogTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p>{t("permanentlyDeleteLong")}</p>
+                  </TooltipContent>
+                </Tooltip>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("permanentlyDeleteConfirmTitle")}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("permanentlyDeleteConfirmDescription", { name: row.original.name })}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("permanentlyDeleteConfirmCancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                    onClick={() => deleteActions.onPermanentlyDelete(row.original.id)}
+                    >
+                      {t("permanentlyDeleteConfirmAction")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          );
+        }
+
+        return (
+        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+          <Dialog>
             <Tooltip>
               <TooltipTrigger asChild>
-                {isDisabled ? (
-                  <Button variant="ghost" disabled>
-                    <Map />
+                <DialogTrigger asChild>
+                  <Button variant="ghost" disabled={isDisabled}>
+                    <Blend />
                   </Button>
-                ) : (
-                  <Button variant="ghost" disabled={isDisabled} asChild>
-                    <Link href={getRowLink?.(row.original) || ""}>
-                      <Map />
-                    </Link>
-                  </Button>
-                )}
+                </DialogTrigger>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                <p>{t("mapLong")}</p>
+                <p>{t("compareLong")}</p>
               </TooltipContent>
             </Tooltip>
-          </div>
-        );
-      },
+            <DialogContent className="w-full max-w-6xl mx-auto p-6 sm:p-8 md:p-10">
+              <DialogTitle className="hidden"></DialogTitle>
+              <AlternativeComparisonCard statusQuo={statusQuo!} selectedAlternatives={[row.original]} />
+            </DialogContent>
+          </Dialog>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {isDisabled ? (
+                <Button variant="ghost" disabled>
+                  <Map />
+                </Button>
+              ) : (
+                <Button variant="ghost" disabled={isDisabled} asChild>
+                  <Link href={getRowLink?.(row.original) || ""}>
+                    <Map />
+                  </Link>
+                </Button>
+              )}
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>{t("mapLong")}</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" onClick={() => deleteActions.onDelete(row.original.id)}>
+                <Trash2 />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>{t("deleteLong")}</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+  );
+},
       enableSorting: false,
       enableHiding: false,
     },
