@@ -163,13 +163,19 @@ export function AlternativesDataTable({
                     <TableRow
                       key={row.id}
                       data-state={row.original === selectedRow ? "selected" : undefined}
-                      className="cursor-pointer hover:bg-muted/50 data-[state=selected]:bg-muted"
-                      onClick={() => {
-                          setClickedAlternative(row.original as Alternative);
-                      }}
+                      className="hover:bg-muted/50 data-[state=selected]:bg-muted"
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
+                        <TableCell 
+                          key={cell.id} 
+                          style={{ width: cell.column.getSize() }}
+                          className={cell.column.id === "name" ? "cursor-pointer" : undefined}
+                          onClick={
+                            cell.column.id === "name"
+                            ? () => setClickedAlternative(row.original as Alternative)
+                            : undefined
+                          }
+                        >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}
