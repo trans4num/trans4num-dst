@@ -12,12 +12,20 @@
     "tabs": {
       "completed": "Completed",
       "processing": "Calculating",
-      "all": "All"
+      "all": "All",
+      "deleted": "Deleted"
     },
     "columns": {
       "actions": "Compare or map view",
       "compareLong": "Compare with Status Quo",
       "mapLong": "Map view of alternative",
+      "deleteLong": "Delete alternative",
+      "restoreLong": "Restore alternative",
+      "permanentlyDeleteLong": "Delete permanently",
+      "permanentlyDeleteConfirmTitle": "Delete permanently?",
+      "permanentlyDeleteConfirmDescription": "This will permanently delete \"{name}\". This cannot be undone.",
+      "permanentlyDeleteConfirmCancel": "Cancel",
+      "permanentlyDeleteConfirmAction": "Delete permanently",
       "select": "Select",
       "name": "Alternative",
       "status":"Status",

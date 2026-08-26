@@ -15,6 +15,7 @@ export type Alternative = {
   charts?: AlternativeChart[]
   barCharts?: AlternativeBarChart[]
   created: string
+  deleted: boolean
 }
 
 export type AlternativeChart = {

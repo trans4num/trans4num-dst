@@ -12,12 +12,20 @@
     "tabs": {
       "completed": "Fertig",
       "processing": "Berechnung",
-      "all": "Alle"
+      "all": "Alle",
+      "deleted": "Gelöscht"
     },
     "columns": {
       "actions": "Vergleichen oder Kartenansicht",
       "compareLong": "Mit Status Quo vergleichen",
       "mapLong": "Kartenansicht der Alternative",
+      "deleteLong": "Alternative löschen",
+      "restoreLong": "Alternative wiederherstellen",
+      "permanentlyDeleteLong": "Endgültig löschen",
+      "permanentlyDeleteConfirmTitle": "Endgültig löschen?",
+      "permanentlyDeleteConfirmDescription": "Dies löscht „{name}“ endgültig. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+      "permanentlyDeleteConfirmCancel": "Abbrechen",
+      "permanentlyDeleteConfirmAction": "Endgültig löschen",
       "select": "Auswählen",
       "name": "Alternative",
       "status": "Status",
