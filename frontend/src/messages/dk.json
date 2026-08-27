@@ -128,7 +128,7 @@
     "legendDescription": {
       "economy": "Gennemsnitlig økonomisk afkast af 7-årige sædskifter [DKK/ha/år]",
       "nLoad": "N belastning af fjorden [kg N/ha]",
-      "nature": "Markernes relative naturværdi (UDKAST)",
+      "nature": "Markernes relative naturværdi",
       "crop": "Sædskifte vist for hver mark (7-årige sædskifter)"
     },
     "variableTypes": {

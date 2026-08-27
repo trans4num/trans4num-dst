@@ -127,7 +127,7 @@
     "legendDescription": {
       "economy": "Average economic return of 7-year crop rotations [DKK/ha/year]",
       "nLoad": "N load to the fjord [kg N/ha]",
-      "nature": "Relative nature value of the fields (draft text)",
+      "nature": "Relative nature value of the fields",
       "crop": "Crop rotation shown for each field (7-year rotations)"
     },
     "economyChange": "Economy Change:",
