@@ -186,16 +186,34 @@ export const AlernativeTableColumns = (
               <p>{t("mapLong")}</p>
             </TooltipContent>
           </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" onClick={() => deleteActions.onDelete(row.original.id)}>
-                <Trash2 />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>{t("deleteLong")}</p>
-            </TooltipContent>
-          </Tooltip>
+          <AlertDialog>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost">
+                    <Trash2 />
+                  </Button>
+                </AlertDialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>{t("deleteLong")}</p>
+              </TooltipContent>
+            </Tooltip>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("deleteConfirmTitle")}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t("deleteConfirmDescription", { name: row.original.name })}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{t("deleteConfirmCancel")}</AlertDialogCancel>
+                <AlertDialogAction onClick={() => deleteActions.onDelete(row.original.id)}>
+                  {t("deleteConfirmAction")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
   );
 },
