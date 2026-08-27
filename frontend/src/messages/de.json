@@ -128,7 +128,7 @@
     "legendDescription": {
       "economy": "Durchschnittlicher wirtschaftlicher Ertrag von 7-jährigen Fruchtfolge [DKK/ha/Jahr]",
       "nLoad": "N-Eintrag in den Fjord [kg N/ha]",
-      "nature": "Relativer Naturwert der Felder (DRAFT)",
+      "nature": "Relativer Naturwert der Felder",
       "crop": "Frucht für jedes Feld (7-jährige Rotation)"
     },
     "economyChange": "Änderung der Wirtschaft:",
