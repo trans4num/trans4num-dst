@@ -137,8 +137,8 @@
       "minimizeNLoad": "Änderung der Wirtschaft"
     },
     "value_range_descriptions": {
-      "maximizeEconomy": "Platzhalter: Wertebereich für die Einschränkung",
-      "minimizeNLoad": "Platzhalter: Wertebereich für die Einschränkung"
+      "maximizeEconomy": "Legen Sie fest, in welchem ​​Umfang sich die gesamte Stickstoffbelastung der Region ändern darf, während das Modell die Wirtschaftlichkeit maximiert.",
+      "minimizeNLoad": "Legen Sie fest, in welchem ​​Umfang sich die Gesamtwirtschaft der Region verändern darf, während das Modell die N-Belastung minimiert."
     },
     "value_ranges": "Wertebereich",
     "goal_names": {
