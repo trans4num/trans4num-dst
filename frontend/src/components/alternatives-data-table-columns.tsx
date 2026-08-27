@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -137,7 +137,8 @@ export const AlernativeTableColumns = (
                   <AlertDialogFooter>
                     <AlertDialogCancel>{t("permanentlyDeleteConfirmCancel")}</AlertDialogCancel>
                     <AlertDialogAction
-                    onClick={() => deleteActions.onPermanentlyDelete(row.original.id)}
+                      className={buttonVariants({ variant: "destructive" })}
+                      onClick={() => deleteActions.onPermanentlyDelete(row.original.id)}
                     >
                       {t("permanentlyDeleteConfirmAction")}
                     </AlertDialogAction>
@@ -208,7 +209,10 @@ export const AlernativeTableColumns = (
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>{t("deleteConfirmCancel")}</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteActions.onDelete(row.original.id)}>
+                <AlertDialogAction 
+                  className={buttonVariants({ variant: "destructive" })}
+                  onClick={() => deleteActions.onDelete(row.original.id)}
+                >
                   {t("deleteConfirmAction")}
                 </AlertDialogAction>
               </AlertDialogFooter>
