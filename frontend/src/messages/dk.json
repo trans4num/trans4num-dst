@@ -144,8 +144,8 @@
       "minimizeNLoad": "Ændring i økonomi"
     },
     "value_range_descriptions": {
-      "maximizeEconomy": "pladsholder: Værdiinterval for begrænsningen",
-      "minimizeNLoad": "pladsholder: Værdiinterval for begrænsningen"
+      "maximizeEconomy": "Angiv, hvor meget regionens samlede kvælstofbelastning må ændre sig, mens modellen maksimerer økonomien.",
+      "minimizeNLoad": "Angiv, hvor meget regionens samlede økonomi må ændre sig, mens modellen minimerer N-belastningen."
     },
     "value_ranges": "Værdimål",
     "goal_names": {

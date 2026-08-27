@@ -138,8 +138,8 @@
       "minimizeNLoad": "Economy Change"
     },
     "value_range_descriptions": {
-      "maximizeEconomy": "placeholder: Value range for the constraint",
-      "minimizeNLoad": "placeholder: Value range for the constraint"
+      "maximizeEconomy": "Set how much the region's total N-load is allowed to change while the model maximizes economy.",
+      "minimizeNLoad": "Set how much the region's total economy is allowed to change while the model minimizes N-load."
     },
     "goal_selection": "Goal Selection",
     "select_goal": "Select a Goal",
