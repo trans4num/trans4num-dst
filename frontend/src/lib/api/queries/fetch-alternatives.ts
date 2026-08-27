@@ -76,7 +76,6 @@ export async function fetchAlternatives(regionId: string): Promise<AlternativesW
 
     const statusQuo = createAlternative(data.statusQuo);
     const alternatives = data.simulations.map(createAlternative) as Alternative[];
-    if (alternatives[0]) alternatives[0].deleted = true; // TEMP: kun til test af Deleted-tab UI, fjern før commit
     
     return {statusQuo, alternatives} as AlternativesWithStatusQuo;
   }
