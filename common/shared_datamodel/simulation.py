@@ -3,6 +3,7 @@ from enum import Enum
 from typing import List, Optional
 from uuid import UUID
 
+from pydantic import field_validator
 from shared_datamodel.schema import BaseSchema
 
 
@@ -80,4 +81,14 @@ class Simulation(SimulationBase):
     deleted: bool = False
     summary: list[SummaryEntry]
     charts: list[Chart]
-    barCharts: list[BarChart]
+    barCharts: list[BarChart] = []
+
+    @field_validator("summary", mode="before")
+    @classmethod
+    def normalize_legacy_summary(cls, value):
+        if isinstance(value, dict):
+            return [
+                {"name": name, "value": metric, "unit": ""}
+                for name, metric in value.items()
+            ]
+        return value
