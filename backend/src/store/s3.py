@@ -77,6 +77,31 @@ class Store(IStore):
             ContentType="application/json",
         )
 
+    def update_simulation(self, simulation: Simulation) -> None:
+        key = f"simulations/{simulation.region_id}/{simulation.id}/meta.json"
+        self.s3.put_object(
+            Bucket=self.bucket_name,
+            Key=key,
+            Body=simulation.model_dump_json(indent=2),
+            ContentType="application/json",
+        )
+
+    def delete_simulation(self, simulation_id: UUID) -> None:
+        keys = []
+        paginator = self.s3.get_paginator("list_objects_v2")
+        for region in self.list_regions():
+            prefix = f"simulations/{region}/{simulation_id}/"
+            for page in paginator.paginate(Bucket=self.bucket_name, Prefix=prefix):
+                keys.extend(
+                    obj["Key"] for obj in page.get("Contents", [])
+                )
+
+        for start in range(0, len(keys), 1000):
+            self.s3.delete_objects(
+                Bucket=self.bucket_name,
+                Delete={"Objects": [{"Key": key} for key in keys[start : start + 1000]]},
+            )
+
     def get_fields(self, region: UUID) -> FeatureCollection | None:
         fields_path = f"simulations/{region}/fields.geojson.gz"
         try:

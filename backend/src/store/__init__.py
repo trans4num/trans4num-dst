@@ -31,6 +31,14 @@ class IStore(ABC):
         pass
 
     @abstractmethod
+    def update_simulation(self, simulation: Simulation) -> None:
+        pass
+
+    @abstractmethod
+    def delete_simulation(self, simulation_id: UUID) -> None:
+        pass
+
+    @abstractmethod
     def get_fields(self, region: UUID) -> FeatureCollection | None:
         pass
 

@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import List
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Response
 from shared_datamodel.schema import BaseSchema
 from shared_datamodel.simulation import Simulation, SimulationBase, SimulationStatus
 
@@ -15,8 +15,22 @@ class SimulationResponse(BaseSchema):
     simulations: List[Simulation]
 
 
+class SimulationUpdate(BaseSchema):
+    deleted: bool
+
+
 def get_router(store: IStore, queue: IEngineJobQueue) -> APIRouter:
     router = APIRouter(prefix="/simulations", tags=["simulations"])
+
+    def find_simulation(simulation_id: UUID) -> Simulation | None:
+        for region in store.list_regions():
+            simulation = next(
+                (s for s in store.list_simulations(region) if s.id == simulation_id),
+                None,
+            )
+            if simulation is not None:
+                return simulation
+        return None
 
     @router.get("")
     async def get_simulation(
@@ -71,5 +85,27 @@ def get_router(store: IStore, queue: IEngineJobQueue) -> APIRouter:
             raise
 
         return {"message": "Simulation created", "id": simulation.id}
+
+    @router.patch("/{simulation_id}")
+    async def update_simulation(simulation_id: UUID, body: SimulationUpdate):
+        """Soft-delete or restore a simulation."""
+        simulation = find_simulation(simulation_id)
+        if simulation is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+
+        updated_simulation = simulation.model_copy(
+            update={"deleted": body.deleted}
+        )
+        store.update_simulation(updated_simulation)
+        return updated_simulation
+
+    @router.delete("/{simulation_id}", status_code=204)
+    async def delete_simulation(simulation_id: UUID) -> Response:
+        """Permanently delete a simulation."""
+        if find_simulation(simulation_id) is None:
+            raise HTTPException(status_code=404, detail="Simulation not found")
+
+        store.delete_simulation(simulation_id)
+        return Response(status_code=204)
 
     return router

@@ -1,6 +1,7 @@
 import gzip
 import json
 from os import listdir, makedirs, path
+from shutil import rmtree
 from uuid import UUID
 
 from shared_datamodel.simulation import Simulation
@@ -59,6 +60,28 @@ class Store(IStore):
             "w",
         ) as f:
             f.write(simulation.model_dump_json(indent=2))
+
+    def update_simulation(self, simulation: Simulation) -> None:
+        simulation_path = self._find_simulation_path(simulation.id)
+        if simulation_path is None:
+            raise FileNotFoundError(f"Simulation {simulation.id} does not exist")
+
+        with open(path.join(simulation_path, "meta.json"), "w") as f:
+            f.write(simulation.model_dump_json(indent=2))
+
+    def delete_simulation(self, simulation_id: UUID) -> None:
+        simulation_path = self._find_simulation_path(simulation_id)
+        if simulation_path is None:
+            raise FileNotFoundError(f"Simulation {simulation_id} does not exist")
+
+        rmtree(simulation_path)
+
+    def _find_simulation_path(self, simulation_id: UUID) -> str | None:
+        for region in self.list_regions():
+            simulation_path = f"src/data/simulations/{region}/{simulation_id}"
+            if path.isdir(simulation_path):
+                return simulation_path
+        return None
 
     def get_fields(self, region: UUID) -> FeatureCollection | None:
         region_path = f"src/data/simulations/{region}/fields.geojson.gz"

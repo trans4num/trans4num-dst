@@ -77,6 +77,7 @@ class Simulation(SimulationBase):
     id: UUID
     created: datetime
     status: SimulationStatus
+    deleted: bool = False
     summary: list[SummaryEntry]
     charts: list[Chart]
     barCharts: list[BarChart]
