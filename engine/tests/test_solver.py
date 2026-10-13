@@ -48,7 +48,8 @@ class SolverTests(unittest.TestCase):
             self.assertFalse(config.use_fast_path)
             override = OptimizationSettings(max_time_seconds=60)
             self.assertIs(settings_for_job(override), override)
-        for data in ({"maxTimeSeconds": 0}, {"relativeGap": -1}, {"workers": -1}, {"maxTimeSeconds": float("inf")}):
+        for data in ({"maxTimeSeconds": 0}, {"relativeGap": -1}, {"workers": -1}, {"maxTimeSeconds": float("inf")},
+                     {"maxFractionalIterations": 0}):
             with self.assertRaises(ValidationError):
                 OptimizationSettings.model_validate(data)
         job = SimulationBase.model_validate({"name": "request", "regionId": str(uuid4()),

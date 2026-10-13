@@ -68,6 +68,7 @@ class OptimizationSettings(BaseSchema):
     workers: int = Field(default=8, ge=0)
     use_fast_path: bool = True
     debug: bool = False
+    max_fractional_iterations: int = Field(default=64, ge=1)
 
 
 class OptimizationResult(BaseSchema):
@@ -77,6 +78,9 @@ class OptimizationResult(BaseSchema):
     objective: float | None = None
     best_bound: float | None = None
     relative_gap: float | None = None
+    objective_name: str | None = None
+    objective_unit: str | None = None
+    iterations: int = 1
     max_time_seconds: float
     requested_relative_gap: float
     workers: int

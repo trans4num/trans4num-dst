@@ -15,6 +15,8 @@ class Choice:
     rotation: CropRotation
     cost: float
     coefficients: tuple[int, ...]
+    economy: float | None = None
+    nload: float | None = None
 
 
 @dataclass
@@ -23,6 +25,7 @@ class PreparedProblem:
     choices: dict[str, list[Choice]]
     constraints: list
     goal_type: SimulationGoalType
+    minimum_economy: float | None = None
 
 
 def prepare_problem(fields, constraints, ignore_constraints, goal_type, prune=True):
@@ -47,22 +50,28 @@ def prepare_problem(fields, constraints, ignore_constraints, goal_type, prune=Tr
         for rotation in rotations.values():
             if not allowed and rotation.name != entry.rotation.name:
                 continue
+            economy = nload = None
             if goal_type == SimulationGoalType.MIN_NLOAD:
                 cost = f(rotation, Transition.LEACHING, entry.spatial_indicator)
             elif goal_type == SimulationGoalType.MAX_ECONOMY:
                 cost = -f(rotation, Transition.ECONOMY, entry.spatial_indicator)
             elif goal_type == SimulationGoalType.MAX_ECON_PER_NLOAD:
-                cost = f(rotation, Transition.LEACHING, entry.spatial_indicator) / f(
-                    rotation, Transition.ECONOMY, entry.spatial_indicator
-                )
+                economy = f(rotation, Transition.ECONOMY, entry.spatial_indicator)
+                nload = f(rotation, Transition.LEACHING, entry.spatial_indicator)
+                if not math.isfinite(economy) or not math.isfinite(nload) or nload < 0:
+                    raise ValueError(f"Regional ratio requires finite economy and nonnegative N-load: {key}")
+                # The ratio is formed from REGIONAL totals in the fractional
+                # pipeline. No field-level ratio is ever used as a cost.
+                cost = 0.0
             else:
                 raise ValueError(f"Unknown goal type: {goal_type}")
             if not math.isfinite(cost):
                 raise ValueError(f"Non-finite objective for {key}: {rotation.name}")
-            candidates.append(Choice(rotation, cost, tuple(c.coefficient(rotation, entry) for c in constraints)))
+            candidates.append(Choice(rotation, cost, tuple(c.coefficient(rotation, entry) for c in constraints), economy, nload))
         if can_prune:
             directions = [1 if c.operator == operator.le else -1 for c in constraints]
-            vectors = [(p.cost,) + tuple(d * v for d, v in zip(directions, p.coefficients)) for p in candidates]
+            vectors = [((-p.economy, p.nload) if goal_type == SimulationGoalType.MAX_ECON_PER_NLOAD else (p.cost,))
+                       + tuple(d * v for d, v in zip(directions, p.coefficients)) for p in candidates]
             # Compare every active constraint, including per-farmer constraints,
             # using the same integer coefficients as the general solver.
             candidates = [p for i, p in enumerate(candidates) if p.rotation.name == entry.rotation.name or not any(

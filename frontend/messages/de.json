@@ -9,7 +9,9 @@
       "gap": "Normalisierte Optimalitätslücke",
       "method": "Methode",
       "termination": "Abbruchgrund",
-      "runtime": "Berechnungszeit"
+      "runtime": "Berechnungszeit",
+      "regionalRatio": "Regionale N-Belastung je Wirtschaft (Kehrwert Wirtschaft/N-Belastung)",
+      "iterations": "Fraktionale Iterationen"
     },
     "addAlternative": "Alternative hinzufügen",
     "openAlternative": "Ausgewählte Alternative öffnen",
@@ -18,7 +20,7 @@
     "goals": {
       "maximizeEconomy": "Wirtschaft maximieren",
       "minimizeNLoad": "N-Belastung minimieren",
-      "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung"
+      "maximizeEconomyNLoad": "Regionale Wirtschaft je N-Belastung"
     },
     "tabs": {
       "completed": "Fertig",
@@ -38,12 +40,12 @@
       "goalType": {
         "maximizeEconomy": "Wirtschaft maximieren",
         "minimizeNLoad": "N-Belastung minimieren",
-        "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung"
+        "maximizeEconomyNLoad": "Regionale Wirtschaft je N-Belastung"
       },
       "goalTypeLong": {
         "maximizeEconomy": "placeholder: Beschreibung Wirtschaft maximieren",
         "minimizeNLoad": "placeholder: Beschreibung N-Belastung minimieren",
-        "maximizeEconomyNLoad": "placeholder: Beschreibung Max. Wirtschaft & min. N-Belastung"
+        "maximizeEconomyNLoad": "Maximieren Sie die gesamte regionale Wirtschaft geteilt durch die gesamte regionale N-Belastung"
       },
       "viewDetails": "Details anzeigen",
       "statusValue": {
@@ -154,12 +156,12 @@
     "goal_names": {
       "maximizeEconomy": "Wirtschaft maximieren",
       "minimizeNLoad": "N-Belastung minimieren",
-      "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung"
+      "maximizeEconomyNLoad": "Regionale Wirtschaft je N-Belastung"
     },
     "goal_descriptions": {
       "maximizeEconomy": "Maximieren Sie die gesamte Wirtschaft der Region",
       "minimizeNLoad": "Minimieren Sie die gesamte N-Belastung der Region",
-      "maximizeEconomyNLoad": "Maximieren Sie die Wirtschaft pro N-Belastung"
+      "maximizeEconomyNLoad": "Maximieren Sie die gesamte regionale Wirtschaft geteilt durch die gesamte regionale N-Belastung"
     },
     "goal_selection": "Zielauswahl",
     "select_goal": "Ein Ziel auswählen",
@@ -180,10 +182,10 @@
     "goals": {
       "maximizeEconomy": "Wirtschaft maximieren",
       "minimizeNLoad": "N-Belastung minimieren",
-      "maximizeEconomyNLoad": "Max. Wirtschaft & min. N-Belastung",
+      "maximizeEconomyNLoad": "Regionale Wirtschaft je N-Belastung",
       "maximizeEconomy_description": "Maximieren Sie die gesamte Wirtschaft der Region",
       "minimizeNLoad_description": "Minimieren Sie die gesamte N-Belastung der Region",
-      "maximizeEconomyNLoad_description": "Maximieren Sie die gesamte Wirtschaft und minimieren Sie die N-Belastung der Region"
+      "maximizeEconomyNLoad_description": "Maximieren Sie die gesamte regionale Wirtschaft geteilt durch die gesamte regionale N-Belastung"
     },
     "singleFarmerImpact": "Auswirkung auf einzelne Landwirte",
     "natureValue": "Naturwert",

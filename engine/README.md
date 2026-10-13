@@ -52,12 +52,49 @@ constraint can use a continuous allocation relaxation with a whole-field repair.
 The result has one actual rotation per field, is checked against the same
 integer-scaled constraints as CP-SAT, and includes a regional lower bound.
 
-Grouped farmer constraints, multiple regional constraints, custom constraint
-implementations, and the mixed-ratio objective use CP-SAT. Eligibility is based
+Grouped farmer constraints, multiple regional constraints, and custom constraint
+implementations use CP-SAT. Eligibility is based
 on the prepared constraint objects, not a list of UI constraint names. New
 constraint types therefore default to the general solver. If the repaired
 allocation misses the requested gap, it becomes a feasible solver hint and
 fallback candidate rather than being accepted as a sufficiently accurate result.
+
+## Regional economy per nitrogen load
+
+`maximizeEconomyNLoad` maximizes **total regional economy / total regional
+N-load**. It no longer minimizes a sum of individual field ratios. Internally,
+the equivalent minimization is **total N-load / total economy**, which remains
+finite when nitrogen load is zero and economy is positive.
+
+Dinkelbach iterations solve the additive objective `N - lambda * E`, where
+`lambda` is the best feasible regional `N/E` found so far. Crop metrics and
+integer-scaled hard constraints are prepared once; each iteration changes only
+the objective. Eligible iterations use regional allocation, and more complex
+constraints use CP-SAT. The CP-SAT variable/constraint matrix is built once and
+reused with updated objectives and checked hints within the same invocation.
+Ratio pruning compares economy and nitrogen load separately, together with
+every active constraint, so an option with a worse field ratio can still be
+chosen when it improves the region's totals.
+
+The objective requires nonnegative field nitrogen loads and positive regional
+economy. Individual field economy can be zero or negative. When positivity is
+not already guaranteed by the options, a conservatively integer-scaled constraint
+requires at least `1e-6` DKK of regional economy. Zero regional nitrogen load is
+an optimal inverse ratio of zero, avoiding an infinite JSON objective.
+
+Each additive lower bound is translated into a regional ratio lower bound using
+the prepared bounds on total economy. The reported ratio gap is
+`(best_ratio - lower_bound) / best_ratio`, or zero for zero nitrogen load. Inner
+linear gaps are never presented as regional-ratio gaps. Metadata identifies the
+objective as `regional_nload_per_economy` in `kg N / DKK` and records the number
+of fractional iterations. Existing simulation files are not recalculated.
+
+All iterations share one search-time budget; reaching a budget or iteration
+limit returns the best feasible regional ratio with its actual gap. The default
+iteration limit is 64, configurable with `maxFractionalIterations` in request
+settings or `TRANS4NUM_OPTIMIZER_MAX_FRACTIONAL_ITERATIONS`. Source data and
+coefficients retain cold-invocation semantics: only the current job's selections
+are used for iteration hints.
 
 ## Solver budgets and result quality
 
@@ -72,6 +109,7 @@ environment variables when starting Compose/the root CLI:
 | `TRANS4NUM_OPTIMIZER_WORKERS` | `8` (use `0` for automatic) |
 | `TRANS4NUM_OPTIMIZER_FAST_PATH` | `true` |
 | `TRANS4NUM_OPTIMIZER_DEBUG` | `false` |
+| `TRANS4NUM_OPTIMIZER_MAX_FRACTIONAL_ITERATIONS` | `64` |
 
 For example, `TRANS4NUM_OPTIMIZER_MAX_TIME_SECONDS=30
 TRANS4NUM_OPTIMIZER_RELATIVE_GAP=0.01 ./trans4num --region REGION_UUID` requests
@@ -118,6 +156,7 @@ engine's minimization convention (economy is negative). The normalized gap is
 `max(0, objective - bound) / max(1, abs(objective))`, which is also defined for
 negative and zero objectives. The configuration dialog displays quality and
 timings for new results; older simulations can omit these fields.
+The regional-ratio objective uses its ratio-specific gap definition above.
 
 Engine regression tests use Python's standard `unittest` runner. With the local
 Docker image built, run from the repository root:
@@ -130,7 +169,7 @@ docker run --rm --entrypoint /opt/conda-env/bin/python \
 ```
 
 # Objectives:
-Mixed (nloadperecon): Minimize (nload/econ)
+Mixed (nloadperecon): Minimize total regional N-load / total regional economy
 Economy (economy): Maximize economy -> Constraints for hvad nload må blive
 Emision (nload): Minimize (nload) -> Constraints for hvad økonomi må blive
 

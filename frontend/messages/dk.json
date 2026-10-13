@@ -9,7 +9,9 @@
       "gap": "Normaliseret optimalitetsgab",
       "method": "Metode",
       "termination": "Årsag til afslutning",
-      "runtime": "Beregningstid"
+      "runtime": "Beregningstid",
+      "regionalRatio": "Regional N-belastning pr. økonomi (invers økonomi/N-belastning)",
+      "iterations": "Fraktionelle iterationer"
     },
     "addAlternative": "Tilføj Alternativ",
     "compareAlternatives": "Sammenlign Valg",
@@ -18,7 +20,7 @@
     "goals": {
       "maximizeEconomy": "Maksimer økonomi",
       "minimizeNLoad": "Minimer N-belastning",
-      "maximizeEconomyNLoad": "Maks økonomi & min N-belastning"
+      "maximizeEconomyNLoad": "Regional økonomi pr. N-belastning"
     },
     "tabs": {
       "completed": "Færdige",
@@ -38,12 +40,12 @@
       "goalType": {
         "maximizeEconomy": "Maksimer økonomi",
         "minimizeNLoad": "Minimer N-belastning",
-        "maximizeEconomyNLoad": "Maks økonomi & min N-belastning"
+        "maximizeEconomyNLoad": "Regional økonomi pr. N-belastning"
       },
       "goalTypeLong": {
         "maximizeEconomy": "placeholder: Beskrivelse af Maksimer økonomi",
         "minimizeNLoad": "placeholder: Beskrivelse af Minimer N-belastning",
-        "maximizeEconomyNLoad": "placeholder: Beskrivelse af Maks økonomi & min N-belastning"
+        "maximizeEconomyNLoad": "Maksimer regionens samlede økonomi divideret med den samlede N-belastning"
       },
       "viewDetails": "Se detaljer",
       "statusValue": {
@@ -161,12 +163,12 @@
     "goal_names": {
       "maximizeEconomy": "Maksimer økonomi",
       "minimizeNLoad": "Minimer N-belastning",
-      "maximizeEconomyNLoad": "Maks økonomi & min N-belastning"
+      "maximizeEconomyNLoad": "Regional økonomi pr. N-belastning"
     },
     "goal_descriptions": {
       "maximizeEconomy": "Maksimer den samlede økonomi i regionen",
       "minimizeNLoad": "Minimer den samlede N-belastning i regionen",
-      "maximizeEconomyNLoad": "Maksimer økonomien pr. N-belastning"
+      "maximizeEconomyNLoad": "Maksimer regionens samlede økonomi divideret med den samlede N-belastning"
     },
     "goal_selection": "Målsætning",
     "select_goal": "Vælg et mål",
@@ -181,10 +183,10 @@
     "goals": {
       "maximizeEconomy": "Maksimer økonomi",
       "minimizeNLoad": "Minimer N-belastning",
-      "maximizeEconomyNLoad": "Maks økonomi & min N-belastning",
+      "maximizeEconomyNLoad": "Regional økonomi pr. N-belastning",
       "maximizeEconomy_description": "Maksimer den samlede økonomi i regionen",
       "minimizeNLoad_description": "Minimer den samlede N-belastning i regionen",
-      "maximizeEconomyNLoad_description": "Maksimer den samlede økonomi og N-belastning i regionen"
+      "maximizeEconomyNLoad_description": "Maksimer regionens samlede økonomi divideret med den samlede N-belastning"
     },
     "singleFarmerImpact": "Påvirkning af enkelt landmand",
     "natureValue": "Naturværdi",

@@ -23,6 +23,10 @@ class Solution:
     preparation_seconds: float = 0
     model_build_seconds: float = 0
     solve_seconds: float = 0
+    objective_name: str | None = None
+    objective_unit: str | None = None
+    iterations: int = 1
+    gap_override: float | None = None
 
     def quality(self, settings, load_seconds=0) -> OptimizationResult:
         return OptimizationResult(
@@ -31,7 +35,12 @@ class Solution:
             termination_reason=self.termination_reason,
             objective=self.objective,
             best_bound=self.bound,
-            relative_gap=relative_gap(self.objective, self.bound) if self.objective is not None and self.bound is not None else None,
+            relative_gap=self.gap_override if self.gap_override is not None else (
+                relative_gap(self.objective, self.bound) if self.objective is not None and self.bound is not None else None
+            ),
+            objective_name=self.objective_name,
+            objective_unit=self.objective_unit,
+            iterations=self.iterations,
             max_time_seconds=settings.max_time_seconds,
             requested_relative_gap=settings.relative_gap,
             workers=settings.workers,

@@ -17,8 +17,8 @@ max_econ = SimulationGoal(
 )
 
 max_tradeoff = SimulationGoal(
-    name="Max Economy & Min N-Load",
-    description="Maximize the economy per N-Load",
+    name="Maximize Regional Economy per N-Load",
+    description="Maximize total regional economy divided by total regional N-Load",
     type=SimulationGoalType.MAX_ECON_PER_NLOAD,
     configuration=[],
 )

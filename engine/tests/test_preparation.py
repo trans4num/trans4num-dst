@@ -41,7 +41,7 @@ class PreparationTests(unittest.TestCase):
 
     def test_pruning_preserves_optimum_with_regional_and_farmer_limits(self):
         fields = sample_fields()
-        for goal in (SimulationGoalType.MAX_ECONOMY, SimulationGoalType.MIN_NLOAD):
+        for goal in (SimulationGoalType.MAX_ECONOMY, SimulationGoalType.MIN_NLOAD, SimulationGoalType.MAX_ECON_PER_NLOAD):
             for farmer_limit in (False, True):
                 constraints = [AccumulatedChangeConstraint(None, 100, operator.le,
                     lambda choice, entry: 0 if choice.name == entry.rotation.name else entry.spatial_indicator.area,
@@ -57,7 +57,8 @@ class PreparationTests(unittest.TestCase):
                     for choices in itertools.product(*problem.choices.values()):
                         selection = dict(zip(problem.fields, choices))
                         if is_feasible(problem, selection):
-                            values.append(sum(choice.cost for choice in choices))
+                            values.append(sum(choice.nload for choice in choices) / sum(choice.economy for choice in choices)
+                                          if goal == SimulationGoalType.MAX_ECON_PER_NLOAD else sum(choice.cost for choice in choices))
                     return min(values) if values else None
                 self.assertEqual(optimum(full), optimum(reduced))
 

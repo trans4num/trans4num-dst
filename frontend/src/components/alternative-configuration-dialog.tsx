@@ -32,6 +32,12 @@ export function AlternativeConfigurationDialog({ alternative, setAlternative }: 
                         <div className="rounded-lg border p-4 space-y-2">
                             <h3 className="font-medium text-foreground">{t("Optimization.title")}</h3>
                             <p>{t("Optimization.status")}: {t(`Optimization.${alternative.optimization.status}`)}</p>
+                            {alternative.optimization.objectiveName === "regional_nload_per_economy" && alternative.optimization.objective !== null && (
+                                <>
+                                    <p>{t("Optimization.regionalRatio")}: {alternative.optimization.objective?.toPrecision(8)} {alternative.optimization.objectiveUnit}</p>
+                                    <p>{t("Optimization.iterations")}: {alternative.optimization.iterations}</p>
+                                </>
+                            )}
                             {alternative.optimization.relativeGap !== null && (
                                 <p>{t("Optimization.gap")}: {(alternative.optimization.relativeGap * 100).toFixed(6)}%</p>
                             )}

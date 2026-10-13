@@ -9,7 +9,9 @@
       "gap": "Normalized optimality gap",
       "method": "Method",
       "termination": "Termination reason",
-      "runtime": "Calculation time"
+      "runtime": "Calculation time",
+      "regionalRatio": "Regional N-load per economy (inverse economy/N-load)",
+      "iterations": "Fractional iterations"
     },
     "addAlternative": "Add Alternative",
     "compareAlternatives": "Compare Selection",
@@ -18,7 +20,7 @@
     "goals":{
       "maximizeEconomy": "Maximize Economy",
       "minimizeNLoad": "Minimize N-Load",
-      "maximizeEconomyNLoad": "Max Economy & Min N-Load"
+      "maximizeEconomyNLoad": "Regional Economy per N-Load"
     },
     "tabs": {
       "completed": "Completed",
@@ -38,12 +40,12 @@
       "goalType": {
         "maximizeEconomy": "Maximize Economy",
         "minimizeNLoad": "Minimize N-Load",
-        "maximizeEconomyNLoad": "Max Economy & Min N-Load"
+        "maximizeEconomyNLoad": "Regional Economy per N-Load"
       },
       "goalTypeLong": {
         "maximizeEconomy": "placeholder: Maximize Economy description",
         "minimizeNLoad": "placeholder: Minimize N-Load description",
-        "maximizeEconomyNLoad": "placeholder: Max Economy & Min N-Load description"
+        "maximizeEconomyNLoad": "Maximize total regional economy divided by total regional N-Load"
       },
       "viewDetails": "View Details",
       "statusValue": {
@@ -156,12 +158,12 @@
     "goal_names": {
       "maximizeEconomy": "Maximize Economy",
       "minimizeNLoad": "Minimize N-Load",
-      "maximizeEconomyNLoad": "Max Economy & Min N-Load"
+      "maximizeEconomyNLoad": "Regional Economy per N-Load"
     },
     "goal_descriptions": {
       "maximizeEconomy": "Maximize the total economy of the region",
       "minimizeNLoad": "Minimize the total N-Load of the region",
-      "maximizeEconomyNLoad": "Maximize the economy per N-Load"
+      "maximizeEconomyNLoad": "Maximize total regional economy divided by total regional N-Load"
     },
     "disabled": "Disabled",
     "variableTypes": {
@@ -180,10 +182,10 @@
     "goals": {
       "maximizeEconomy": "Maximize Economy",
       "minimizeNLoad": "Minimize N-Load",
-      "maximizeEconomyNLoad": "Max Economy & Min N-Load",
+      "maximizeEconomyNLoad": "Regional Economy per N-Load",
       "maximizeEconomy_description": "Maximize the total economy of the region",
       "minimizeNLoad_description": "Minimize the total N-Load of the region",
-      "maximizeEconomyNLoad_description": "Maximize the total economy and N-Load of the region"
+      "maximizeEconomyNLoad_description": "Maximize total regional economy divided by total regional N-Load"
     },
     "singleFarmerImpact": "Single Farmer Impact",
     "natureValue": "Nature Value",

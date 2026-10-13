@@ -12,5 +12,6 @@ def settings_for_job(override: OptimizationSettings | None = None) -> Optimizati
         "workers": "TRANS4NUM_OPTIMIZER_WORKERS",
         "use_fast_path": "TRANS4NUM_OPTIMIZER_FAST_PATH",
         "debug": "TRANS4NUM_OPTIMIZER_DEBUG",
+        "max_fractional_iterations": "TRANS4NUM_OPTIMIZER_MAX_FRACTIONAL_ITERATIONS",
     }
     return OptimizationSettings.model_validate({key: os.environ[name] for key, name in names.items() if name in os.environ})

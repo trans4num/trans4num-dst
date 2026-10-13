@@ -26,6 +26,9 @@ export type AlternativeOptimization = {
   objective: number | null
   bestBound: number | null
   relativeGap: number | null
+  objectiveName?: string | null
+  objectiveUnit?: string | null
+  iterations?: number
   preparationSeconds: number
   modelBuildSeconds: number
   solveSeconds: number
