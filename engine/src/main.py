@@ -2,12 +2,11 @@ from uuid import UUID, uuid4
 
 from models.denmark.load import load_fields
 from models.denmark.metrics import get_metrics
-from models.denmark.model import setup_model
+from models.denmark.optimize import solve_region
 from models.denmark.output import create_output
 from models.denmark.rotations import rotations
 from models.denmark.things import Field
 from models.denmark.transitions import rotation_coefficients
-from optimize.optimize import optimize_region
 from shared_datamodel.simulation import (
     SimulationBase,
 )
@@ -42,12 +41,11 @@ def run(store: IStore, job: SimulationBase, simulation_id: UUID | None = None):
 
     if job.model:
         print("Set up model")
-        model, x = setup_model(
+        result = solve_region(
             fields=fields,
             original_metrics=original_metrics,
             job_model=job.model,
         )
-        result = optimize_region(model, x)
         if not result.success or result.result is None:
             print(result)
             raise Exception("Optimization failed, cannot create output.")

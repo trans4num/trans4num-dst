@@ -45,6 +45,20 @@ across simulations, including fresh containers. Its cache key includes the
 geometry source version and selected field IDs, so a changed source or field set
 regenerates it. Custom stores can opt out through the default `IStore` methods.
 
+## Regional allocation fast path
+
+Economy and nitrogen-load objectives with zero or one plain regional additive
+constraint can use a continuous allocation relaxation with a whole-field repair.
+The result has one actual rotation per field, is checked against the same
+integer-scaled constraints as CP-SAT, and includes a regional lower bound.
+
+Grouped farmer constraints, multiple regional constraints, custom constraint
+implementations, and the mixed-ratio objective use CP-SAT. Eligibility is based
+on the prepared constraint objects, not a list of UI constraint names. New
+constraint types therefore default to the general solver. If the repaired
+allocation misses the requested gap, it becomes a feasible solver hint and
+fallback candidate rather than being accepted as a sufficiently accurate result.
+
 Engine regression tests use Python's standard `unittest` runner. With the local
 Docker image built, run from the repository root:
 
