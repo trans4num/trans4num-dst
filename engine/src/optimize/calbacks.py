@@ -1,4 +1,5 @@
 from ortools.sat.python import cp_model
+from . import relative_gap
 
 
 class SolutionPrinterWithLimit(cp_model.CpSolverSolutionCallback):
@@ -12,7 +13,7 @@ class SolutionPrinterWithLimit(cp_model.CpSolverSolutionCallback):
         print("Found a solution")
         bound = self.BestObjectiveBound()
         objective = self.ObjectiveValue()
-        pct_deviation = (objective - bound) / bound * 100
+        pct_deviation = relative_gap(objective, bound) * 100
         print("It was off by", pct_deviation, "%")
 
         if abs(pct_deviation) < self.__solution_limit:

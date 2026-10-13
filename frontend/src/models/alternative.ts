@@ -16,6 +16,21 @@ export type Alternative = {
   barCharts?: AlternativeBarChart[]
   created: string
   deleted: boolean
+  optimization?: AlternativeOptimization
+}
+
+export type AlternativeOptimization = {
+  method: string
+  status: "optimal" | "feasible" | "missing"
+  terminationReason: string
+  objective: number | null
+  bestBound: number | null
+  relativeGap: number | null
+  preparationSeconds: number
+  modelBuildSeconds: number
+  solveSeconds: number
+  loadSeconds: number
+  outputSeconds: number
 }
 
 export type AlternativeChart = {

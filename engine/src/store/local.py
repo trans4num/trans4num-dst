@@ -9,6 +9,7 @@ from osgeo import gdal, ogr
 from shared_datamodel.simulation import (
     Simulation,
     SimulationBase,
+    OptimizationResult,
 )
 from models.denmark.things import Col
 from store import IStore, geometry_cache_key, resolve_input_columns
@@ -135,11 +136,13 @@ class Store(IStore):
         with open(f"simulations/{region_id}/{simulation_id}/meta.json", "w") as f:
             f.write(simulation.model_dump_json(indent=2))
 
-    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID):
+    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None):
         meta_path = f"simulations/{region_id}/{simulation_id}/meta.json"
         with open(meta_path, "r") as f:
             meta = json.load(f)
 
         meta["status"] = "failed"
+        if optimization is not None:
+            meta["optimization"] = optimization.model_dump(mode="json")
         with open(meta_path, "w") as f:
             json.dump(meta, f, indent=2)

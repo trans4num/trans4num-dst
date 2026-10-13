@@ -1,6 +1,7 @@
 import type {
   Alternative,
   AlternativeBarChart,
+  AlternativeOptimization,
   AlternativesWithStatusQuo,
 } from "@/models/alternative"
 import { apiFetch } from "@/lib/api/client";
@@ -47,6 +48,7 @@ interface SimulationResponse {
   created: string
   status: "success" | "processing" | "failed" | "nonOptimal"
   deleted?: boolean
+  optimization?: AlternativeOptimization | null
   summary: Array<{
     name: string
     value: number
@@ -92,6 +94,7 @@ export async function fetchAlternatives(regionId: string): Promise<AlternativesW
       model: data.model,
       created: data.created,
       deleted: data.deleted ?? false,
+      optimization: data.optimization ?? undefined,
     };
   }
 

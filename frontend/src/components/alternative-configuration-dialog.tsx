@@ -28,6 +28,24 @@ export function AlternativeConfigurationDialog({ alternative, setAlternative }: 
                     {alternative.model && 
                     <ConstraintsDisplayCard 
                     alternativeModel={alternative.model} />}
+                    {alternative.optimization && (
+                        <div className="rounded-lg border p-4 space-y-2">
+                            <h3 className="font-medium text-foreground">{t("Optimization.title")}</h3>
+                            <p>{t("Optimization.status")}: {t(`Optimization.${alternative.optimization.status}`)}</p>
+                            {alternative.optimization.relativeGap !== null && (
+                                <p>{t("Optimization.gap")}: {(alternative.optimization.relativeGap * 100).toFixed(6)}%</p>
+                            )}
+                            <p>{t("Optimization.method")}: {alternative.optimization.method}</p>
+                            <p>{t("Optimization.termination")}: {alternative.optimization.terminationReason}</p>
+                            <p>{t("Optimization.runtime")}: {(
+                                alternative.optimization.loadSeconds +
+                                alternative.optimization.preparationSeconds +
+                                alternative.optimization.modelBuildSeconds +
+                                alternative.optimization.solveSeconds +
+                                alternative.optimization.outputSeconds
+                            ).toFixed(1)} s</p>
+                        </div>
+                    )}
                 </div>
             </DialogDescription>
         </DialogContent>

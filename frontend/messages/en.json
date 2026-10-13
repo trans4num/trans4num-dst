@@ -1,5 +1,16 @@
 {
   "HomePage": {
+    "Optimization": {
+      "title": "Optimization quality",
+      "status": "Solution",
+      "optimal": "Proven optimal",
+      "feasible": "Feasible approximation",
+      "missing": "No feasible solution",
+      "gap": "Normalized optimality gap",
+      "method": "Method",
+      "termination": "Termination reason",
+      "runtime": "Calculation time"
+    },
     "addAlternative": "Add Alternative",
     "compareAlternatives": "Compare Selection",
     "openAlternative": "Open Selected",

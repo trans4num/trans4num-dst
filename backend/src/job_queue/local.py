@@ -1,6 +1,6 @@
 import json
 import logging
-from threading import Thread
+from threading import Lock, Thread
 from urllib.request import Request, urlopen
 from uuid import UUID
 
@@ -14,6 +14,8 @@ class EngineJobQueue(IEngineJobQueue):
         if not invoke_url:
             raise ValueError("A local engine invoke URL is required")
         self.invoke_url = invoke_url
+        # One local emulator represents one Lambda execution environment.
+        self._invoke_lock = Lock()
 
     def enqueue_simulation(self, region_id: UUID, simulation_id: UUID) -> None:
         event = {
@@ -48,13 +50,14 @@ class EngineJobQueue(IEngineJobQueue):
             method="POST",
         )
         try:
-            with urlopen(request, timeout=60 * 60) as response:
+            with self._invoke_lock, urlopen(request, timeout=60 * 60) as response:
                 if response.status >= 300 or response.headers.get(
                     "X-Amz-Function-Error"
                 ):
                     raise RuntimeError(
                         f"Local engine invocation failed with HTTP {response.status}"
                     )
+                response.read()
                 logger.info(
                     "Local simulation %s completed engine invocation", simulation_id
                 )

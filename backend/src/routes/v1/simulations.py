@@ -66,6 +66,7 @@ def get_router(store: IStore, queue: IEngineJobQueue) -> APIRouter:
             name=body.name,
             region_id=body.region_id,
             model=body.model,
+            optimization_settings=body.optimization_settings,
             summary=[],
             charts=[],
             barCharts=[],

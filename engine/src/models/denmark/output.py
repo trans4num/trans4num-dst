@@ -1,5 +1,6 @@
 import json
 import math
+import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from uuid import UUID
@@ -18,6 +19,7 @@ from shared_datamodel.simulation import (
     SimulationBase,
     SimulationStatus,
     SummaryEntry,
+    OptimizationResult,
 )
 from store import IStore
 
@@ -41,7 +43,9 @@ def create_output(
     original_metrics: Metrics,
     original_fields: dict[str, Field],
     simulation_id: UUID,
+    optimization: OptimizationResult | None = None,
 ):
+    start = time.perf_counter()
     field_ids: set[str] = set()
 
     total_fields = len(fields)
@@ -202,6 +206,8 @@ def create_output(
             name=job.name,
             region_id=job.region_id,
             model=job.model,
+            optimization_settings=job.optimization_settings,
+            optimization=optimization.model_copy(update={"output_seconds": time.perf_counter() - start}) if optimization else None,
             id=simulation_id,
             created=datetime.now(timezone.utc),
             status=SimulationStatus.SUCCESS,

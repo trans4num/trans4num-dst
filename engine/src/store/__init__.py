@@ -10,6 +10,7 @@ from osgeo import gdal
 from shared_datamodel.simulation import (
     Simulation,
     SimulationBase,
+    OptimizationResult,
 )
 
 
@@ -85,7 +86,7 @@ class IStore(ABC):
         pass
 
     @abstractmethod
-    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID):
+    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None):
         pass
 
 

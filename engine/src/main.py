@@ -1,4 +1,5 @@
 from uuid import UUID, uuid4
+import time
 
 from models.denmark.load import load_fields
 from models.denmark.metrics import get_metrics
@@ -11,6 +12,7 @@ from shared_datamodel.simulation import (
     SimulationBase,
 )
 from store import IStore
+from optimize.settings import settings_for_job
 
 
 def run(store: IStore, job: SimulationBase, simulation_id: UUID | None = None):
@@ -33,23 +35,31 @@ def run(store: IStore, job: SimulationBase, simulation_id: UUID | None = None):
                     return
 
     print("Load the data")
+    start = time.perf_counter()
     fields = load_fields(store, job.region_id)
+    if not fields:
+        raise ValueError("No supported fields found in the source dataset")
     print("Got fields")
 
     original_fields = fields.copy()
     original_metrics = get_metrics(fields)
+    load_seconds = time.perf_counter() - start
+    quality = None
 
     if job.model:
         print("Set up model")
+        settings = settings_for_job(job.optimization_settings)
         result = solve_region(
             fields=fields,
             original_metrics=original_metrics,
             job_model=job.model,
+            settings=settings,
         )
+        quality = result.quality(settings, load_seconds)
         if not result.success or result.result is None:
             print(result)
+            store.update_meta_to_failed(job.region_id, simulation_id, quality)
             raise Exception("Optimization failed, cannot create output.")
-            return
         print(result.description)
         # Based on the optimization change the crops
         selected = {r[0]: r[1] for r in result.result}
@@ -79,4 +89,5 @@ def run(store: IStore, job: SimulationBase, simulation_id: UUID | None = None):
         job=job,
         original_fields=original_fields,
         simulation_id=simulation_id,
+        optimization=quality,
     )

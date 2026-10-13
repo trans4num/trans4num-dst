@@ -59,6 +59,66 @@ constraint types therefore default to the general solver. If the repaired
 allocation misses the requested gap, it becomes a feasible solver hint and
 fallback candidate rather than being accepted as a sufficiently accurate result.
 
+## Solver budgets and result quality
+
+The defaults are a 120-second CP-SAT search budget, a normalized relative gap of
+0.05 (5%), eight search workers, and an enabled allocation fast path. Set these
+environment variables when starting Compose/the root CLI:
+
+| Variable | Default |
+| --- | --- |
+| `TRANS4NUM_OPTIMIZER_MAX_TIME_SECONDS` | `120` |
+| `TRANS4NUM_OPTIMIZER_RELATIVE_GAP` | `0.05` |
+| `TRANS4NUM_OPTIMIZER_WORKERS` | `8` (use `0` for automatic) |
+| `TRANS4NUM_OPTIMIZER_FAST_PATH` | `true` |
+| `TRANS4NUM_OPTIMIZER_DEBUG` | `false` |
+
+For example, `TRANS4NUM_OPTIMIZER_MAX_TIME_SECONDS=30
+TRANS4NUM_OPTIMIZER_RELATIVE_GAP=0.01 ./trans4num --region REGION_UUID` requests
+a 30-second solver budget and a 1% gap. The budget covers CP-SAT search, including
+presolve, rather than input loading/model building/output generation. A time
+limit may return a feasible result with a larger gap, or no result if neither
+the solver nor a checked starting selection found one.
+
+API clients can override the defaults per simulation using `optimizationSettings`:
+
+```json
+{
+  "name": "Preview",
+  "regionId": "REGION_UUID",
+  "model": "<the normal model object>",
+  "optimizationSettings": {
+    "maxTimeSeconds": 30,
+    "relativeGap": 0.01,
+    "workers": 8,
+    "useFastPath": true
+  }
+}
+```
+
+An explicit settings object uses its own defaults for omitted fields; otherwise
+the environment is used. Set the gap to zero to request exact search, or disable
+the fast path to compare CP-SAT directly. Native gap stopping observes both
+incumbent and bound improvements. Starting selections are constructed from the
+current job's allocation or source baseline and checked against all current
+constraints before use as hints or timeout fallbacks.
+For supported additive constraints, greedy improvement of a feasible seed checks
+every regional/farmer limit after each field move. This heuristic is only a
+starting solution; it never supplies its own optimality bound. Solver hints and
+fallbacks therefore work on cold invocations without a previous simulation.
+
+The local backend serializes requests to its single Lambda emulator and consumes
+each invocation response before starting the next one. Cloud Lambda execution
+is unaffected by this local queue behavior.
+
+Completed and solver-failed simulations expose `optimization` metadata: method,
+optimal/feasible/missing status, objective, lower bound, normalized relative gap,
+termination reason, requested budget, and phase timings. Objectives use the
+engine's minimization convention (economy is negative). The normalized gap is
+`max(0, objective - bound) / max(1, abs(objective))`, which is also defined for
+negative and zero objectives. The configuration dialog displays quality and
+timings for new results; older simulations can omit these fields.
+
 Engine regression tests use Python's standard `unittest` runner. With the local
 Docker image built, run from the repository root:
 

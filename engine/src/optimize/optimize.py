@@ -1,90 +1,50 @@
-from ortools.sat.cp_model_pb2 import CpSolverStatus
+import time
+
 from ortools.sat.python import cp_model
 
-# from optimize.initialize import setup_model
 from utils import print_runtime
-
-from . import Solution, SolutionType
-from .calbacks import SolutionPrinterWithLimit
+from . import Solution, SolutionType, relative_gap
 
 
 @print_runtime
-def solve_model(
-    model: cp_model.CpModel,
-    max_time: int,
-    debug: bool,
-) -> tuple[cp_model.CpSolver, CpSolverStatus]:
+def solve_model(model, max_time, debug, gap_limit=0.05, workers=8):
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = max_time
+    solver.parameters.relative_gap_limit = gap_limit
+    solver.parameters.num_search_workers = workers
     solver.parameters.log_search_progress = debug
-    solution_printer = SolutionPrinterWithLimit(5)
-    status = solver.Solve(model, solution_printer)
+    # Native gap termination observes bound improvements even when no new
+    # incumbent arrives, unlike stopping in a solution callback.
+    status = solver.Solve(model)
     return solver, status
 
 
-def optimize_region(
-    model: cp_model.CpModel,
-    x: dict,
-    max_time: int = 120,
-    debug: bool = False,
-) -> Solution:
-    solver, status = solve_model(model, max_time, debug)
-
-    if status == cp_model.MODEL_INVALID:
-        return Solution(
-            success=False,
-            result=None,
-            description="The model is invalid.",
-            type=SolutionType.MISSING,
-        )
-
-    if status == cp_model.UNKNOWN:
-        return Solution(
-            success=False,
-            result=None,
-            description="No solution found.",
-            type=SolutionType.MISSING,
-        )
-
-    if status == cp_model.INFEASIBLE:
-        return Solution(
-            success=False,
-            result=None,
-            description="No feasible solution exists.",
-            type=SolutionType.MISSING,
-        )
-
-    slices = []
-    for idx, xij in x.items():
-        selected = solver.BooleanValue(xij)
-        if selected:
-            slices.append(idx)
-
-    selected = slices
-
-    if status == cp_model.OPTIMAL:
-        return Solution(
-            success=True,
-            result=selected,
-            description="Optimal solution",
-            type=SolutionType.OPTIMAL,
-        )
-    if status == cp_model.FEASIBLE:
-        bound = solver.BestObjectiveBound()
-        objective = solver.ObjectiveValue()
-
-        pct_deviation = (objective - bound) / bound * 100
-
-        return Solution(
-            success=True,
-            result=selected,
-            description=f"Only found a feasible solution. Solution is guarenteed within {pct_deviation:.2f} % of the optimal solution",
-            type=SolutionType.FEASIBLE,
-        )
-
+def optimize_region(model, x, max_time=120, debug=False, gap_limit=0.05, workers=8):
+    start = time.perf_counter()
+    solver, status = solve_model(model, max_time, debug, gap_limit, workers)
+    seconds = time.perf_counter() - start
+    failures = {
+        cp_model.MODEL_INVALID: ("The model is invalid.", "model_invalid"),
+        cp_model.UNKNOWN: ("No feasible solution found within the solver budget.", "no_solution"),
+        cp_model.INFEASIBLE: ("No feasible solution exists.", "infeasible"),
+    }
+    if status in failures:
+        description, reason = failures[status]
+        return Solution(False, None, description, SolutionType.MISSING,
+                        termination_reason=reason, solve_seconds=seconds)
+    objective, bound = solver.ObjectiveValue(), solver.BestObjectiveBound()
+    # CP-SAT can report OPTIMAL after reaching a nonzero relative-gap limit.
+    # Do not present that as a proof that the incumbent equals the optimum.
+    proven = status == cp_model.OPTIMAL and abs(objective - bound) <= 1e-7
+    gap = relative_gap(objective, bound)
+    reason = "optimal" if proven else "gap_limit" if gap_limit > 0 and gap <= gap_limit else "time_limit"
     return Solution(
-        success=False,
-        result=None,
-        description="We do not know why this failed.",
-        type=SolutionType.MISSING,
+        success=True,
+        result=[key for key, variable in x.items() if solver.BooleanValue(variable)],
+        description="Optimal solution" if proven else f"Feasible solution; normalized optimality gap {gap * 100:.6f}%",
+        type=SolutionType.OPTIMAL if proven else SolutionType.FEASIBLE,
+        objective=objective,
+        bound=bound,
+        termination_reason=reason,
+        solve_seconds=seconds,
     )

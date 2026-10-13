@@ -1,5 +1,16 @@
 {
   "HomePage": {
+    "Optimization": {
+      "title": "Optimierungsqualität",
+      "status": "Lösung",
+      "optimal": "Nachweislich optimal",
+      "feasible": "Zulässige Näherungslösung",
+      "missing": "Keine zulässige Lösung",
+      "gap": "Normalisierte Optimalitätslücke",
+      "method": "Methode",
+      "termination": "Abbruchgrund",
+      "runtime": "Berechnungszeit"
+    },
     "addAlternative": "Alternative hinzufügen",
     "openAlternative": "Ausgewählte Alternative öffnen",
     "compareAlternatives": "Alternativen vergleichen",

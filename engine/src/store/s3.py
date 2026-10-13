@@ -12,6 +12,7 @@ from osgeo import gdal, ogr
 from shared_datamodel.simulation import (
     Simulation,
     SimulationBase,
+    OptimizationResult,
 )
 from models.denmark.things import Col
 from store import IStore, geometry_cache_key, resolve_input_columns
@@ -160,12 +161,14 @@ class Store(IStore):
             ContentType="application/json",
         )
 
-    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID):
+    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None):
         meta_path = f"simulations/{region_id}/{simulation_id}/meta.json"
         meta_data = self.s3.get_object(Bucket=self.bucket_name, Key=meta_path)
         text = meta_data["Body"].read().decode()
         meta = json.loads(text)
         meta["status"] = "failed"
+        if optimization is not None:
+            meta["optimization"] = optimization.model_dump(mode="json")
 
         self.s3.put_object(
             Bucket=self.bucket_name,

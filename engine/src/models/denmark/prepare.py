@@ -36,7 +36,12 @@ def prepare_problem(fields, constraints, ignore_constraints, goal_type, prune=Tr
     for key, entry in fields.items():
         allowed = all(c.allow(entry) for c in ignore_constraints)
         candidates = []
-        rotations = {r.name: r for r in entry.choices}
+        rotations = {}
+        for rotation in entry.choices + [entry.rotation]:
+            existing = rotations.get(rotation.name)
+            if existing is not None and existing.indices != rotation.indices:
+                raise ValueError(f"Different rotations share the name {rotation.name!r} on {key}")
+            rotations[rotation.name] = rotation
         # The existing rotation remains a valid option, even for frozen fields.
         rotations[entry.rotation.name] = entry.rotation
         for rotation in rotations.values():
@@ -86,8 +91,8 @@ def is_feasible(problem: PreparedProblem, selection: dict[str, Choice]) -> bool:
                 limit = int(constraint.max_change * constraint.scale)
             else:
                 return False
-            value, _ = totals.get(group, (0, limit))
-            totals[group] = (value + choice.coefficients[index], limit)
+            value, group_limit = totals.get(group, (0, limit))
+            totals[group] = (value + choice.coefficients[index], group_limit)
         if not all(constraint.operator(value, limit) for value, limit in totals.values()):
             return False
     return all(choice in problem.choices[key] for key, choice in selection.items())

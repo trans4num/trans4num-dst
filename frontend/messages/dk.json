@@ -1,5 +1,16 @@
 {
   "HomePage": {
+    "Optimization": {
+      "title": "Optimeringskvalitet",
+      "status": "Løsning",
+      "optimal": "Bevist optimal",
+      "feasible": "Mulig tilnærmet løsning",
+      "missing": "Ingen mulig løsning",
+      "gap": "Normaliseret optimalitetsgab",
+      "method": "Metode",
+      "termination": "Årsag til afslutning",
+      "runtime": "Beregningstid"
+    },
     "addAlternative": "Tilføj Alternativ",
     "compareAlternatives": "Sammenlign Valg",
     "openAlternative": "Åbn Valg",
