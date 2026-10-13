@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+import hashlib
+import json
 from os import environ
 from uuid import UUID
 
@@ -28,7 +30,18 @@ def resolve_input_columns(
     }
 
 
+def geometry_cache_key(source_version, field_ids: set[str]) -> str:
+    payload = json.dumps(["geometry-v1", source_version, sorted(field_ids)], separators=(",", ":"))
+    return hashlib.sha256(payload.encode()).hexdigest()
+
+
 class IStore(ABC):
+    def read_cached_geometries(self, region_id: UUID, field_ids: set[str]):
+        return None
+
+    def cache_geometries(self, region_id: UUID, field_ids: set[str], featurecollection_str: str):
+        self.write_geometries_if_missing(region_id, featurecollection_str)
+
     @abstractmethod
     def region_exists(self, region_id: UUID) -> bool:
         pass

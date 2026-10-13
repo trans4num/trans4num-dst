@@ -6,6 +6,7 @@ from models.denmark.model import setup_model
 from models.denmark.output import create_output
 from models.denmark.rotations import rotations
 from models.denmark.things import Field
+from models.denmark.transitions import rotation_coefficients
 from optimize.optimize import optimize_region
 from shared_datamodel.simulation import (
     SimulationBase,
@@ -14,6 +15,9 @@ from store import IStore
 
 
 def run(store: IStore, job: SimulationBase, simulation_id: UUID | None = None):
+    # Reuse coefficients throughout this job, with cold-invocation semantics
+    # even when a local container or Lambda execution environment is reused.
+    rotation_coefficients.cache_clear()
     if simulation_id is None:
         simulation_id = uuid4()
     # Status Quo is created only when the region does not have one yet.

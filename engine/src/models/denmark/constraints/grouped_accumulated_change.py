@@ -32,6 +32,12 @@ class GroupedAccumulatedChangeConstraint:
         field: Field,
         model_var: IntVar,
     ):
+        self.add_coefficient(field, self.coefficient(choice, field), model_var)
+
+    def coefficient(self, choice: CropRotation, field: Field) -> int:
+        return int(self.loader(choice, field) * self.scale)
+
+    def add_coefficient(self, field: Field, value: int, model_var: IntVar):
         group_name = self.grouper(field)
         if group_name not in self.group_constraints:
             self.group_constraints[group_name] = AccumulatedChangeConstraint(
@@ -41,7 +47,7 @@ class GroupedAccumulatedChangeConstraint:
                 self.loader,
                 max_change=self.get_max_change(field),
             )
-        self.group_constraints[group_name].add_term(choice, field, model_var)
+        self.group_constraints[group_name].add_coefficient(field, value, model_var)
 
     def constraint(self):
         # print(list(self.group_constraints.keys())[:5])

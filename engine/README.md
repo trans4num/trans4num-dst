@@ -26,6 +26,35 @@ Use `--store-type local` for local engine runs that use the local file store
 instead. The repository root includes a Compose configuration that runs this
 mode in Docker and shares its files with the backend.
 
+## Optimization preparation
+
+The engine assumes a fresh AWS Lambda execution environment for each job. Source
+fields are read for each job. Crop-transition coefficients are reused by full
+crop sequence, soil, and metric within that job, avoiding repeated calculations
+across fields and constraints. This bounded coefficient cache is cleared at job
+entry, so benchmarks and behavior do not depend on earlier invocations.
+
+Model preparation removes dominated rotation options only after comparing the
+objective and every enabled regional/farmer constraint, using the exact same
+integer-scaled coefficients as CP-SAT. The existing rotation is always retained.
+Unrecognized constraint implementations opt out of pruning, and an enabled
+constraint without an implementation raises an error instead of being ignored.
+
+Prepared map geometry is persisted in S3 (or the local file store) and reused
+across simulations, including fresh containers. Its cache key includes the
+geometry source version and selected field IDs, so a changed source or field set
+regenerates it. Custom stores can opt out through the default `IStore` methods.
+
+Engine regression tests use Python's standard `unittest` runner. With the local
+Docker image built, run from the repository root:
+
+```bash
+docker run --rm --entrypoint /opt/conda-env/bin/python \
+  -v "$PWD:/workspace:ro" -w /workspace/engine \
+  -e PYTHONPATH=/workspace/engine/src:/workspace/common \
+  open-source-engine -m unittest discover -s tests -v
+```
+
 # Objectives:
 Mixed (nloadperecon): Minimize (nload/econ)
 Economy (economy): Maximize economy -> Constraints for hvad nload må blive

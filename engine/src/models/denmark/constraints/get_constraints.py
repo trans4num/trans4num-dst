@@ -141,4 +141,7 @@ def get_accumulated_constraints(
             )
             result.append(constraint_func)
 
+        elif constraint.name not in ("Distance to Biogas", "Nature Value"):
+            raise ValueError(f"Unsupported enabled constraint: {constraint.name}")
+
     return result

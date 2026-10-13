@@ -1,6 +1,6 @@
 import gzip
 import json
-from os import listdir, makedirs, path
+from os import listdir, makedirs, path, stat
 from uuid import UUID
 
 import pandas as pd
@@ -11,10 +11,35 @@ from shared_datamodel.simulation import (
     SimulationBase,
 )
 from models.denmark.things import Col
-from store import IStore, resolve_input_columns
+from store import IStore, geometry_cache_key, resolve_input_columns
 
 
 class Store(IStore):
+    def _geometry_key(self, field_ids):
+        source = "data/Marker_2023_n61489.zip"
+        if not path.exists(source):
+            source = "data/fake-fields.geojson"
+        version = stat(source)
+        return geometry_cache_key((source, version.st_size, version.st_mtime_ns), field_ids)
+
+    def read_cached_geometries(self, region_id: UUID, field_ids: set[str]):
+        root = f"simulations/{region_id}"
+        if not path.exists(f"{root}/fields.source.json") or not path.exists(f"{root}/fields.geojson.gz"):
+            return None
+        with open(f"{root}/fields.source.json") as file:
+            if json.load(file) != self._geometry_key(field_ids):
+                return None
+        with gzip.open(f"{root}/fields.geojson.gz", "rt") as file:
+            return json.load(file)
+
+    def cache_geometries(self, region_id: UUID, field_ids: set[str], featurecollection_str: str):
+        root = f"simulations/{region_id}"
+        makedirs(root, exist_ok=True)
+        with gzip.open(f"{root}/fields.geojson.gz", "wt") as file:
+            file.write(featurecollection_str)
+        with open(f"{root}/fields.source.json", "w") as file:
+            json.dump(self._geometry_key(field_ids), file)
+
     def region_exists(self, region_id: UUID) -> bool:
         return path.exists(f"simulations/{region_id}")
 

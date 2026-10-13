@@ -27,9 +27,12 @@ class AccumulatedChangeConstraint:
         field: Field,
         model_var: IntVar,
     ):
-        value = self.loader(choice, field)
-        # UPSCALE TO INT
-        value = int(value * self.scale)
+        self.add_coefficient(field, self.coefficient(choice, field), model_var)
+
+    def coefficient(self, choice: CropRotation, field: Field) -> int:
+        return int(self.loader(choice, field) * self.scale)
+
+    def add_coefficient(self, field: Field, value: int, model_var: IntVar):
         term = value * model_var
         self.terms.append(term)
 

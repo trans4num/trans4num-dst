@@ -82,44 +82,36 @@ def create_output(
     area_consistency = (unchanged_area / metrics.total_area) * 100
 
     print("Generating fields geojson")
-    features = []
-    data_src = store.read_fields_shapefile(job.region_id)
-    layer = data_src.GetLayer()
-    source_srs = layer.GetSpatialRef()
-    target_srs = osr.SpatialReference()
-    target_srs.ImportFromEPSG(4326)
-    transform = osr.CoordinateTransformation(source_srs, target_srs)
+    cached = store.read_cached_geometries(job.region_id, field_ids)
+    if cached is not None:
+        features = cached["features"]
+    else:
+        features = []
+        data_src = store.read_fields_shapefile(job.region_id)
+        layer = data_src.GetLayer()
+        source_srs = layer.GetSpatialRef()
+        target_srs = osr.SpatialReference()
+        target_srs.ImportFromEPSG(4326)
+        transform = osr.CoordinateTransformation(source_srs, target_srs)
 
-    for feature in layer:
-        field_id = f"f-{feature.GetField('IMK_ID')}"
-
-        if field_id in field_ids:
-            geom = feature.GetGeometryRef()
-            simplified_geom = geom.Simplify(10.0)
-            if simplified_geom is not None and not simplified_geom.IsEmpty():
-                geom = simplified_geom
-            geom.Transform(transform)
-            features.append(
-                {
-                    "type": "Feature",
-                    "properties": {},
-                    "id": str(field_id),
+        for feature in layer:
+            field_id = f"f-{feature.GetField('IMK_ID')}"
+            if field_id in field_ids:
+                geom = feature.GetGeometryRef()
+                simplified_geom = geom.Simplify(10.0)
+                if simplified_geom is not None and not simplified_geom.IsEmpty():
+                    geom = simplified_geom
+                geom.Transform(transform)
+                features.append({
+                    "type": "Feature", "properties": {}, "id": str(field_id),
                     "geometry": json.loads(geom.ExportToJson(["XY_COORD_PRECISION=5"])),
-                }
-            )
+                })
+
+        store.cache_geometries(job.region_id, field_ids, json.dumps({
+            "type": "FeatureCollection", "name": str(job.region_id), "features": features,
+        }))
 
     print("Features", len(features))
-
-    store.write_geometries_if_missing(
-        region_id=job.region_id,
-        featurecollection_str=json.dumps(
-            {
-                "type": "FeatureCollection",
-                "name": str(job.region_id),
-                "features": features,
-            }
-        ),
-    )
 
     res_dict = {str(r.field_id): asdict(r) for r in res}
     store.write_debug_geometries(

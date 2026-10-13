@@ -1,4 +1,5 @@
 from enum import Enum
+from functools import lru_cache
 
 from models.denmark.things import Crop, CropRotation, Soil, SpatialIndicator
 
@@ -157,6 +158,17 @@ def get_transition(
         )
 
 
+@lru_cache(maxsize=65536)
+def rotation_coefficients(indices: tuple[Crop, ...], transition: Transition, soil: Soil):
+    values = []
+    for idx, crop in enumerate(indices):
+        value = get_transition(indices[idx - 1], crop, soil, 0, 1, transition)
+        if value is None:
+            raise ValueError(f"Invalid transition: {indices[idx - 1]} -> {crop}")
+        values.append(int(value))
+    return tuple(values)
+
+
 # This is the function calculating the values from our crop rotation
 # In general the entire framework is based on the idea that we have a crop rotation, transition and spatial indicators.
 def f(
@@ -164,25 +176,11 @@ def f(
     transition: Transition,
     spatial_indicator: SpatialIndicator,
 ) -> float:
-    values = []
-    for idx, crop in enumerate(crop_rotation.indices):
-        # We specifically want -1 if it is the first crop, since it is a rotation.
-        previous_crop = crop_rotation.indices[idx - 1]
-        value = get_transition(
-            from_crop=previous_crop,
-            to_crop=crop,
-            soil=spatial_indicator.soil,
-            retention=spatial_indicator.retention,
-            area=spatial_indicator.area,
-            transition=transition,
-        )
-
-        if value is None:
-            raise Exception(
-                f"The existing data should not contain invalid transitions \n {crop_rotation} {spatial_indicator} {transition}, {previous_crop} -> {crop} = {value}"
-            )
-
-        values.append(value)
-
-    # We return the average of the values, so we can have different lengths of crop rotations
-    return sum(values) / len(values)
+    coefficients = rotation_coefficients(crop_rotation.indices, transition, spatial_indicator.soil)
+    area = spatial_indicator.area
+    # Preserve the original per-transition arithmetic order. In particular,
+    # changing the order around averaging can affect integer-scaled constraints.
+    if transition == Transition.LEACHING:
+        factor = (100 - spatial_indicator.retention) / 100
+        return sum((value * area) * factor for value in coefficients) / len(coefficients)
+    return sum(value * area for value in coefficients) / len(coefficients)

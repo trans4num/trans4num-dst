@@ -5,6 +5,7 @@ from io import StringIO
 from uuid import UUID
 
 import boto3
+from botocore.exceptions import ClientError
 import pandas as pd
 from osgeo import gdal, ogr
 
@@ -13,7 +14,7 @@ from shared_datamodel.simulation import (
     SimulationBase,
 )
 from models.denmark.things import Col
-from store import IStore, resolve_input_columns
+from store import IStore, geometry_cache_key, resolve_input_columns
 
 
 class Store(IStore):
@@ -24,6 +25,32 @@ class Store(IStore):
                 "TRANS4NUM_STORAGE_BUCKET must be set when using the S3 store"
             )
         self.s3 = boto3.client("s3")
+
+    def _geometry_key(self, region_id, field_ids):
+        response = self.s3.head_object(Bucket=self.bucket_name, Key=f"data/regions/{region_id}/fields.zip")
+        return geometry_cache_key((response["ETag"], response.get("VersionId")), field_ids)
+
+    def read_cached_geometries(self, region_id: UUID, field_ids: set[str]):
+        root = f"simulations/{region_id}"
+        try:
+            source = self.s3.get_object(Bucket=self.bucket_name, Key=f"{root}/fields.source.json")
+            if json.loads(source["Body"].read()) != self._geometry_key(region_id, field_ids):
+                return None
+            data = self.s3.get_object(Bucket=self.bucket_name, Key=f"{root}/fields.geojson.gz")
+            return json.loads(gzip.decompress(data["Body"].read()))
+        except ClientError as error:
+            if error.response["Error"]["Code"] in ("NoSuchKey", "404"):
+                return None
+            raise
+
+    def cache_geometries(self, region_id: UUID, field_ids: set[str], featurecollection_str: str):
+        root = f"simulations/{region_id}"
+        self.s3.put_object(Bucket=self.bucket_name, Key=f"{root}/fields.geojson.gz",
+                           Body=gzip.compress(featurecollection_str.encode()),
+                           ContentEncoding="gzip", ContentType="application/json")
+        self.s3.put_object(Bucket=self.bucket_name, Key=f"{root}/fields.source.json",
+                           Body=json.dumps(self._geometry_key(region_id, field_ids)).encode(),
+                           ContentType="application/json")
 
     def region_exists(self, region_id: UUID) -> bool:
         key = f"simulations/{region_id}".rstrip("/")

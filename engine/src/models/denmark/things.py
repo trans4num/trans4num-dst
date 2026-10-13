@@ -55,7 +55,12 @@ class Crop(Enum):
 @dataclass(frozen=True)
 class CropRotation:
     name: str
-    indices: list[Crop]
+    indices: tuple[Crop, ...]
+
+    def __post_init__(self):
+        # Immutable sequences make coefficient caches safe, including rotations
+        # with the same display name but different crop histories.
+        object.__setattr__(self, "indices", tuple(self.indices))
 
 
 @dataclass(frozen=True)
