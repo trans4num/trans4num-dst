@@ -1,4 +1,5 @@
 import operator
+import math
 
 from ortools.sat.python import cp_model
 
@@ -48,6 +49,26 @@ def get_accumulated_constraints(
 ) -> list[AccumulatedChangeConstraint | GroupedAccumulatedChangeConstraint]:
     result = []
 
+    periods = {len(field.rotation.indices) for field in fields.values()}
+    periods.update(len(choice.indices) for field in fields.values() for choice in field.choices)
+    if 0 in periods:
+        raise ValueError("Crop rotations must not be empty")
+    # Represent ordinary crop-period averages and four-decimal hectare areas
+    # accurately without making the integer model grow without bound.
+    economy_scale = min(1_000_000, 10_000 * math.lcm(*periods))
+    originals = {}
+    def baseline(transition):
+        if transition not in originals:
+            values = original_metrics.field_revenue if transition == Transition.ECONOMY else original_metrics.field_emission
+            originals[transition] = values or {
+                field.field_id: f(field.rotation, transition, field.spatial_indicator) for field in fields.values()
+            }
+        return originals[transition]
+
+    def change_loader(transition):
+        values = baseline(transition)
+        return lambda choice, field: f(choice, transition, field.spatial_indicator) - values[field.field_id]
+
     for constraint in job_model.constraints + job_model.goal.configuration:
         # Ignore all constraints which are not enabled
         if not constraint.enabled:
@@ -57,11 +78,9 @@ def get_accumulated_constraints(
             print("Adding single farmer impact constraint")
             constraint_func = GroupedAccumulatedChangeConstraint(
                 cp_model,
-                10,
+                economy_scale,
                 operator.ge,
-                lambda choice, field: f(
-                    choice, Transition.ECONOMY, field.spatial_indicator
-                ),
+                change_loader(Transition.ECONOMY),
                 lambda field: field.spatial_indicator.org_id,
                 # This default value of val is INSANELY important.
                 # The problem is that the scope in python is not what you expect.
@@ -71,7 +90,7 @@ def get_accumulated_constraints(
                 # the value of `constraint.value` at the time of creation.
                 get_max_change=lambda field, val=constraint.value: (
                     original_metrics.org_revenue[field.spatial_indicator.org_id]
-                    * ((100 - val) / 100)
+                    * (-val / 100)
                 ),
             )
             result.append(constraint_func)
@@ -81,7 +100,7 @@ def get_accumulated_constraints(
             print("Adding area change constraint")
             constraint_func = AccumulatedChangeConstraint(
                 cp_model,
-                100,
+                1_000_000,
                 operator.le,
                 lambda choice, field: 0
                 if choice.name == field.rotation.name
@@ -108,24 +127,20 @@ def get_accumulated_constraints(
                 cp_model,
                 1_000_000,
                 operator.le,
-                lambda choice, field: f(
-                    choice, Transition.LEACHING, field.spatial_indicator
-                ),
+                change_loader(Transition.LEACHING),
                 max_change=original_metrics.total_emission
-                * ((100 + constraint.value) / 100),
+                * (constraint.value / 100),
             )
             result.append(constraint_func)
         elif constraint.name == "Economy Change":
             print("Adding economy change constraint")
             constraint_func = AccumulatedChangeConstraint(
                 cp_model,
-                10,
+                economy_scale,
                 operator.ge,
-                lambda choice, field: f(
-                    choice, Transition.ECONOMY, field.spatial_indicator
-                ),
+                change_loader(Transition.ECONOMY),
                 max_change=original_metrics.total_revenue
-                * ((100 + constraint.value) / 100),
+                * (constraint.value / 100),
             )
             result.append(constraint_func)
         elif constraint.name == "Percentage of farm type change":
@@ -143,5 +158,12 @@ def get_accumulated_constraints(
 
         elif constraint.name not in ("Distance to Biogas", "Nature Value"):
             raise ValueError(f"Unsupported enabled constraint: {constraint.name}")
+
+        if constraint.name not in ("Distance to Biogas", "Nature Value"):
+            constraint_func.name = constraint.name
+            if constraint.name == "Fields Change" and constraint_func.limit() == 0:
+                constraint_func.freeze_field = lambda field: True
+            elif constraint.name == "Area Change" and constraint_func.limit() == 0:
+                constraint_func.freeze_field = lambda field: field.spatial_indicator.area > 0
 
     return result

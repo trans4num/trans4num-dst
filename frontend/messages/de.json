@@ -11,7 +11,8 @@
       "termination": "Abbruchgrund",
       "runtime": "Berechnungszeit",
       "regionalRatio": "Regionale N-Belastung je Wirtschaft (Kehrwert Wirtschaft/N-Belastung)",
-      "iterations": "Fraktionale Iterationen"
+      "iterations": "Fraktionale Iterationen",
+      "failureReason": "Fehlerursache"
     },
     "addAlternative": "Alternative hinzufügen",
     "openAlternative": "Ausgewählte Alternative öffnen",
@@ -52,18 +53,19 @@
         "success": "Erfolg",
         "nonOptimal": "Nicht optimal",
         "processing": "Berechnung",
-        "failed": "Keine Lösung"
+        "failed": "Kein Ergebnis"
       },
       "statusDescription": {
         "success": "Placeholder: success description",
         "nonOptimal": "Placeholder: non optimal description",
         "processing": "Placeholder: processing description",
-        "failed": "Placeholder: failed description"
+        "failed": "Kein Ergebnis erzeugt. Details zeigen Einschränkungen, abgelaufene Suchzeit oder einen Engine-Fehler."
       }
     },
       "AlternativeConfigurationDialog": {
         "title": "Alternative Konfigurationsübersicht",
-        "description": "Placeholder: Die Einschränkungen für die Alternative {name} sind unten dargestellt."
+        "description": "Die Einschränkungen für die Alternative {name} sind unten dargestellt.",
+        "descriptionFailed": "Die Berechnung für {name} lieferte kein Ergebnis. Fehlerdetails stehen unten."
       }
   },
   "RegionPage": {
@@ -315,7 +317,7 @@
       "nloadPerEcon": "placeholder: Kurzinfo N-Belastung pro Wirtschaft",
       "nbalance": "placeholder: Kurzinfo N-Bilanz",
       "fieldConsistency": "placeholder: Kurzinfo Feldkonsistenz",
-      "Distance to Biogas": "placeholder: Entfernung zur Biogasanlage",
+      "Distance to Biogas": "Nur Felder innerhalb dieser Entfernung dürfen ihre Fruchtfolge ändern; außerhalb bleibt die bestehende Fruchtfolge erhalten.",
       "Single Farmer Impact": "placeholder: Auswirkung auf einzelne Landwirte",
       "Nature Value": "placeholder: Naturwert",
       "Area Change": "placeholder: Flächenänderung",

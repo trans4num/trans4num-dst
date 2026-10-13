@@ -6,7 +6,7 @@ from uuid import uuid4
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from shared_datamodel.models import get_models
-from shared_datamodel.simulation import OptimizationResult, Simulation
+from shared_datamodel.simulation import OptimizationResult, Simulation, SimulationStatus
 from src.routes.v1.simulations import get_router
 
 
@@ -44,7 +44,9 @@ class OptimizationContractTests(unittest.TestCase):
                                      max_time_seconds=15, requested_relative_gap=.01, workers=8,
                                      objective_name="regional_nload_per_economy", objective_unit="kg N / DKK", iterations=3)
         alternative = status_quo.model_copy(update={"id": uuid4(), "name": "Preview", "optimization": quality})
-        self.store.list_simulations.return_value = [status_quo, alternative]
+        failed = status_quo.model_copy(update={"id": uuid4(), "name": "Failed", "status": SimulationStatus.FAILED,
+                                               "error_message": "Search budget expired before a solution was found"})
+        self.store.list_simulations.return_value = [status_quo, alternative, failed]
         response = self.client.get(f"/simulations?region={self.region}")
         self.assertEqual(response.status_code, 200)
         data = response.json()
@@ -53,6 +55,7 @@ class OptimizationContractTests(unittest.TestCase):
         self.assertEqual(data["simulations"][0]["optimization"]["terminationReason"], "time_limit")
         self.assertEqual(data["simulations"][0]["optimization"]["objectiveName"], "regional_nload_per_economy")
         self.assertEqual(data["simulations"][0]["optimization"]["iterations"], 3)
+        self.assertIn("Search budget expired", data["simulations"][1]["errorMessage"])
 
 
 if __name__ == "__main__":

@@ -5,17 +5,19 @@ from urllib.request import Request, urlopen
 from uuid import UUID
 
 from src.job_queue import IEngineJobQueue
+from shared_datamodel.simulation import SimulationStatus
 
 logger = logging.getLogger(__name__)
 
 
 class EngineJobQueue(IEngineJobQueue):
-    def __init__(self, invoke_url: str) -> None:
+    def __init__(self, invoke_url: str, store=None) -> None:
         if not invoke_url:
             raise ValueError("A local engine invoke URL is required")
         self.invoke_url = invoke_url
         # One local emulator represents one Lambda execution environment.
         self._invoke_lock = Lock()
+        self.store = store
 
     def enqueue_simulation(self, region_id: UUID, simulation_id: UUID) -> None:
         event = {
@@ -61,9 +63,21 @@ class EngineJobQueue(IEngineJobQueue):
                 logger.info(
                     "Local simulation %s completed engine invocation", simulation_id
                 )
-        except Exception:
+        except Exception as error:
             logger.exception(
                 "Local engine invocation failed for simulation %s in region %s",
                 simulation_id,
                 region_id,
             )
+            if self.store is not None:
+                try:
+                    simulation = next((s for s in self.store.list_simulations(region_id) if s.id == simulation_id), None)
+                    # A transport failure after successful output must not
+                    # overwrite a completed result or a more useful engine error.
+                    if simulation is not None and simulation.status == SimulationStatus.PROCESSING:
+                        self.store.update_simulation(simulation.model_copy(update={
+                            "status": SimulationStatus.FAILED,
+                            "error_message": f"Local engine invocation failed: {error}",
+                        }))
+                except Exception:
+                    logger.exception("Could not persist local invocation failure for %s", simulation_id)

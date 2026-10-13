@@ -25,11 +25,15 @@ def optimize_region(model, x, max_time=120, debug=False, gap_limit=0.05, workers
     seconds = time.perf_counter() - start
     failures = {
         cp_model.MODEL_INVALID: ("The model is invalid.", "model_invalid"),
-        cp_model.UNKNOWN: ("No feasible solution found within the solver budget.", "no_solution"),
+        cp_model.UNKNOWN: ("The search budget expired before a feasible solution was found; this does not prove infeasibility.", "time_limit_no_solution"),
         cp_model.INFEASIBLE: ("No feasible solution exists.", "infeasible"),
     }
     if status in failures:
         description, reason = failures[status]
+        if status == cp_model.MODEL_INVALID:
+            detail = model.Validate() or solver.ResponseProto().solution_info
+            if detail:
+                description += " " + detail
         return Solution(False, None, description, SolutionType.MISSING,
                         termination_reason=reason, solve_seconds=seconds)
     objective, bound = solver.ObjectiveValue(), solver.BestObjectiveBound()
@@ -40,7 +44,7 @@ def optimize_region(model, x, max_time=120, debug=False, gap_limit=0.05, workers
     reason = "optimal" if proven else "gap_limit" if gap_limit > 0 and gap <= gap_limit else "time_limit"
     return Solution(
         success=True,
-        result=[key for key, variable in x.items() if solver.BooleanValue(variable)],
+        result=[key for key, variable in x.items() if variable is True or solver.BooleanValue(variable)],
         description="Optimal solution" if proven else f"Feasible solution; normalized optimality gap {gap * 100:.6f}%",
         type=SolutionType.OPTIMAL if proven else SolutionType.FEASIBLE,
         objective=objective,

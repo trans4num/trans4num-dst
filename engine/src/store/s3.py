@@ -161,7 +161,8 @@ class Store(IStore):
             ContentType="application/json",
         )
 
-    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None):
+    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None,
+                              error_message: str | None = None):
         meta_path = f"simulations/{region_id}/{simulation_id}/meta.json"
         meta_data = self.s3.get_object(Bucket=self.bucket_name, Key=meta_path)
         text = meta_data["Body"].read().decode()
@@ -169,6 +170,8 @@ class Store(IStore):
         meta["status"] = "failed"
         if optimization is not None:
             meta["optimization"] = optimization.model_dump(mode="json")
+        if error_message is not None:
+            meta["error_message"] = error_message
 
         self.s3.put_object(
             Bucket=self.bucket_name,

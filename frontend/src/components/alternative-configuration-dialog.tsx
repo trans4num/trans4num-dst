@@ -28,6 +28,9 @@ export function AlternativeConfigurationDialog({ alternative, setAlternative }: 
                     {alternative.model && 
                     <ConstraintsDisplayCard 
                     alternativeModel={alternative.model} />}
+                    {alternative.errorMessage && (
+                        <p className="text-destructive">{t("Optimization.failureReason")}: {alternative.errorMessage}</p>
+                    )}
                     {alternative.optimization && (
                         <div className="rounded-lg border p-4 space-y-2">
                             <h3 className="font-medium text-foreground">{t("Optimization.title")}</h3>

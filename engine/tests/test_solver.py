@@ -66,16 +66,13 @@ class SolverTests(unittest.TestCase):
         next(c for c in job.constraints if c.name == "Fields Change").value = 0
         missing = Solution(False, None, "timeout", SolutionType.MISSING, termination_reason="no_solution")
         with patch("models.denmark.optimize.optimize_region", return_value=missing) as solver:
-            result = solve_region(fields, get_metrics(fields), job)
+            result = solve_region(fields, get_metrics(fields), job, settings=OptimizationSettings(use_fast_path=False))
         self.assertTrue(result.success)
         self.assertEqual(result.result, [("f-1", "original")])
         self.assertEqual(result.termination_reason, "time_limit_fallback")
         model, variables = solver.call_args.args[:2]
-        hints = dict(zip(model.Proto().solution_hint.vars, model.Proto().solution_hint.values))
-        self.assertEqual(hints[variables["f-1", "original"].Index()], 1)
-        for key, variable in variables.items():
-            if key != ("f-1", "original"):
-                self.assertEqual(hints[variable.Index()], 0)
+        self.assertIs(variables["f-1", "original"], True)
+        self.assertEqual(len(model.Proto().solution_hint.vars), 0)
 
     def test_general_solver_honors_exact_request_and_fast_path_opt_out(self):
         region = uuid4()
@@ -83,7 +80,7 @@ class SolverTests(unittest.TestCase):
                       SpatialIndicator(Soil.SAND, 30, 1, 0, 0, "farm"), rotations)
         fields = {entry.field_id: entry}
         settings = OptimizationSettings(use_fast_path=False, relative_gap=0, workers=1, max_time_seconds=5)
-        with patch("models.denmark.optimize.allocate_region") as allocation:
+        with patch("models.denmark.optimize.allocate_checked_relaxation") as allocation:
             result = solve_region(fields, get_metrics(fields), get_models(region)[0], settings=settings)
             allocation.assert_not_called()
         self.assertTrue(result.success)

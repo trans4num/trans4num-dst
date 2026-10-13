@@ -1,6 +1,7 @@
 import gzip
 import json
-from os import listdir, makedirs, path, stat
+from os import listdir, makedirs, path, stat, replace, unlink
+from tempfile import NamedTemporaryFile
 from uuid import UUID
 
 import pandas as pd
@@ -13,6 +14,18 @@ from shared_datamodel.simulation import (
 )
 from models.denmark.things import Col
 from store import IStore, geometry_cache_key, resolve_input_columns
+
+
+def write_json_atomic(file_path, value):
+    temporary = None
+    try:
+        with NamedTemporaryFile(mode="w", dir=path.dirname(file_path), suffix=".tmp", delete=False) as file:
+            temporary = file.name
+            json.dump(value, file, indent=2)
+        replace(temporary, file_path)
+    finally:
+        if temporary is not None and path.exists(temporary):
+            unlink(temporary)
 
 
 class Store(IStore):
@@ -38,8 +51,7 @@ class Store(IStore):
         makedirs(root, exist_ok=True)
         with gzip.open(f"{root}/fields.geojson.gz", "wt") as file:
             file.write(featurecollection_str)
-        with open(f"{root}/fields.source.json", "w") as file:
-            json.dump(self._geometry_key(field_ids), file)
+        write_json_atomic(f"{root}/fields.source.json", self._geometry_key(field_ids))
 
     def region_exists(self, region_id: UUID) -> bool:
         return path.exists(f"simulations/{region_id}")
@@ -133,10 +145,10 @@ class Store(IStore):
             makedirs(f"simulations/{region_id}")
         if not path.exists(f"simulations/{region_id}/{simulation_id}"):
             makedirs(f"simulations/{region_id}/{simulation_id}")
-        with open(f"simulations/{region_id}/{simulation_id}/meta.json", "w") as f:
-            f.write(simulation.model_dump_json(indent=2))
+        write_json_atomic(f"simulations/{region_id}/{simulation_id}/meta.json", simulation.model_dump(mode="json"))
 
-    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None):
+    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None,
+                              error_message: str | None = None):
         meta_path = f"simulations/{region_id}/{simulation_id}/meta.json"
         with open(meta_path, "r") as f:
             meta = json.load(f)
@@ -144,5 +156,6 @@ class Store(IStore):
         meta["status"] = "failed"
         if optimization is not None:
             meta["optimization"] = optimization.model_dump(mode="json")
-        with open(meta_path, "w") as f:
-            json.dump(meta, f, indent=2)
+        if error_message is not None:
+            meta["error_message"] = error_message
+        write_json_atomic(meta_path, meta)

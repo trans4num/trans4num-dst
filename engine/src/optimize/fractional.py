@@ -138,7 +138,7 @@ def optimize_fractional(problem, settings, solve_linear):
                 reason = "ratio_gap"
                 break
             if previous_value is not None and previous_value - best_value <= max(1e-15, abs(previous_value) * 1e-12):
-                if inner.method == "regional-allocation" and not force_general:
+                if inner.method in ("regional-allocation", "checked-regional-relaxation") and not force_general:
                     force_general = True
                 else:
                     reason = "time_limit" if search_seconds >= settings.max_time_seconds else "no_progress"

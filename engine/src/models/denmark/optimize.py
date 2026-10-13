@@ -4,10 +4,10 @@ import math
 from shared_datamodel.simulation import OptimizationSettings, SimulationGoalType
 
 from models.denmark.model import build_model, prepare_model, set_hint, set_objective
-from models.denmark.prepare import is_feasible
+from models.denmark.prepare import is_feasible, InfeasibleConstraints
 from optimize import Solution, SolutionType, relative_gap
-from optimize.allocation import allocate_region
-from optimize.greedy import improve_seed
+from optimize.allocation import allocate_checked_relaxation
+from optimize.greedy import improve_seed, repair_seed
 from optimize.optimize import optimize_region
 from optimize.fractional import optimize_fractional
 
@@ -21,7 +21,7 @@ def _allocation_solution(candidate):
         type=SolutionType.OPTIMAL if candidate.optimal else SolutionType.FEASIBLE,
         objective=candidate.objective,
         bound=candidate.bound,
-        method="regional-allocation",
+        method=candidate.method,
         termination_reason="optimal" if candidate.optimal else "allocation_gap",
     )
 
@@ -47,7 +47,7 @@ class PreparedSolver:
 
     def solve(self, problem, settings, starting_names=None, defer_allocation_gap=False):
         start = time.perf_counter()
-        candidate = allocate_region(problem) if settings.use_fast_path else None
+        candidate = allocate_checked_relaxation(problem) if settings.use_fast_path else None
         allocation_seconds = time.perf_counter() - start
         if candidate is not None and (defer_allocation_gap or
                 relative_gap(candidate.objective, candidate.bound) <= settings.relative_gap):
@@ -70,6 +70,16 @@ class PreparedSolver:
                     "Feasible starting selection", SolutionType.FEASIBLE,
                     objective=math.fsum(choice.cost for choice in selection.values()),
                     bound=independent_bound, method="feasible-fallback"))
+        if not seeds:
+            initial = {key: next((choice for choice in choices if choice.rotation.name == problem.fields[key].rotation.name),
+                                min(choices, key=lambda choice: choice.cost))
+                       for key, choices in problem.choices.items()}
+            repaired = repair_seed(problem, initial)
+            if repaired is not None:
+                seeds.append(Solution(True, [(key, choice.rotation.name) for key, choice in repaired.items()],
+                    "Repaired feasible starting selection", SolutionType.FEASIBLE,
+                    objective=math.fsum(choice.cost for choice in repaired.values()),
+                    bound=independent_bound, method="repaired-fallback"))
         seed = min(seeds, key=lambda solution: solution.objective) if seeds else None
         if seed is not None:
             improved = improve_seed(problem, _selection_from_names(problem, dict(seed.result)))
@@ -109,7 +119,12 @@ def solve_region(fields, original_metrics, job_model, max_time=120, gap_limit=0.
                  settings=None):
     settings = settings or OptimizationSettings(max_time_seconds=max_time, relative_gap=gap_limit, debug=debug)
     start = time.perf_counter()
-    model, problem = prepare_model(fields, original_metrics, job_model)
+    try:
+        model, problem = prepare_model(fields, original_metrics, job_model)
+    except InfeasibleConstraints as error:
+        return Solution(False, None, str(error), SolutionType.MISSING,
+                        method="constraint-check", termination_reason="infeasible",
+                        preparation_seconds=time.perf_counter() - start, iterations=0)
     preparation_seconds = time.perf_counter() - start
     solver = PreparedSolver(model)
     result = optimize_fractional(problem, settings, solver.solve) if (

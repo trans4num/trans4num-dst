@@ -49,6 +49,7 @@ interface SimulationResponse {
   status: "success" | "processing" | "failed" | "nonOptimal"
   deleted?: boolean
   optimization?: AlternativeOptimization | null
+  errorMessage?: string | null
   summary: Array<{
     name: string
     value: number
@@ -95,6 +96,7 @@ export async function fetchAlternatives(regionId: string): Promise<AlternativesW
       created: data.created,
       deleted: data.deleted ?? false,
       optimization: data.optimization ?? undefined,
+      errorMessage: data.errorMessage,
     };
   }
 

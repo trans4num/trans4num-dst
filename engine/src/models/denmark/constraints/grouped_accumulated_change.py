@@ -6,6 +6,7 @@ from models.denmark.constraints.accumulated_change import (
     AccumulatedChangeConstraint,
 )
 from models.denmark.things import CropRotation, Field
+from . import scaling
 
 
 class GroupedAccumulatedChangeConstraint:
@@ -35,7 +36,10 @@ class GroupedAccumulatedChangeConstraint:
         self.add_coefficient(field, self.coefficient(choice, field), model_var)
 
     def coefficient(self, choice: CropRotation, field: Field) -> int:
-        return int(self.loader(choice, field) * self.scale)
+        return scaling.coefficient(self.loader(choice, field), self.scale)
+
+    def limit(self, field) -> int:
+        return scaling.limit(self.get_max_change(field), self.scale, self.operator)
 
     def add_coefficient(self, field: Field, value: int, model_var: IntVar):
         group_name = self.grouper(field)

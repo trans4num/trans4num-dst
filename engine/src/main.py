@@ -58,8 +58,8 @@ def run(store: IStore, job: SimulationBase, simulation_id: UUID | None = None):
         quality = result.quality(settings, load_seconds)
         if not result.success or result.result is None:
             print(result)
-            store.update_meta_to_failed(job.region_id, simulation_id, quality)
-            raise Exception("Optimization failed, cannot create output.")
+            store.update_meta_to_failed(job.region_id, simulation_id, quality, result.description)
+            raise RuntimeError(result.description)
         print(result.description)
         # Based on the optimization change the crops
         selected = {r[0]: r[1] for r in result.result}

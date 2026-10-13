@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 from os import getenv
 from uuid import UUID
 
@@ -7,18 +8,16 @@ from main import run
 from shared_datamodel.simulation import SimulationBase
 from store import IStore, get_store
 
+logger = logging.getLogger(__name__)
+
 
 def _run_simulation(region_id: UUID, simulation_id: UUID, store: IStore) -> None:
-    job = store.read_meta(
-        region_id=region_id,
-        simulation_id=simulation_id,
-    )
-
     try:
+        job = store.read_meta(region_id=region_id, simulation_id=simulation_id)
         run(store, job, simulation_id=simulation_id)
-    except Exception:
-        print("Failed, now update that it failed")
-        store.update_meta_to_failed(region_id=region_id, simulation_id=simulation_id)
+    except Exception as error:
+        logger.exception("Simulation %s failed in region %s", simulation_id, region_id)
+        store.update_meta_to_failed(region_id=region_id, simulation_id=simulation_id, error_message=str(error))
 
 
 def _run_status_quo(region_id: UUID, store: IStore) -> None:
@@ -38,16 +37,12 @@ def handler(event, context):
     for record in records:
         body = json.loads(record["body"])
 
-    region = body["region"]
-    region_id = UUID(region)
-    create_status_quo = body.get("create_status_quo", False)
-    if create_status_quo:
-        _run_status_quo(region_id=region_id, store=store)
-        return
-
-    simulation = body["simulation"]
-    simulation_id = UUID(simulation)
-    _run_simulation(region_id=region_id, simulation_id=simulation_id, store=store)
+        region_id = UUID(body["region"])
+        if body.get("create_status_quo", False):
+            _run_status_quo(region_id=region_id, store=store)
+            continue
+        simulation_id = UUID(body["simulation"])
+        _run_simulation(region_id=region_id, simulation_id=simulation_id, store=store)
 
 
 if __name__ == "__main__":

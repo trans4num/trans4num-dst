@@ -28,6 +28,62 @@ class PreparedProblem:
     minimum_economy: float | None = None
 
 
+class InfeasibleConstraints(ValueError):
+    pass
+
+
+def constraint_rows(problem):
+    """Known additive scopes; custom constraint implementations opt out."""
+    for index, constraint in enumerate(problem.constraints):
+        if type(constraint) not in (AccumulatedChangeConstraint, GroupedAccumulatedChangeConstraint):
+            continue
+        groups, limits = {}, {}
+        for key, field in problem.fields.items():
+            group = constraint.grouper(field) if type(constraint) is GroupedAccumulatedChangeConstraint else None
+            groups.setdefault(group, []).append(key)
+            limits.setdefault(group, constraint.limit(field))
+        for group, keys in groups.items():
+            yield index, constraint, group, keys, limits[group]
+
+
+def propagate_constraints(problem, max_passes=8):
+    """Remove options that cannot satisfy even one additive row.
+
+    This is necessary-condition propagation, not a claim that the surviving
+    model is feasible. CP-SAT still checks all rows, including custom ones.
+    """
+    for _ in range(max_passes):
+        changed = False
+        for index, constraint, group, keys, limit in constraint_rows(problem):
+            if constraint.operator not in (operator.le, operator.ge):
+                continue
+            mins = {key: min(choice.coefficients[index] for choice in problem.choices[key]) for key in keys}
+            maxs = {key: max(choice.coefficients[index] for choice in problem.choices[key]) for key in keys}
+            minimum, maximum = sum(mins.values()), sum(maxs.values())
+            if (constraint.operator == operator.le and minimum > limit) or (
+                    constraint.operator == operator.ge and maximum < limit):
+                label = getattr(constraint, "name", f"Constraint {index + 1}")
+                scope = f" for {group}" if group is not None else ""
+                raise InfeasibleConstraints(
+                    f"{label}{scope} cannot be satisfied: attainable range "
+                    f"[{minimum / constraint.scale:.6g}, {maximum / constraint.scale:.6g}], "
+                    f"required {'at most' if constraint.operator == operator.le else 'at least'} {limit / constraint.scale:.6g}"
+                )
+            for key in keys:
+                choices = problem.choices[key]
+                kept = [choice for choice in choices if (
+                    minimum - mins[key] + choice.coefficients[index] <= limit
+                    if constraint.operator == operator.le else
+                    maximum - maxs[key] + choice.coefficients[index] >= limit
+                )]
+                if len(kept) != len(choices):
+                    problem.choices[key] = kept
+                    changed = True
+        if not changed:
+            break
+    return problem
+
+
 def prepare_problem(fields, constraints, ignore_constraints, goal_type, prune=True):
     choices = {}
     # Custom constraint types are not assumed to support dominance pruning.
@@ -37,7 +93,8 @@ def prepare_problem(fields, constraints, ignore_constraints, goal_type, prune=Tr
         for c in constraints
     )
     for key, entry in fields.items():
-        allowed = all(c.allow(entry) for c in ignore_constraints)
+        frozen = any(getattr(c, "freeze_field", None) is not None and c.freeze_field(entry) for c in constraints)
+        allowed = not frozen and all(c.allow(entry) for c in ignore_constraints)
         candidates = []
         rotations = {}
         for rotation in entry.choices + [entry.rotation]:
@@ -80,7 +137,7 @@ def prepare_problem(fields, constraints, ignore_constraints, goal_type, prune=Tr
                 for j, other in enumerate(vectors) if i != j
             )]
         choices[key] = candidates
-    return PreparedProblem(fields, choices, constraints, goal_type)
+    return propagate_constraints(PreparedProblem(fields, choices, constraints, goal_type))
 
 
 def is_feasible(problem: PreparedProblem, selection: dict[str, Choice]) -> bool:
@@ -94,10 +151,10 @@ def is_feasible(problem: PreparedProblem, selection: dict[str, Choice]) -> bool:
             field = problem.fields[key]
             if type(constraint) is GroupedAccumulatedChangeConstraint:
                 group = constraint.grouper(field)
-                limit = int(constraint.get_max_change(field) * constraint.scale)
+                limit = constraint.limit(field)
             elif type(constraint) is AccumulatedChangeConstraint:
                 group = None
-                limit = int(constraint.max_change * constraint.scale)
+                limit = constraint.limit()
             else:
                 return False
             value, group_limit = totals.get(group, (0, limit))

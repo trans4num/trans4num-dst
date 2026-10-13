@@ -11,7 +11,8 @@
       "termination": "Årsag til afslutning",
       "runtime": "Beregningstid",
       "regionalRatio": "Regional N-belastning pr. økonomi (invers økonomi/N-belastning)",
-      "iterations": "Fraktionelle iterationer"
+      "iterations": "Fraktionelle iterationer",
+      "failureReason": "Årsag til fejl"
     },
     "addAlternative": "Tilføj Alternativ",
     "compareAlternatives": "Sammenlign Valg",
@@ -52,18 +53,19 @@
         "success": "Succes",
         "nonOptimal": "Ikke optimal løsning",
         "processing": "Udregner",
-        "failed": "Ingen løsning"
+        "failed": "Intet resultat"
       },
       "statusDescription": {
         "success": "Placeholder: success description",
         "nonOptimal": "Placeholder: non optimal description",
         "processing": "Placeholder: processing description",
-        "failed": "Placeholder: failed description"
+        "failed": "Intet resultat blev beregnet. Se detaljer for begrænsninger, udløbet søgetid eller fejl i motoren."
       }
     },
       "AlternativeConfigurationDialog": {
         "title": "Alternativets konfigurationsoversigt",
-        "description": "Placeholder: De valgte begrænsninger for alternativet {name} er vist nedenfor."
+        "description": "De valgte begrænsninger for alternativet {name} er vist nedenfor.",
+        "descriptionFailed": "Beregningen for {name} gav intet resultat. Fejldetaljer er vist nedenfor."
       }
 
   },
@@ -318,7 +320,7 @@
       "nloadPerEcon": "placeholder: Værktøjstip til N-belastning pr. økonomi",
       "nbalance": "placeholder: Værktøjstip til N-balance",
       "fieldConsistency": "placeholder: Værktøjstip til markkonsistens",
-      "Distance to Biogas": "placeholder: Afstand til biogas",
+      "Distance to Biogas": "Kun marker inden for denne afstand må ændre sædskifte; marker udenfor beholder det eksisterende sædskifte.",
       "Single Farmer Impact": "placeholder: Påvirkning af enkelt landmand",
       "Nature Value": "placeholder: Naturværdi",
       "Area Change": "placeholder: Områdeændring",

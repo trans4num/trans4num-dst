@@ -21,6 +21,7 @@ store = Store(config["store-type"])
 queue = JobQueue(
     os.getenv("TRANS4NUM_ENGINE_JOB_QUEUE_TYPE", config.get("engine-job-queue-type")),
     os.getenv("TRANS4NUM_ENGINE_JOB_QUEUE_URL", config.get("engine-job-queue-url")),
+    store=store,
 )
 auth = AuthService(config)
 

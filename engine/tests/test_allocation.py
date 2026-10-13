@@ -2,6 +2,8 @@ import itertools
 import operator
 import random
 import unittest
+from dataclasses import replace
+from ortools.sat.python import cp_model
 from unittest.mock import patch
 
 from models.denmark.constraints.accumulated_change import AccumulatedChangeConstraint
@@ -72,12 +74,19 @@ class AllocationTests(unittest.TestCase):
         problem.goal_type = SimulationGoalType.MAX_ECON_PER_NLOAD
         self.assertIsNone(allocate_region(problem))
 
-    def test_extra_enabled_constraint_routes_to_general_solver(self):
-        problem = make_problem([[(0, 0), (10, 1)]])
+    def test_unchecked_relaxation_routes_to_general_solver(self):
+        # Each relaxed problem violates the other resource cap: at most one A
+        # and one B can be selected, so the full solution needs an original.
+        problem = make_problem([[(0, 10), (1, 0), (0, 1)]] * 3)
+        model = cp_model.CpModel()
+        problem.constraints = [AccumulatedChangeConstraint(model, 1, operator.le, None, 1),
+                               AccumulatedChangeConstraint(model, 1, operator.le, None, 1)]
+        problem.choices = {key: [replace(choice, coefficients=(int(j == 1), int(j == 2)))
+                                for j, choice in enumerate(choices)] for key, choices in problem.choices.items()}
         job = get_models(None)[0].model_copy(deep=True)
-        next(c for c in job.constraints if c.name == "Fields Change").enabled = True
+        problem.goal_type = job.goal.type
         expected = Solution(True, [], "general solver", SolutionType.FEASIBLE)
-        with patch("models.denmark.optimize.optimize_region", return_value=expected) as solve:
+        with patch("models.denmark.optimize.prepare_model", return_value=(model, problem)), patch("models.denmark.optimize.optimize_region", return_value=expected) as solve:
             self.assertIs(solve_region(problem.fields, get_metrics(problem.fields), job), expected)
             solve.assert_called_once()
 

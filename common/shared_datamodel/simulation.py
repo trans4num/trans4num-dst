@@ -113,6 +113,7 @@ class Simulation(SimulationBase):
     charts: list[Chart]
     barCharts: list[BarChart] = []
     optimization: OptimizationResult | None = None
+    error_message: str | None = None
 
     @field_validator("summary", mode="before")
     @classmethod

@@ -36,7 +36,8 @@ entry, so benchmarks and behavior do not depend on earlier invocations.
 
 Model preparation removes dominated rotation options only after comparing the
 objective and every enabled regional/farmer constraint, using the exact same
-integer-scaled coefficients as CP-SAT. The existing rotation is always retained.
+integer-scaled coefficients as CP-SAT. The existing rotation is retained unless
+hard-constraint propagation proves it cannot occur in a feasible assignment.
 Unrecognized constraint implementations opt out of pruning, and an enabled
 constraint without an implementation raises an error instead of being ignored.
 
@@ -52,10 +53,12 @@ constraint can use a continuous allocation relaxation with a whole-field repair.
 The result has one actual rotation per field, is checked against the same
 integer-scaled constraints as CP-SAT, and includes a regional lower bound.
 
-Grouped farmer constraints, multiple regional constraints, and custom constraint
-implementations use CP-SAT. Eligibility is based
-on the prepared constraint objects, not a list of UI constraint names. New
-constraint types therefore default to the general solver. If the repaired
+For multiple/grouped constraints, a one-region-row relaxation can still be used
+when its whole-field assignment passes **every** original constraint check. Its
+lower bound is also valid for the full problem. Independent best-per-field
+assignments are optimal whenever all hard constraints already hold. Unchecked
+relaxations and custom constraint implementations use CP-SAT. Eligibility is
+based on prepared constraint objects rather than UI names. If the repaired
 allocation misses the requested gap, it becomes a feasible solver hint and
 fallback candidate rather than being accepted as a sufficiently accurate result.
 
@@ -145,6 +148,37 @@ every regional/farmer limit after each field move. This heuristic is only a
 starting solution; it never supplies its own optimality bound. Solver hints and
 fallbacks therefore work on cold invocations without a previous simulation.
 
+## Feasibility and failure diagnostics
+
+Economy, farmer-income and nitrogen-change constraints use **changes from each
+field's baseline**, so retaining the original rotation has an exact zero
+coefficient. This prevents per-field integer truncation from making Status Quo
+infeasible under zero-loss limits. Income coefficients use a bounded,
+crop-period-aware scale; area and nitrogen coefficients use `1e6`. Coefficients
+are rounded symmetrically and inequality limits in their required direction,
+with floating-point near-integer noise removed. Aggregate quantization error
+is bounded by half a coefficient unit per participating field, plus the limit
+rounding; zero baseline changes have no such error.
+
+Necessary-condition propagation removes impossible field options and reports
+provably unattainable row limits before search. Fixed fields become constants,
+zero constraint terms are omitted, and current-job baseline statistics are
+reused. Greedy repair can produce feasible reduction-target seeds while keeping
+already satisfied limits intact; failure to repair is never treated as proof of
+infeasibility. These techniques retain the general solver for harder models.
+
+`time_limit_no_solution` means no feasible assignment was found within the
+budget, not that none exists. Actual errors and constraint explanations are
+persisted as `errorMessage` and displayed in the configuration dialog. Model
+validation details and exception tracebacks are logged. Local transport errors
+mark pending jobs failed without overwriting completed results. Local engine
+metadata is replaced atomically so polling readers cannot see partial JSON.
+
+The Lambda handler processes every SQS record, including mixed Status Quo and
+simulation batches, instead of silently processing only the last record.
+The biogas-distance rule restricts **every rotation change**: fields outside
+the radius retain their original rotation.
+
 The local backend serializes requests to its single Lambda emulator and consumes
 each invocation response before starting the next one. Cloud Lambda execution
 is unaffected by this local queue behavior.
@@ -179,7 +213,7 @@ Emision (nload): Minimize (nload) -> Constraints for hvad økonomi må blive
 * max_change_of_field_pct: Eksempelvis 15 betyder at vi må ændre 15% af markerne
 * max_change_of_area_pct: Eksempelvis 15 betyder at vi må ændre 15% af arealet
 * max_revenue_per_org_change_pct: Eksempelvis -5 betyder at vi reducerer økonomien med 5 % på den mest ramte farm
-* max_distance_to_biora: Eksempelvis 30 betyder at vi kun må ligge græs ud hvis marken er inden for 30km af biogas.
+* max_distance_to_biora: Eksempelvis 30 betyder, at marken kun må ændre sædskifte, hvis den er inden for 30 km af biogas.
 * max_nature_value_for_changed_field: Eksempelvis 40 betyder at vi ikke må ændre på en mark med mere end 40% højnatur.
 
 

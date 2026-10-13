@@ -11,6 +11,7 @@ class IEngineJobQueue(ABC):
 def JobQueue(
     engine_job_queue_type: str | None,
     engine_job_queue_url: str | None,
+    store=None,
 ) -> IEngineJobQueue:
     if engine_job_queue_type is None:
         engine_job_queue_type = "sqs" if engine_job_queue_url else "fake"
@@ -25,7 +26,7 @@ def JobQueue(
             raise ValueError("A local engine invoke URL is required")
         from src.job_queue.local import EngineJobQueue as LocalJobQueue
 
-        return LocalJobQueue(engine_job_queue_url)
+        return LocalJobQueue(engine_job_queue_url, store=store)
 
     if engine_job_queue_type == "sqs":
         if not engine_job_queue_url:

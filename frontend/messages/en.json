@@ -11,7 +11,8 @@
       "termination": "Termination reason",
       "runtime": "Calculation time",
       "regionalRatio": "Regional N-load per economy (inverse economy/N-load)",
-      "iterations": "Fractional iterations"
+      "iterations": "Fractional iterations",
+      "failureReason": "Failure reason"
     },
     "addAlternative": "Add Alternative",
     "compareAlternatives": "Compare Selection",
@@ -52,18 +53,19 @@
         "success": "Success",
         "nonOptimal": "Non Optimal Solution",
         "processing": "Calculating",
-        "failed": "No Solution"
+        "failed": "No result"
       },
       "statusDescription": {
         "success": "Placeholder: success description",
         "nonOptimal": "Placeholder: non optimal description",
         "processing": "Placeholder: processing description",
-        "failed": "Placeholder: failed description"
+        "failed": "No result was produced. See details for a constraint explanation, search timeout, or engine error."
       }
     },
     "AlternativeConfigurationDialog": {
         "title": "Alternative configuration overview",
-        "description": "Placeholder: The constraints chosen for alternative {name} are shown below."
+        "description": "The constraints chosen for alternative {name} are shown below.",
+        "descriptionFailed": "The calculation for {name} did not produce a result. Failure details are shown below."
       }
   },
   "RegionPage": {
@@ -317,7 +319,7 @@
     "nloadPerEcon": "placeholder: N Load Per Economy tooltip",
     "nbalance": "placeholder: N Balance tooltip",
     "fieldConsistency": "placeholder: Field Consistency tooltip",
-    "Distance to Biogas": "placeholder: Distance to Biogas",
+    "Distance to Biogas": "Only fields within this distance may change rotation; fields outside retain their existing rotation.",
     "Single Farmer Impact": "placeholder: Single Farmer Impact",
     "Nature Value": "placeholder: Nature Value",
     "Area Change": "placeholder: Area Change",

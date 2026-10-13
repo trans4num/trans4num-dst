@@ -1,11 +1,12 @@
 """A certified relaxation and whole-field repair for one regional constraint.
 
-The general CP-SAT solver remains the fallback. This module only recognizes
-plain, additive constraints; grouped/custom constraints never enter this path.
+The allocation kernel handles one plain additive row. Grouped/multi-row models
+may accept a relaxation only after all original constraints are checked; custom
+constraint implementations retain the general CP-SAT fallback.
 """
 import math
 import operator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from shared_datamodel.simulation import SimulationGoalType
 from models.denmark.constraints.accumulated_change import AccumulatedChangeConstraint
@@ -18,17 +19,47 @@ class Allocation:
     objective: float
     bound: float
     optimal: bool
+    method: str = "regional-allocation"
+
+
+def allocate_checked_relaxation(problem: PreparedProblem) -> Allocation | None:
+    candidate = allocate_region(problem)
+    if candidate is not None:
+        return candidate
+    if len(problem.constraints) <= 1:
+        return None
+    independent = {key: min(choices, key=lambda choice: choice.cost) for key, choices in problem.choices.items()}
+    # A relaxed regional optimum is also useful for grouped/multi-row models
+    # ONLY if the resulting whole-field assignment satisfies every original
+    # constraint. Its relaxation bound remains a valid bound for the full model.
+    for index, constraint in enumerate(problem.constraints):
+        if type(constraint) is not AccumulatedChangeConstraint:
+            continue
+        if constraint.operator(sum(choice.coefficients[index] for choice in independent.values()), constraint.limit()):
+            # This relaxation would just return the already-rejected independent
+            # assignment; avoid projecting/copying the whole model unnecessarily.
+            continue
+        relaxed = PreparedProblem(problem.fields, {
+            key: [replace(choice, coefficients=(choice.coefficients[index],)) for choice in choices]
+            for key, choices in problem.choices.items()
+        }, [constraint], problem.goal_type)
+        candidate = allocate_region(relaxed)
+        if candidate is None:
+            continue
+        selection = {key: next(choice for choice in problem.choices[key]
+                               if choice.rotation.name == selected.rotation.name)
+                     for key, selected in candidate.selection.items()}
+        if is_feasible(problem, selection):
+            return Allocation(selection, candidate.objective, candidate.bound, candidate.optimal,
+                              method="checked-regional-relaxation")
+    return None
 
 
 def allocate_region(problem: PreparedProblem) -> Allocation | None:
     if problem.goal_type not in (SimulationGoalType.MAX_ECONOMY, SimulationGoalType.MIN_NLOAD):
         return None
-    if len(problem.constraints) > 1 or not problem.fields:
+    if not problem.fields:
         return None
-    if problem.constraints:
-        constraint = problem.constraints[0]
-        if type(constraint) is not AccumulatedChangeConstraint or constraint.operator not in (operator.le, operator.ge):
-            return None
 
     selection = {key: min(choices, key=lambda p: p.cost) for key, choices in problem.choices.items()}
     if is_feasible(problem, selection):
@@ -36,11 +67,16 @@ def allocate_region(problem: PreparedProblem) -> Allocation | None:
         return Allocation(selection, value, value, True)
     if not problem.constraints:
         return None
+    if len(problem.constraints) != 1:
+        return None
+    constraint = problem.constraints[0]
+    if type(constraint) is not AccumulatedChangeConstraint or constraint.operator not in (operator.le, operator.ge):
+        return None
 
     # Normalize either inequality to resource >= target, preserving the integer
     # coefficients/rounding of the CP-SAT model, including negative resources.
     direction = 1 if constraint.operator == operator.ge else -1
-    target = direction * int(constraint.max_change * constraint.scale)
+    target = direction * constraint.limit()
     points = {key: [(direction * choice.coefficients[0], choice.cost, index)
                     for index, choice in enumerate(choices)]
               for key, choices in problem.choices.items()}

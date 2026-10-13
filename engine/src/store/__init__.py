@@ -86,7 +86,8 @@ class IStore(ABC):
         pass
 
     @abstractmethod
-    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None):
+    def update_meta_to_failed(self, region_id: UUID, simulation_id: UUID, optimization: OptimizationResult | None = None,
+                              error_message: str | None = None):
         pass
 
 

@@ -17,6 +17,7 @@ export type Alternative = {
   created: string
   deleted: boolean
   optimization?: AlternativeOptimization
+  errorMessage?: string | null
 }
 
 export type AlternativeOptimization = {
