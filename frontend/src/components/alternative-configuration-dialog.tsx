@@ -1,8 +1,9 @@
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { DialogHeader } from "@/components/ui/dialog";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { type Alternative } from "@/models/alternative";
 import ConstraintsDisplayCard from "@/components/constraints-display-card";
+import { formatFailureMessage } from "@/lib/helpers/failure-message";
 
 interface AlternativeConfigurationDialogProps {
   alternative: Alternative;
@@ -11,6 +12,7 @@ interface AlternativeConfigurationDialogProps {
 
 export function AlternativeConfigurationDialog({ alternative, setAlternative }: AlternativeConfigurationDialogProps) {
     const t = useTranslations("HomePage");
+    const failure = formatFailureMessage(alternative, useLocale(), t);
   return (
     <Dialog open={!!alternative} onOpenChange={(open) => setAlternative(open ? alternative : null)}>
         <DialogContent>
@@ -28,8 +30,17 @@ export function AlternativeConfigurationDialog({ alternative, setAlternative }: 
                     {alternative.model && 
                     <ConstraintsDisplayCard 
                     alternativeModel={alternative.model} />}
-                    {alternative.errorMessage && (
-                        <p className="text-destructive">{t("Optimization.failureReason")}: {alternative.errorMessage}</p>
+                    {failure && (
+                        <div className="space-y-2">
+                            <p className="font-medium text-destructive">{t("Optimization.failureReason")}</p>
+                            <p>{failure.message}</p>
+                            {failure.technicalDetails && (
+                                <details className="text-xs">
+                                    <summary className="cursor-pointer">{t("Optimization.technicalDetails")}</summary>
+                                    <p className="mt-2 break-words">{failure.technicalDetails}</p>
+                                </details>
+                            )}
+                        </div>
                     )}
                     {alternative.optimization && (
                         <div className="rounded-lg border p-4 space-y-2">

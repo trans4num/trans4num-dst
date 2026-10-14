@@ -7,13 +7,18 @@ import { defaultLocale, locales, type Locale } from "@/i18n/config"
 import deMessages from "@/messages/de.json"
 import dkMessages from "@/messages/dk.json"
 import enMessages from "@/messages/en.json"
+import deOptimization from "../../messages/de.json"
+import dkOptimization from "../../messages/dk.json"
+import enOptimization from "../../messages/en.json"
 
 const LOCALE_STORAGE_KEY = "trans4num-locale"
 
 const messagesByLocale = {
-  de: deMessages,
-  dk: dkMessages,
-  en: enMessages,
+  // Optimization messages have one shared source. Preserve the app catalogs'
+  // other translations, including their delete/restore and tooltip content.
+  de: { ...deMessages, HomePage: { ...deMessages.HomePage, Optimization: deOptimization.HomePage.Optimization } },
+  dk: { ...dkMessages, HomePage: { ...dkMessages.HomePage, Optimization: dkOptimization.HomePage.Optimization } },
+  en: { ...enMessages, HomePage: { ...enMessages.HomePage, Optimization: enOptimization.HomePage.Optimization } },
 } as const
 
 type LocaleContextValue = {

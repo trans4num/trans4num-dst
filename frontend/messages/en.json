@@ -12,7 +12,24 @@
       "runtime": "Calculation time",
       "regionalRatio": "Regional N-load per economy (inverse economy/N-load)",
       "iterations": "Fractional iterations",
-      "failureReason": "Failure reason"
+      "failureReason": "Why this calculation could not finish",
+      "technicalDetails": "Technical details",
+      "failures": {
+        "nitrogenReduction": "Your target is a {requestedPercent}% reduction in nitrogen load (about {requestedReduction} kg N). With the selected constraints, even the best-case reduction is at most {maximumPercent}% (about {maximumReduction} kg N). Try a smaller reduction target or relax another constraint.",
+        "maximumLimit": "The selected settings cannot meet the limit for {constraint}. Even in the best case, at least {bestCase} {unit} is required, but your limit allows only {limit} {unit}. Try increasing this limit or relaxing another constraint.",
+        "minimumLimit": "The selected settings cannot meet the limit for {constraint}. Even in the best case, at most {bestCase} {unit} can be achieved, but your settings require at least {limit} {unit}. Try lowering this requirement or relaxing another constraint.",
+        "timeout": "The calculation ran out of search time before finding a valid solution. This does not mean your settings are impossible. Try allowing more calculation time or relaxing a constraint.",
+        "infeasible": "No solution can satisfy all the selected limits together. Try relaxing a constraint or choosing a less demanding target.",
+        "fieldsUnit": "fields",
+        "constraints": {
+          "nitrogen": "nitrogen-load change",
+          "economy": "regional income change",
+          "farmIncome": "income of at least one farm",
+          "area": "changed area",
+          "fields": "changed fields",
+          "farmType": "farm-type changes"
+        }
+      }
     },
     "addAlternative": "Add Alternative",
     "compareAlternatives": "Compare Selection",

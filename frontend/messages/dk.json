@@ -12,7 +12,24 @@
       "runtime": "Beregningstid",
       "regionalRatio": "Regional N-belastning pr. økonomi (invers økonomi/N-belastning)",
       "iterations": "Fraktionelle iterationer",
-      "failureReason": "Årsag til fejl"
+      "failureReason": "Hvorfor beregningen ikke kunne gennemføres",
+      "technicalDetails": "Tekniske detaljer",
+      "failures": {
+        "nitrogenReduction": "Dit mål er at reducere N-belastningen med {requestedPercent}% (ca. {requestedReduction} kg N). Med de valgte begrænsninger er reduktionen selv i bedste fald højst {maximumPercent}% (ca. {maximumReduction} kg N). Prøv et lavere reduktionsmål, eller lemp en anden begrænsning.",
+        "maximumLimit": "De valgte indstillinger kan ikke overholde grænsen for {constraint}. Selv i bedste fald kræves mindst {bestCase} {unit}, men din grænse tillader kun {limit} {unit}. Prøv at hæve grænsen eller lempe en anden begrænsning.",
+        "minimumLimit": "De valgte indstillinger kan ikke overholde grænsen for {constraint}. Selv i bedste fald kan højst {bestCase} {unit} opnås, men dine indstillinger kræver mindst {limit} {unit}. Prøv at sænke kravet eller lempe en anden begrænsning.",
+        "timeout": "Søgetiden udløb, før beregningen fandt en gyldig løsning. Det betyder ikke, at dine indstillinger er umulige. Prøv at tillade mere beregningstid eller lempe en begrænsning.",
+        "infeasible": "Ingen løsning kan overholde alle de valgte grænser samtidig. Prøv at lempe en begrænsning eller vælge et mindre krævende mål.",
+        "fieldsUnit": "marker",
+        "constraints": {
+          "nitrogen": "ændring i N-belastning",
+          "economy": "ændring i regionens økonomi",
+          "farmIncome": "økonomien på mindst én bedrift",
+          "area": "ændret areal",
+          "fields": "ændrede marker",
+          "farmType": "ændringer i bedriftstype"
+        }
+      }
     },
     "addAlternative": "Tilføj Alternativ",
     "compareAlternatives": "Sammenlign Valg",

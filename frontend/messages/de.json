@@ -12,7 +12,24 @@
       "runtime": "Berechnungszeit",
       "regionalRatio": "Regionale N-Belastung je Wirtschaft (Kehrwert Wirtschaft/N-Belastung)",
       "iterations": "Fraktionale Iterationen",
-      "failureReason": "Fehlerursache"
+      "failureReason": "Warum die Berechnung nicht abgeschlossen werden konnte",
+      "technicalDetails": "Technische Details",
+      "failures": {
+        "nitrogenReduction": "Ihr Ziel ist eine Verringerung der N-Belastung um {requestedPercent}% (etwa {requestedReduction} kg N). Mit den gewählten Einschränkungen beträgt die Verringerung selbst im besten Fall höchstens {maximumPercent}% (etwa {maximumReduction} kg N). Versuchen Sie ein niedrigeres Reduktionsziel oder lockern Sie eine andere Einschränkung.",
+        "maximumLimit": "Die gewählten Einstellungen können die Grenze für {constraint} nicht einhalten. Selbst im besten Fall sind mindestens {bestCase} {unit} erforderlich, aber Ihre Grenze erlaubt nur {limit} {unit}. Erhöhen Sie die Grenze oder lockern Sie eine andere Einschränkung.",
+        "minimumLimit": "Die gewählten Einstellungen können die Grenze für {constraint} nicht einhalten. Selbst im besten Fall sind höchstens {bestCase} {unit} erreichbar, aber Ihre Einstellungen erfordern mindestens {limit} {unit}. Senken Sie die Anforderung oder lockern Sie eine andere Einschränkung.",
+        "timeout": "Die Suchzeit ist abgelaufen, bevor eine zulässige Lösung gefunden wurde. Das bedeutet nicht, dass Ihre Einstellungen unmöglich sind. Erlauben Sie mehr Berechnungszeit oder lockern Sie eine Einschränkung.",
+        "infeasible": "Keine Lösung kann alle gewählten Grenzen gleichzeitig einhalten. Lockern Sie eine Einschränkung oder wählen Sie ein weniger anspruchsvolles Ziel.",
+        "fieldsUnit": "Felder",
+        "constraints": {
+          "nitrogen": "Änderung der N-Belastung",
+          "economy": "Änderung der regionalen Wirtschaft",
+          "farmIncome": "Wirtschaft mindestens eines Betriebs",
+          "area": "geänderte Fläche",
+          "fields": "geänderte Felder",
+          "farmType": "Betriebstypänderungen"
+        }
+      }
     },
     "addAlternative": "Alternative hinzufügen",
     "openAlternative": "Ausgewählte Alternative öffnen",
