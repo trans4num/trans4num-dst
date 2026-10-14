@@ -37,32 +37,26 @@ export function AlternativeResultCard({
             <GoalTypeBadge goal={alternativeModel?.goal} />
           </div>
         </CardHeader>
-        <CardContent>
-          {alternativeModel?.goal?.configuration?.length > 0 ? (
-            <>
-              {alternativeModel.goal.configuration.map((configuration) => (
-                <div key={configuration.name} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-5 w-5 text-green-600" />
-                    <span className="font-semibold">
-                      {t("value_range_names." + alternativeModel.goal.type)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <Badge variant="outline" className={configuration.value > 0 ? "text-green-600" : "text-red-600"}>
-                      {configuration.value > 0 ? "+" : null}
-                      {configuration.value}%
-                    </Badge>
-                  </div>
+        {alternativeModel?.goal?.configuration?.length > 0 && (
+          <CardContent>
+            {alternativeModel.goal.configuration.map((configuration) => (
+              <div key={configuration.name} className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                  <span className="font-semibold">
+                    {t("value_range_names." + alternativeModel.goal.type)}
+                  </span>
                 </div>
-              ))}
-            </>
-          ) : (
-            <div className="flex items-center justify-center">
-              <p className="text-sm text-gray-500">{t("noConfiguration")}</p>
-            </div>
-          )}
-        </CardContent>
+                <div className="flex items-center justify-center">
+                  <Badge variant="outline" className={configuration.value > 0 ? "text-green-600" : "text-red-600"}>
+                    {configuration.value > 0 ? "+" : null}
+                    {configuration.value}%
+                  </Badge>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        )}
       </Card>
     </motion.div>
   );
