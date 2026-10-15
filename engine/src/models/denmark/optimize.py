@@ -115,7 +115,7 @@ class PreparedSolver:
         return result
 
 
-def solve_region(fields, original_metrics, job_model, max_time=120, gap_limit=0.05, debug=False,
+def solve_region(fields, original_metrics, job_model, max_time=720, gap_limit=0.05, debug=False,
                  settings=None):
     settings = settings or OptimizationSettings(max_time_seconds=max_time, relative_gap=gap_limit, debug=debug)
     start = time.perf_counter()

@@ -63,7 +63,7 @@ class Chart(BaseSchema):
 
 
 class OptimizationSettings(BaseSchema):
-    max_time_seconds: float = Field(default=120, gt=0, allow_inf_nan=False)
+    max_time_seconds: float = Field(default=720, gt=0, allow_inf_nan=False)
     relative_gap: float = Field(default=0.05, ge=0, le=1, allow_inf_nan=False)
     workers: int = Field(default=8, ge=0)
     use_fast_path: bool = True

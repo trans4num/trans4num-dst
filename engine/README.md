@@ -101,13 +101,13 @@ are used for iteration hints.
 
 ## Solver budgets and result quality
 
-The defaults are a 120-second CP-SAT search budget, a normalized relative gap of
+The defaults are a 720-second (12-minute) CP-SAT search budget, a normalized relative gap of
 0.05 (5%), eight search workers, and an enabled allocation fast path. Set these
 environment variables when starting Compose/the root CLI:
 
 | Variable | Default |
 | --- | --- |
-| `TRANS4NUM_OPTIMIZER_MAX_TIME_SECONDS` | `120` |
+| `TRANS4NUM_OPTIMIZER_MAX_TIME_SECONDS` | `720` |
 | `TRANS4NUM_OPTIMIZER_RELATIVE_GAP` | `0.05` |
 | `TRANS4NUM_OPTIMIZER_WORKERS` | `8` (use `0` for automatic) |
 | `TRANS4NUM_OPTIMIZER_FAST_PATH` | `true` |

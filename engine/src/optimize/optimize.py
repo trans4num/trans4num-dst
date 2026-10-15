@@ -19,7 +19,7 @@ def solve_model(model, max_time, debug, gap_limit=0.05, workers=8):
     return solver, status
 
 
-def optimize_region(model, x, max_time=120, debug=False, gap_limit=0.05, workers=8):
+def optimize_region(model, x, max_time=720, debug=False, gap_limit=0.05, workers=8):
     start = time.perf_counter()
     solver, status = solve_model(model, max_time, debug, gap_limit, workers)
     seconds = time.perf_counter() - start
