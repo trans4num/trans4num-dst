@@ -3,7 +3,7 @@ import math
 import operator
 import random
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from ortools.sat.python import cp_model
 from shared_datamodel.models import get_models
@@ -142,6 +142,22 @@ class FractionalTests(unittest.TestCase):
         self.assertEqual(result.iterations, 1)
         self.assertEqual(result.termination_reason, "iteration_limit")
         self.assertEqual(result.type, SolutionType.FEASIBLE)
+        self.assertLessEqual(result.bound, result.objective)
+
+    def test_memory_stop_does_not_restart_search_in_the_next_iteration(self):
+        _, problem = make_problem([[(1000, 100, ())], [(1, .0001, ()), (1000, 1, ())]])
+        def limited(priced, settings, **kwargs):
+            selected = {key: choices[-1] for key, choices in priced.choices.items()}
+            return Solution(True, [(key, c.rotation.name) for key, c in selected.items()],
+                "Memory-limited feasible selection", SolutionType.FEASIBLE,
+                objective=sum(c.cost for c in selected.values()), bound=-1000,
+                termination_reason="memory_limit_fallback")
+        solve = Mock(side_effect=limited)
+        result = optimize_fractional(problem, OptimizationSettings(relative_gap=0), solve)
+        self.assertEqual(solve.call_count, 1)
+        self.assertTrue(result.success)
+        self.assertEqual(result.termination_reason, "memory_limit")
+        self.assertAlmostEqual(result.objective, 101 / 2000)
         self.assertLessEqual(result.bound, result.objective)
 
 

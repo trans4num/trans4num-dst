@@ -22,7 +22,8 @@ class OptimizationContractTests(unittest.TestCase):
         request = {"name": "Preview", "regionId": str(self.region),
                    "model": get_models(self.region)[0].model_dump(mode="json"),
                    "optimizationSettings": {"maxTimeSeconds": 15, "relativeGap": .01, "useFastPath": False,
-                                            "maxFractionalIterations": 5}}
+                                            "maxFractionalIterations": 5, "maxMemoryMb": 7000,
+                                            "useLinearRelaxation": True}}
         response = self.client.post("/simulations", json=request)
         self.assertEqual(response.status_code, 200)
         saved = self.store.create_simulation.call_args.args[0]
@@ -30,6 +31,8 @@ class OptimizationContractTests(unittest.TestCase):
         self.assertEqual(saved.optimization_settings.relative_gap, .01)
         self.assertFalse(saved.optimization_settings.use_fast_path)
         self.assertEqual(saved.optimization_settings.max_fractional_iterations, 5)
+        self.assertEqual(saved.optimization_settings.max_memory_mb, 7000)
+        self.assertTrue(saved.optimization_settings.use_linear_relaxation)
         request["optimizationSettings"]["maxTimeSeconds"] = 0
         self.assertEqual(self.client.post("/simulations", json=request).status_code, 422)
         self.assertEqual(self.queue.enqueue_simulation.call_count, 1)

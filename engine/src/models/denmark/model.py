@@ -34,7 +34,9 @@ def build_model(model: cp_model.CpModel, problem: PreparedProblem, hint=None):
             continue
         variables = []
         for choice in choices:
-            variable = model.NewBoolVar(f"x_{key}_{choice.rotation.name}")
+            # The mapping already identifies each variable; repeating field and
+            # rotation names in the proto wastes memory in every solver copy.
+            variable = model.NewBoolVar("")
             x[key, choice.rotation.name] = variable
             variables.append(variable)
             if hint_set is not None:
@@ -50,16 +52,17 @@ def build_model(model: cp_model.CpModel, problem: PreparedProblem, hint=None):
 
 def set_objective(model, problem, x):
     fixed = []
-    terms = []
+    variables, coefficients = [], []
     for key, choices in problem.choices.items():
         for choice in choices:
             variable = x[key, choice.rotation.name]
             if variable is True:
                 fixed.append(choice.cost)
-            else:
-                terms.append(choice.cost * variable)
-    if terms:
-        model.Minimize(sum(terms) + math.fsum(fixed))
+            elif choice.cost:
+                variables.append(variable)
+                coefficients.append(choice.cost)
+    if variables:
+        model.Minimize(cp_model.LinearExpr.WeightedSum(variables, coefficients) + math.fsum(fixed))
     else:
         # OR-Tools requires an expression rather than a bare float objective.
         model.Minimize(math.fsum(fixed) * model.NewConstant(1))

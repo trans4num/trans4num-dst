@@ -99,6 +99,9 @@ def optimize_fractional(problem, settings, solve_linear):
             inner = solve_linear(priced, inner_settings,
                 starting_names={key: choice.rotation.name for key, choice in best.items()} if best else None,
                 defer_allocation_gap=True)
+            # Do not retain the previous iteration's full set of choices while
+            # allocating the next one.
+            del priced
             iterations = iteration + 1
             search_seconds += inner.solve_seconds
             build_seconds += inner.model_build_seconds
@@ -136,6 +139,9 @@ def optimize_fractional(problem, settings, solve_linear):
                 break
             if settings.relative_gap > 0 and ratio_gap(best_value, lower_bound) <= settings.relative_gap:
                 reason = "ratio_gap"
+                break
+            if inner.termination_reason.startswith("memory_limit"):
+                reason = "memory_limit"
                 break
             if previous_value is not None and previous_value - best_value <= max(1e-15, abs(previous_value) * 1e-12):
                 if inner.method in ("regional-allocation", "checked-regional-relaxation") and not force_general:

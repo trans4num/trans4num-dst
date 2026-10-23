@@ -1,6 +1,6 @@
 from typing import Callable
 
-from ortools.sat.python.cp_model import CpModel, IntVar
+from ortools.sat.python.cp_model import CpModel, IntVar, LinearExpr
 
 from models.denmark.things import CropRotation, Field
 from . import scaling
@@ -15,7 +15,9 @@ class AccumulatedChangeConstraint:
         loader: Callable[[CropRotation, Field], float],
         max_change: float,
     ):
-        self.terms = []
+        self.variables = []
+        self.coefficients = []
+        self.fixed = 0
         self.model = model
         self.scale = scale
         self.operator = operator
@@ -40,12 +42,20 @@ class AccumulatedChangeConstraint:
     def add_coefficient(self, field: Field, value: int, model_var: IntVar):
         if value == 0:
             return
-        term = value * model_var
-        self.terms.append(term)
+        if model_var is True:
+            self.fixed += value
+        else:
+            self.variables.append(model_var)
+            self.coefficients.append(value)
 
     def constraint(self):
         # UPSCALE MAX TO INT TO MATCH THE UPSCALED TERMS
         max_change = self.limit()
-        if not self.terms and self.operator(0, max_change):
-            return
-        self.model.Add(self.operator(sum(self.terms), max_change))
+        if self.variables or not self.operator(self.fixed, max_change):
+            expression = LinearExpr.WeightedSum(self.variables, self.coefficients) + self.fixed
+            self.model.Add(self.operator(expression, max_change))
+        # The row now lives in the model proto. Keeping these Python arrays
+        # alive throughout search duplicates the matrix for no benefit.
+        self.variables.clear()
+        self.coefficients.clear()
+        self.fixed = 0

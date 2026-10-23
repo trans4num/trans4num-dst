@@ -41,15 +41,19 @@ class SolverTests(unittest.TestCase):
     def test_environment_and_request_settings_are_validated(self):
         with patch.dict("os.environ", {"TRANS4NUM_OPTIMIZER_MAX_TIME_SECONDS": "15",
                                       "TRANS4NUM_OPTIMIZER_RELATIVE_GAP": "0.01",
+                                      "TRANS4NUM_OPTIMIZER_MAX_MEMORY_MB": "7000",
+                                      "TRANS4NUM_OPTIMIZER_LINEAR_RELAXATION": "true",
                                       "TRANS4NUM_OPTIMIZER_FAST_PATH": "false"}):
             config = settings_for_job()
             self.assertEqual(config.max_time_seconds, 15)
             self.assertEqual(config.relative_gap, .01)
             self.assertFalse(config.use_fast_path)
+            self.assertEqual(config.max_memory_mb, 7000)
+            self.assertTrue(config.use_linear_relaxation)
             override = OptimizationSettings(max_time_seconds=60)
             self.assertIs(settings_for_job(override), override)
         for data in ({"maxTimeSeconds": 0}, {"relativeGap": -1}, {"workers": -1}, {"maxTimeSeconds": float("inf")},
-                     {"maxFractionalIterations": 0}):
+                     {"maxFractionalIterations": 0}, {"maxMemoryMb": 0}):
             with self.assertRaises(ValidationError):
                 OptimizationSettings.model_validate(data)
         job = SimulationBase.model_validate({"name": "request", "regionId": str(uuid4()),

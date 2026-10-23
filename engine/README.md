@@ -102,14 +102,17 @@ are used for iteration hints.
 ## Solver budgets and result quality
 
 The defaults are a 720-second (12-minute) CP-SAT search budget, a normalized relative gap of
-0.05 (5%), eight search workers, and an enabled allocation fast path. Set these
+0.05 (5%), four search workers, an 8192 MiB process-memory search budget, and an
+enabled allocation fast path. Linear relaxations remain enabled. Set these
 environment variables when starting Compose/the root CLI:
 
 | Variable | Default |
 | --- | --- |
 | `TRANS4NUM_OPTIMIZER_MAX_TIME_SECONDS` | `720` |
 | `TRANS4NUM_OPTIMIZER_RELATIVE_GAP` | `0.05` |
-| `TRANS4NUM_OPTIMIZER_WORKERS` | `8` (use `0` for automatic) |
+| `TRANS4NUM_OPTIMIZER_WORKERS` | `4` (use `0` for automatic) |
+| `TRANS4NUM_OPTIMIZER_MAX_MEMORY_MB` | `8192` (MiB, process RSS during search) |
+| `TRANS4NUM_OPTIMIZER_LINEAR_RELAXATION` | `true` |
 | `TRANS4NUM_OPTIMIZER_FAST_PATH` | `true` |
 | `TRANS4NUM_OPTIMIZER_DEBUG` | `false` |
 | `TRANS4NUM_OPTIMIZER_MAX_FRACTIONAL_ITERATIONS` | `64` |
@@ -131,7 +134,9 @@ API clients can override the defaults per simulation using `optimizationSettings
   "optimizationSettings": {
     "maxTimeSeconds": 30,
     "relativeGap": 0.01,
-    "workers": 8,
+    "workers": 4,
+    "maxMemoryMb": 8192,
+    "useLinearRelaxation": true,
     "useFastPath": true
   }
 }
@@ -147,6 +152,37 @@ For supported additive constraints, greedy improvement of a feasible seed checks
 every regional/farmer limit after each field move. This heuristic is only a
 starting solution; it never supplies its own optimality bound. Solver hints and
 fallbacks therefore work on cold invocations without a previous simulation.
+
+### Running with 10 GB RAM
+
+The defaults reserve headroom for a 10 GB environment by using fewer parallel
+solver workers and a soft memory stop. Keeping linear-programming relaxation
+enabled helps obtain useful bounds and finish search sooner.
+All integer-scaled hard constraints and whole-field choices remain enforced.
+Search may have weaker bounds or find a less optimal solution within its budget;
+the result still reports its actual bound and gap. The requested gap remains 5%.
+Setting `TRANS4NUM_OPTIMIZER_LINEAR_RELAXATION=false` also removes memory-heavy LP
+search workers, at the cost of weaker bounds and potentially longer searches or
+less optimal solutions. Avoid automatic worker counts on memory-constrained hosts.
+
+A watchdog checks the entire engine process's resident memory every 100 ms,
+including native solver allocations. At 8192 MiB it cooperatively stops search
+and returns the best solver solution or a constraint-checked starting selection.
+Termination is reported as `memory_limit` or `memory_limit_fallback`. If neither
+exists, `memory_limit_no_solution` reports the missing result without claiming
+infeasibility. Fractional optimization also stops instead of starting another
+memory-limited search iteration.
+
+This is a soft search budget: allocations can overshoot between checks, and
+input preparation, model building, and output generation are outside the guard.
+It is not a hard cap on total container or host memory. Lower
+`TRANS4NUM_OPTIMIZER_MAX_MEMORY_MB` if other services share the same 10 GB.
+
+Model building also avoids per-term expression objects, omits redundant variable
+names, releases row buffers after adding constraints, and uses compact field and
+choice records. Fractional iterations release their temporary priced choices
+before allocating the next iteration. These changes reduce memory without
+discarding rotations or relaxing constraints.
 
 ## Feasibility and failure diagnostics
 

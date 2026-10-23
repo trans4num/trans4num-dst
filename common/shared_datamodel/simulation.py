@@ -65,7 +65,9 @@ class Chart(BaseSchema):
 class OptimizationSettings(BaseSchema):
     max_time_seconds: float = Field(default=720, gt=0, allow_inf_nan=False)
     relative_gap: float = Field(default=0.05, ge=0, le=1, allow_inf_nan=False)
-    workers: int = Field(default=8, ge=0)
+    workers: int = Field(default=4, ge=0)
+    max_memory_mb: int = Field(default=8192, gt=0)
+    use_linear_relaxation: bool = True
     use_fast_path: bool = True
     debug: bool = False
     max_fractional_iterations: int = Field(default=64, ge=1)

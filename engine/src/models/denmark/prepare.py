@@ -10,7 +10,7 @@ from models.denmark.things import CropRotation, Field
 from models.denmark.transitions import Transition, f
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Choice:
     rotation: CropRotation
     cost: float

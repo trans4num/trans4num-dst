@@ -99,11 +99,14 @@ class PreparedSolver:
             set_hint(self.model, self.x, hint)
         build_seconds = time.perf_counter() - start
         result = optimize_region(self.model, self.x, max_time=settings.max_time_seconds, debug=settings.debug,
-                                 gap_limit=settings.relative_gap, workers=settings.workers)
+                                 gap_limit=settings.relative_gap, workers=settings.workers,
+                                 max_memory_mb=settings.max_memory_mb,
+                                 use_linear_relaxation=settings.use_linear_relaxation)
         if seed is not None and result.termination_reason not in ("model_invalid", "infeasible"):
             if not result.success or (result.objective is not None and seed.objective < result.objective):
                 seed.solve_seconds = result.solve_seconds
-                seed.termination_reason = "time_limit_fallback" if not result.success else "best_feasible_fallback"
+                seed.termination_reason = ("memory_limit_fallback" if result.termination_reason.startswith("memory_limit")
+                                           else "time_limit_fallback" if not result.success else "best_feasible_fallback")
                 if result.bound is not None:
                     seed.bound = max(seed.bound, min(result.bound, seed.objective))
                 result = seed

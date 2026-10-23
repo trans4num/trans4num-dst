@@ -52,7 +52,7 @@ class Crop(Enum):
         raise Exception(f"This crop does not exist: {self.name}")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class CropRotation:
     name: str
     indices: tuple[Crop, ...]
@@ -63,7 +63,7 @@ class CropRotation:
         object.__setattr__(self, "indices", tuple(self.indices))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class SpatialIndicator:
     soil: Soil
     retention: float
@@ -73,7 +73,7 @@ class SpatialIndicator:
     org_id: str
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Field:
     field_id: str
     rotation: CropRotation
